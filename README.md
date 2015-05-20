@@ -27,7 +27,7 @@ This only needs to be done once until the dependencies change.
 
 ## Building
 
-[GruntJS][gruntjs.com] is used to build the project. See [gruntjs.com][GruntGettingStartedExistingProj].
+[GruntJS][grunt] is used to build the project. See [gruntjs.com][GruntGettingStartedExistingProj].
 
 For a list of available tasks, run `grunt --help`.
 
@@ -102,7 +102,7 @@ keyword placeholders will be found in the code.
 
 ### Indentation and Tabs
 
-See .editorconfig file.
+See `.editorconfig` file.
 
 ### `undefined` vs `null`
 
@@ -127,7 +127,7 @@ One reason for this is that in the JSON format, `null` is an acceptable value bu
 
 * Create a class creation package in YJS.core.
 
-  - Change signature of class definition to use properties prefixed with '$' for the special purpose properties.
+  - Change signature of class definition to use properties prefixed with `$` for the special purpose properties.
 
   - Find an alternative to using arguments.callee.caller. See http://ejohn.org/blog/simple-javascript-inheritance/
 
