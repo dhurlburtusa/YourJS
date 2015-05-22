@@ -6,8 +6,20 @@ body { margin: 0; padding: 0; color: #606c71; font-family: "Open Sans", "Helveti
 a { color: #1e6bb8; text-decoration: none; }
 a:hover { text-decoration: underline; }
 
+@media screen and (min-width: 64em) {
+    .page-width-constrained { max-width: 64rem; margin: 0 auto; }
+}
+
+.Btn { display: inline-block; }
+
+.Menubar { margin: 0; padding: 0; list-style: none; }
+.Menubar::before,
+.Menubar::after { content: " "; display: table; }
+.Menubar::after { clear: both; }
+.Menubar > li { float: left; display: block; }
+
 .Btn {
-    display: inline-block; margin-bottom: 1rem;
+    margin-bottom: 1rem;
     background-color: rgba(255, 255, 255, 0.08); color: rgba(255, 255, 255, 0.7); border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 0.3rem; transition: color 0.2s, background-color 0.2s, border-color 0.2s;
 }
 .Btn + .Btn { margin-left: 1rem; }
@@ -29,18 +41,22 @@ a:hover { text-decoration: underline; }
     .Btn + .Btn { margin-top: 1rem; margin-left: 0; }
 }
 
-.Page-hd { background-color: #159957; background-image: linear-gradient(120deg, #155799, #159957); color: #fff; text-align: center; }
+.Menubar { background: #444; }
+.Menubar a { display: block; padding: 0.75rem 1rem; color: white; transition: color 0.2s, background-color 0.2s; }
+.Menubar a:hover { background: #159957; background: #1e6bb8; text-decoration: none; }
+
+.Page-hd--masthead { background-color: #159957; background-image: linear-gradient(120deg, #155799, #159957); color: #fff; text-align: center; }
 
 @media screen and (min-width: 64em) {
-    .Page-hd { padding: 5rem 6rem; }
+    .Page-hd--masthead { padding: 5rem 6rem; }
 }
 
 @media screen and (min-width: 42em) and (max-width: 64em) {
-    .Page-hd { padding: 3rem 4rem; }
+    .Page-hd--masthead { padding: 3rem 4rem; }
 }
 
 @media screen and (max-width: 42em) {
-    .Page-hd { padding: 2rem 1rem; }
+    .Page-hd--masthead { padding: 2rem 1rem; }
 }
 
 .GhProj-name { margin-top: 0; margin-bottom: 0.1rem; }
@@ -126,7 +142,7 @@ a:hover { text-decoration: underline; }
 .Page-bd hr { height: 2px; margin: 1rem 0; padding: 0; background-color: #eff0f1; border: 0; }
 
 @media screen and (min-width: 64em) {
-    .Page-bd { max-width: 64rem; margin: 0 auto; padding: 2rem 6rem; font-size: 1.1rem; }
+    .Page-bd { padding: 2rem 6rem; font-size: 1.1rem; }
 }
 
 @media screen and (min-width: 42em) and (max-width: 64em) {
