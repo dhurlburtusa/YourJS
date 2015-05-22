@@ -1,16 +1,45 @@
+/* ###################################################################################################################
+# The Site's Default Styles
+
+## Table of Contents
+
+* Foundation Element Rules
+* Foundation Component Rules
+  - Btn Component Rules
+  - Menubar Component Rules
+* Site-Specific Element Rules
+* Site-Specific Attribute Style Rules
+* Site-Specific Region Rules
+  - Page-bd Rules
+  - Page-hd Rules
+* Site-Specific Component Rules
+  - GhProj Component Rules
+  - Btn Component Rules
+  - Menubar Component Rules
+
+################################################################################################################### */
+
+/* *******************************************************************************************************************
+# Foundation Element Rules
+******************************************************************************************************************* */
 
 * { box-sizing: border-box; }
 
-body { margin: 0; padding: 0; color: #606c71; font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif; font-size: 16px; line-height: 1.5; }
+body { margin: 0; padding: 0; }
 
-a { color: #1e6bb8; text-decoration: none; }
-a:hover { text-decoration: underline; }
+/* *******************************************************************************************************************
+# Foundation Component Rules
+******************************************************************************************************************* */
 
-@media screen and (min-width: 64em) {
-    .page-width-constrained { max-width: 64rem; margin: 0 auto; }
-}
+/* -------------------------------------------------------------------------------------------------------------------
+# Foundation Btn Component Rules
+------------------------------------------------------------------------------------------------------------------- */
 
 .Btn { display: inline-block; }
+
+/* -------------------------------------------------------------------------------------------------------------------
+# Foundation Menubar Component Rules
+------------------------------------------------------------------------------------------------------------------- */
 
 .Menubar { margin: 0; padding: 0; list-style: none; }
 .Menubar::before,
@@ -18,128 +47,88 @@ a:hover { text-decoration: underline; }
 .Menubar::after { clear: both; }
 .Menubar > li { float: left; display: block; }
 
-.Btn {
-    margin-bottom: 1rem;
-    background-color: rgba(255, 255, 255, 0.08); color: rgba(255, 255, 255, 0.7); border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 0.3rem; transition: color 0.2s, background-color 0.2s, border-color 0.2s;
-}
-.Btn + .Btn { margin-left: 1rem; }
+/* *******************************************************************************************************************
+# Site-Specific Element Rules
+******************************************************************************************************************* */
 
-.Btn:hover {
-    background-color: rgba(255, 255, 255, 0.2); border-color: rgba(255, 255, 255, 0.3); color: rgba(255, 255, 255, 0.8); text-decoration: none;
-}
+body { color: #606c71; font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif; font-size: 16px; line-height: 1.5; }
 
-@media screen and (min-width: 64em) {
-    .Btn { padding: 0.75rem 1rem; }
-}
+a { color: #1e6bb8; text-decoration: none; }
+a:hover { text-decoration: underline; }
 
-@media screen and (min-width: 42em) and (max-width: 64em) {
-    .Btn { padding: 0.6rem 0.9rem; font-size: 0.9rem; }
-}
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 { margin-top: 2rem; margin-bottom: 1rem; color: #159957; }
 
-@media screen and (max-width: 42em) {
-    .Btn { display: block; width: 100%; padding: 0.75rem; font-size: 0.9rem; }
-    .Btn + .Btn { margin-top: 1rem; margin-left: 0; }
-}
+p { margin-bottom: 1em; }
 
-.Menubar { background: #444; }
-.Menubar a { display: block; padding: 0.75rem 1rem; color: white; transition: color 0.2s, background-color 0.2s; }
-.Menubar a:hover { background: #159957; background: #1e6bb8; text-decoration: none; }
+code { padding: 2px 4px; background-color: #f3f6fa; border-radius: 0.3rem; color: #383e41; font-family: Consolas, "Liberation Mono", Menlo, Courier, monospace; font-size: 0.9rem; }
 
-.Page-hd--masthead { background-color: #159957; background-image: linear-gradient(120deg, #155799, #159957); color: #fff; text-align: center; }
-
-@media screen and (min-width: 64em) {
-    .Page-hd--masthead { padding: 5rem 6rem; }
-}
-
-@media screen and (min-width: 42em) and (max-width: 64em) {
-    .Page-hd--masthead { padding: 3rem 4rem; }
-}
-
-@media screen and (max-width: 42em) {
-    .Page-hd--masthead { padding: 2rem 1rem; }
-}
-
-.GhProj-name { margin-top: 0; margin-bottom: 0.1rem; }
-
-@media screen and (min-width: 64em) {
-    .GhProj-name { font-size: 3.25rem; }
-}
-
-@media screen and (min-width: 42em) and (max-width: 64em) {
-    .GhProj-name { font-size: 2.25rem; }
-}
-
-@media screen and (max-width: 42em) {
-    .GhProj-name { font-size: 1.75rem; }
-}
-
-.GhProj-tagline { margin-bottom: 2rem; font-weight: normal; opacity: 0.7; }
-
-@media screen and (min-width: 64em) {
-    .GhProj-tagline { font-size: 1.25rem; }
-}
-
-@media screen and (min-width: 42em) and (max-width: 64em) {
-    .GhProj-tagline { font-size: 1.15rem; }
-}
-
-@media screen and (max-width: 42em) {
-    .GhProj-tagline { font-size: 1rem; }
-}
-
-.Page-bd :first-child {  margin-top: 0; }
-.Page-bd img { max-width: 100%; }
-.Page-bd h1,
-.Page-bd h2,
-.Page-bd h3,
-.Page-bd h4,
-.Page-bd h5,
-.Page-bd h6 { margin-top: 2rem; margin-bottom: 1rem; color: #159957; font-weight: normal; }
-.Page-bd p { margin-bottom: 1em; }
-.Page-bd code { padding: 2px 4px; background-color: #f3f6fa; border-radius: 0.3rem; color: #383e41; font-family: Consolas, "Liberation Mono", Menlo, Courier, monospace; font-size: 0.9rem; }
-.Page-bd pre {
+pre {
     margin-top: 0; margin-bottom: 1rem; padding: 0.8rem;
     background-color: #f3f6fa; border: solid 1px #dce6f0; border-radius: 0.3rem; color: #567482; font: 1rem Consolas, "Liberation Mono", Menlo, Courier, monospace; word-wrap: normal;
 }
-.Page-bd pre > code {
+pre > code {
     margin: 0; padding: 0;
     background: transparent; border: 0; color: #567482; font-size: 0.9rem; white-space: pre; word-break: normal;
 }
-.Page-bd .highlight { margin-bottom: 1rem; }
-.Page-bd .highlight pre { margin-bottom: 0; word-break: normal; }
-.Page-bd .highlight pre,
-.Page-bd pre {
+.highlight { margin-bottom: 1rem; }
+.highlight pre { margin-bottom: 0; word-break: normal; }
+.highlight pre,
+pre {
     padding: 0.8rem; overflow: auto;
     border-radius: 0.3rem; font-size: 0.9rem; line-height: 1.45;
 }
-.Page-bd pre code,
-.Page-bd pre tt { display: inline; margin: 0; padding: 0; max-width: initial; overflow: initial;
+pre code,
+pre tt { display: inline; margin: 0; padding: 0; max-width: initial; overflow: initial;
     background-color: transparent; border: 0; line-height: inherit; word-wrap: normal;
 }
-.Page-bd pre code:before,
-.Page-bd pre code:after,
-.Page-bd pre tt:before,
-.Page-bd pre tt:after { content: normal; }
+pre code:before,
+pre code:after,
+pre tt:before,
+pre tt:after { content: normal; }
 
-.Page-bd ul,
-.Page-bd ol { margin-top: 0; }
+ul,
+ol { margin-top: 0; }
 
-.Page-bd blockquote { margin-left: 0; padding: 0 1rem; border-left: 0.3rem solid #dce6f0; color: #819198; }
-.Page-bd blockquote > :first-child { margin-top: 0; }
-.Page-bd blockquote > :last-child { margin-bottom: 0; }
-.Page-bd table {
+blockquote { margin-left: 0; padding: 0 1rem; border-left: 0.3rem solid #dce6f0; color: #819198; }
+blockquote > :first-child { margin-top: 0; }
+blockquote > :last-child { margin-bottom: 0; }
+
+table {
     display: block; width: 100%; overflow: auto;
     word-break: normal; word-break: keep-all;
 }
-.Page-bd table th { font-weight: bold; }
-.Page-bd table th,
-.Page-bd table td { padding: 0.5rem 1rem; border: 1px solid #e9ebec; }
+table th { font-weight: bold; }
+table th,
+table td { padding: 0.5rem 1rem; border: 1px solid #e9ebec; }
 
-.Page-bd dl { padding: 0; }
-.Page-bd dl dt { margin-top: 1rem; padding: 0; font-size: 1rem; font-weight: bold; }
-.Page-bd dl dd { margin-bottom: 1rem; padding: 0; }
+dl { padding: 0; }
+dl dt { margin-top: 1rem; padding: 0; font-size: 1rem; font-weight: bold; }
+dl dd { margin-bottom: 1rem; padding: 0; }
 
-.Page-bd hr { height: 2px; margin: 1rem 0; padding: 0; background-color: #eff0f1; border: 0; }
+hr { height: 2px; margin: 1rem 0; padding: 0; background-color: #eff0f1; border: 0; }
+
+/* *******************************************************************************************************************
+# Site-Specific Attribute Style Rules
+******************************************************************************************************************* */
+
+@media screen and (min-width: 64em) {
+    .page-width-constrained { max-width: 64rem; margin: 0 auto; }
+}
+
+/* *******************************************************************************************************************
+# Site-Specific Region Rules
+******************************************************************************************************************* */
+
+/* -------------------------------------------------------------------------------------------------------------------
+# Site-Specific Page-bd Rules
+------------------------------------------------------------------------------------------------------------------- */
+
+.Page-bd :first-child { margin-top: 0; }
 
 @media screen and (min-width: 64em) {
     .Page-bd { padding: 2rem 6rem; font-size: 1.1rem; }
@@ -170,3 +159,99 @@ a:hover { text-decoration: underline; }
 @media screen and (max-width: 42em) {
     .Page-bd-ft { font-size: 0.9rem; }
 }
+
+/* -------------------------------------------------------------------------------------------------------------------
+# Site-Specific Page-hd Rules
+------------------------------------------------------------------------------------------------------------------- */
+
+/*
+# Site-Specific Page-hd--masthead Rules
+--------------------------------------------------------------------------- */
+
+.Page-hd--masthead { background-color: #159957; background-image: linear-gradient(120deg, #155799, #159957); color: #fff; text-align: center; }
+
+
+@media screen and (min-width: 64em) {
+    .Page-hd--masthead { padding: 5rem 6rem; }
+}
+
+@media screen and (min-width: 42em) and (max-width: 64em) {
+    .Page-hd--masthead { padding: 3rem 4rem; }
+}
+
+@media screen and (max-width: 42em) {
+    .Page-hd--masthead { padding: 2rem 1rem; }
+}
+
+/* *******************************************************************************************************************
+# Site-Specific Component Rules
+******************************************************************************************************************* */
+
+/* -------------------------------------------------------------------------------------------------------------------
+# Site-Specific GhProj Component Rules
+
+These are the Github project related components.
+------------------------------------------------------------------------------------------------------------------- */
+
+.GhProj-name { margin-top: 0; margin-bottom: 0.1rem; color: #fff; }
+
+@media screen and (min-width: 64em) {
+    .GhProj-name { font-size: 3.25rem; }
+}
+
+@media screen and (min-width: 42em) and (max-width: 64em) {
+    .GhProj-name { font-size: 2.25rem; }
+}
+
+@media screen and (max-width: 42em) {
+    .GhProj-name { font-size: 1.75rem; }
+}
+
+.GhProj-tagline { margin-top: 1em; margin-bottom: 2rem; color: #fff; font-weight: normal; opacity: 0.7; }
+
+@media screen and (min-width: 64em) {
+    .GhProj-tagline { font-size: 1.25rem; }
+}
+
+@media screen and (min-width: 42em) and (max-width: 64em) {
+    .GhProj-tagline { font-size: 1.15rem; }
+}
+
+@media screen and (max-width: 42em) {
+    .GhProj-tagline { font-size: 1rem; }
+}
+
+/* -------------------------------------------------------------------------------------------------------------------
+# Site-Specific Btn Component Rules
+------------------------------------------------------------------------------------------------------------------- */
+
+.Btn {
+    margin-bottom: 1rem;
+    background-color: rgba(255, 255, 255, 0.08); color: rgba(255, 255, 255, 0.7); border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 0.3rem; transition: color 0.2s, background-color 0.2s, border-color 0.2s;
+}
+.Btn + .Btn { margin-left: 1rem; }
+
+.Btn:hover {
+    background-color: rgba(255, 255, 255, 0.2); border-color: rgba(255, 255, 255, 0.3); color: rgba(255, 255, 255, 0.8); text-decoration: none;
+}
+
+@media screen and (min-width: 64em) {
+    .Btn { padding: 0.75rem 1rem; }
+}
+
+@media screen and (min-width: 42em) and (max-width: 64em) {
+    .Btn { padding: 0.6rem 0.9rem; font-size: 0.9rem; }
+}
+
+@media screen and (max-width: 42em) {
+    .Btn { display: block; width: 100%; padding: 0.75rem; font-size: 0.9rem; }
+    .Btn + .Btn { margin-top: 1rem; margin-left: 0; }
+}
+
+/* -------------------------------------------------------------------------------------------------------------------
+# Site-Specific Menubar Component Rules
+------------------------------------------------------------------------------------------------------------------- */
+
+.Menubar { background: #444; }
+.Menubar a { display: block; padding: 0.75rem 1rem; color: white; transition: color 0.2s, background-color 0.2s; }
+.Menubar a:hover { background: #159957; background: #1e6bb8; text-decoration: none; }
