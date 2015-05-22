@@ -6,7 +6,18 @@ module.exports = function (grunt) {
 
   src.main = [
     'src/main/js/YJS/core/Core.js',
-    'src/main/js/YJS/Array.js'
+    'src/main/js/YJS/Array.js',
+    'src/main/js/YJS/String.js',
+    'src/main/js/YJS/log/Entry.js',
+    'src/main/js/YJS/log/Level.js',
+    'src/main/js/YJS/log/Appender.js',
+    'src/main/js/YJS/log/ArrayAppender.js',
+    'src/main/js/YJS/log/ConsoleAppender.js',
+    'src/main/js/YJS/log/Logger.js',
+    'src/main/js/YJS/log/ConfigBuilder.js',
+    'src/main/js/YJS/log/Config.js',
+    'src/main/js/YJS/log/Log.js',
+    'src/main/js/YJS/log/Factory.js'
   ];
 
   src.polyfill = [

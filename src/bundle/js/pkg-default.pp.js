@@ -4,3 +4,4 @@
 /* @endexclude */
 
 // @include ../../main/js/YJS/Array.js
+// @include ../../main/js/YJS/String.js

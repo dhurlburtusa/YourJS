@@ -5,3 +5,4 @@
 
 // @include pkg-core.pp.js
 // @include pkg-default.pp.js
+// @include pkg-log.pp.js

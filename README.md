@@ -12,7 +12,7 @@ Some functionality may overlap with other frameworks. However, the goal is to ke
 
 * Well documented.
 
-* Logging system (future).
+* Logging system.
 
 * Class system (future).
 
@@ -142,6 +142,8 @@ One reason for this is that in the JSON format, `null` is an acceptable value bu
     + Figure out how to open the generated doc in a browser.
 
     + Research how to setup a guide.
+    
+    + Research how to add a custom header. Would like to have a way to navigate back to other YourJS pages.
 
   - Make @dependency a custom JSDuck tag.
 
