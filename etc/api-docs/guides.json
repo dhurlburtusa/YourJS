@@ -1,0 +1,12 @@
+[
+    {
+        "title": "YourJS Guides",
+        "items": [
+            {
+                "name": "logging",
+                "title": "The Logging System",
+                "description": "A runtime configurable logging system that can log to more than just web-console."
+            }
+        ]
+    }
+]

@@ -44,8 +44,9 @@ module.exports = function (grunt) {
       dest: 'dist/api-docs/',
       options: {
         'builtin-classes': true,
-        'external': [],
-        'warnings': ['-nodoc', '-dup_member', '-link_ambiguous']
+        external: [],
+        guides: 'etc/api-docs/guides.json',
+        warnings: ['-nodoc', '-dup_member', '-link_ambiguous']
       }
     }
   };
