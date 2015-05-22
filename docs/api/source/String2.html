@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>The source code</title>
+  <link href="../resources/prettify/prettify.css" type="text/css" rel="stylesheet" />
+  <script type="text/javascript" src="../resources/prettify/prettify.js"></script>
+  <style type="text/css">
+    .highlight { display: block; background-color: #ddd; }
+  </style>
+  <script type="text/javascript">
+    function highlight() {
+      document.getElementById(location.hash.replace(/#/, "")).className = "highlight";
+    }
+  </script>
+</head>
+<body onload="prettyPrint(); highlight();">
+  <pre class="prettyprint lang-js">
+/*
+ * @dependency YJS
+ */
+
+<span id='YJS-String'>/**
+</span> * @singleton
+ * @class YJS.String
+ * A set of String related methods.
+ */
+(function (GBL, YJS, nsPath) {
+
+// @if STRICT
+&quot;use strict&quot;;
+// @endif
+
+var NS = YJS.ns(nsPath),
+    YJS_String;
+
+NS.String = YJS_String = {};
+
+// ==========================================================================
+<span id='YJS-String-method-printf'>/**
+</span> * A utility function that behaves similar to the C programming language's printf function.
+ * 
+ *     YJS.String.printf('Hello World!'); // &quot;Hello World!&quot;
+ *     YJS.String.printf('Hello', ' World!', ' What a beautiful day!'); // &quot;Hello World! What a beautiful day!&quot;
+ *     YJS.String.printf('%s %s', 'Hello', 'World!'); // &quot;Hello World!&quot;
+ *     YJS.String.printf('%s %s', 'Hello'); // &quot;Hello %s&quot;
+ *     YJS.String.printf('%s must be between %i and %f.', 'It', 1.2, 3.14); // &quot;It must be between 1 and 3.14.&quot;
+ *     YJS.String.printf('%s %s', 'Hello', 'World!', ' What a beautiful day!'); // &quot;Hello World! What a beautiful day!&quot;
+ * 
+ * Three different placeholders are understood.
+ * 
+ * * %f converts the replacement value to a float before replacing.
+ * * %i converts the replacement value to an integer before replacing.
+ * * %s converts the replacement value to a string before replacing.
+ * 
+ * @param {String} pattern The string pattern/template with the printf style placeholders.
+ * @param {Mixed} [varargs] The replacement values.
+ * 
+ * @return {String} a string with the placeholders replaced with the specified replacement values.
+ */
+YJS_String.printf = function (pattern, varargs) {
+    var args, i, iLen, out;
+
+    out = pattern;
+    args = arguments;
+    i = 1;
+
+    if (pattern &amp;&amp; args.length &gt; 1) {
+        out = out.replace(/%[ifs]/g, function (placeholder) {
+            var replacement;
+
+            replacement = placeholder;
+            if (i &lt; args.length) {
+                replacement = args[i];
+            }
+            i += 1;
+            switch (placeholder) {
+            case &quot;%i&quot;:
+                replacement = GBL.parseInt(replacement);
+                break;
+            case &quot;%f&quot;:
+                replacement = GBL.parseFloat(replacement);
+                break;
+            }
+            return replacement;
+        });
+        
+        out = [out];
+        for (iLen = args.length; i &lt; iLen; ++i) {
+            out.push(args[i]);
+        }
+        out = out.join('');
+    }
+    
+    return out;
+};
+
+})(this, YJS, 'YJS');
+
+// ##################################################################################################################
+</pre>
+</body>
+</html>

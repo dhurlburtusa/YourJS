@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>The source code</title>
+  <link href="../resources/prettify/prettify.css" type="text/css" rel="stylesheet" />
+  <script type="text/javascript" src="../resources/prettify/prettify.js"></script>
+  <style type="text/css">
+    .highlight { display: block; background-color: #ddd; }
+  </style>
+  <script type="text/javascript">
+    function highlight() {
+      document.getElementById(location.hash.replace(/#/, "")).className = "highlight";
+    }
+  </script>
+</head>
+<body onload="prettyPrint(); highlight();">
+  <pre class="prettyprint lang-js">
+/*
+ * @dependency YJS
+ */
+
+<span id='YJS-log-Entry'>/**
+</span> * @class YJS.log.Entry
+ * A log-entry represents a message and the level at which it is to be logged.
+ * 
+ * @requires YJS.log.Level
+ * 
+ * @uses YJS.String
+ */
+(function (YJS, nsPath) {
+
+// @if STRICT
+&quot;use strict&quot;;
+// @endif
+
+var NS = YJS.ns(nsPath);
+
+// ==========================================================================
+<span id='YJS-log-Entry-method-constructor'>/**
+</span> * @method constructor
+ * Creates an immutable log-entry with the specified level, message template, and data.
+ * 
+ * @param {Object} [cfgs]
+ * @param {Mixed[]} [cfgs.data=[]] The data to merge with the template and/or to append to the end of the message.
+ * @param {Number} [cfgs.level=YJS.log.Level.DEBUG] The level at which to log the message. See YJS.log.Level for
+ *   pre-defined log-level values. Other levels beside the pre-defined are allowed too.
+ * @param {String} [cfgs.template=&quot;&quot;] The message template with optional placeholders (aka substitution strings) that
+ *   is used to help form the log message.
+ */
+NS.Entry = function (cfgs) {
+    var SELF = this, data, level, template;
+    
+    cfgs = cfgs || {};
+    data = cfgs.data || [];
+    level = cfgs.level || YJS.log.Level.DEBUG;
+    template = &quot;&quot; + (cfgs.template || &quot;&quot;);
+    
+// @if DEBUG
+    if (typeof level !== 'number') {
+        throw new TypeError('cfgs.level must be a number.');
+    }
+// @endif
+    
+    SELF._ = {};
+    
+<span id='YJS-log-Entry-property-level'>    /**
+</span>     * @readonly
+     * @property {Number}
+     * The level the message is to be logged at.
+     */
+    SELF.level = level;
+<span id='YJS-log-Entry-property-template'>    /**
+</span>     * @readonly
+     * @property {String}
+     * The message template with optional placeholders that is to be logged.
+     */
+    SELF.template = template;
+<span id='YJS-log-Entry-property-data'>    /**
+</span>     * @readonly
+     * @property {Mixed[]}
+     * The data to merge with the template and/or to append to the end of the message.
+     */
+    SELF.data = data;
+    
+    Object.freeze(SELF);
+};
+
+<span id='YJS-log-Entry-method-getMessage'>/**
+</span> * Returns the message formed from merging the message template with the data. It uses YJS.String#printf to do the
+ * resolution.
+ */
+NS.Entry.prototype.getMessage = function () {
+    var SELF = this, args;
+    
+    if (!SELF._.resolvedMsg) {
+        args = [SELF.template].concat(SELF.data);
+        SELF._.resolvedMsg = YJS.String.printf.apply(YJS.String, args);
+    }
+    return SELF._.resolvedMsg;
+};
+
+})(YJS, 'YJS.log');
+
+// ##################################################################################################################
+</pre>
+</body>
+</html>

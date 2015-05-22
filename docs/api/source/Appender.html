@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>The source code</title>
+  <link href="../resources/prettify/prettify.css" type="text/css" rel="stylesheet" />
+  <script type="text/javascript" src="../resources/prettify/prettify.js"></script>
+  <style type="text/css">
+    .highlight { display: block; background-color: #ddd; }
+  </style>
+  <script type="text/javascript">
+    function highlight() {
+      document.getElementById(location.hash.replace(/#/, "")).className = "highlight";
+    }
+  </script>
+</head>
+<body onload="prettyPrint(); highlight();">
+  <pre class="prettyprint lang-js">
+/*
+ * @dependency YJS
+ */
+
+<span id='YJS-log-Appender'>/**
+</span> * @abstract
+ * @class YJS.log.Appender
+ * The base class all appender subclasses should inherit from.
+ * 
+ * Different implementations may handle the appending (aka logging) of the messages differently. Some implementations
+ * may only handle messages at certain levels, ignoring the rest. Some may format the message even further. Some may
+ * aggregate the messages. Some may buffer up the messages until a certain threshold is meet. While others may simply
+ * ignore all messages.
+ * 
+ * Each implementation SHOULD document how it handles the messages it appends.
+ * 
+ * @uses YJS.log.Entry
+ */
+(function (YJS, nsPath) {
+
+// @if STRICT
+&quot;use strict&quot;;
+// @endif
+
+var NS = YJS.ns(nsPath),
+    YJS_log_Appender;
+
+NS.Appender = YJS_log_Appender = function () {};
+
+// ==========================================================================
+<span id='YJS-log-Appender-method-append'>/**
+</span> * @abstract
+ * Appends/handles the log entry.
+ * 
+ * @param {YJS.log.Entry} logEntry The log entry to append.
+ */
+YJS_log_Appender.prototype.append = function () {
+// @if DEBUG
+    throw new Error(&quot;Subclasses must override the `append` method.&quot;);
+// @endif
+};
+
+})(YJS, 'YJS.log');
+
+// ##################################################################################################################
+</pre>
+</body>
+</html>
