@@ -41,13 +41,7 @@ module.exports = function (grunt) {
   cfg.jsduck = {
     main: {
       src: src.main,
-      dest: 'dist/api-docs/',
-      options: {
-        'builtin-classes': true,
-        external: [],
-        guides: 'etc/api-docs/guides.json',
-        warnings: ['-nodoc', '-dup_member', '-link_ambiguous']
-      }
+      dest: 'dist/api-docs/'
     }
   };
 

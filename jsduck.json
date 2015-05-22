@@ -1,0 +1,6 @@
+{
+    "--builtin-classes": true,
+    "--title": "My personal docs",
+    "--guides": "etc/api-docs/guides.json",
+    "--warnings": ["-nodoc", "-dup_member", "-link_ambiguous"]
+}
