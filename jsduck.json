@@ -1,6 +1,8 @@
 {
     "--builtin-classes": true,
-    "--title": "YourJS",
     "--guides": "etc/api-docs/guides.json",
-    "--warnings": ["-nodoc", "-dup_member", "-link_ambiguous"]
+    "--title": "YourJS",
+    "--warnings": ["-nodoc", "-dup_member", "-link_ambiguous"],
+    "--warnings-exit-nonzero": true,
+    "--welcome": "etc/api-docs/welcome.htm"
 }
