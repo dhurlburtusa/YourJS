@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Jasmine Spec Runner for Native JavaScript</title>
+
+  <link rel="shortcut icon" type="image/png" href="../../../../../lib/test/js/jasmine-2.1.1/lib/jasmine_favicon.png">
+  <link rel="stylesheet" href="../../../../../lib/test/js/jasmine-2.1.1/lib/jasmine.css">
+
+  <script src="../../../../../lib/test/js/jasmine-2.1.1/lib/jasmine.js"></script>
+  <script src="../../../../../lib/test/js/jasmine-2.1.1/lib/jasmine-html.js"></script>
+  <script src="../../../../../lib/test/js/jasmine-2.1.1/lib/boot.js"></script>
+
+  <!--
+  This spec runner is designed to test the native capabilities of JavaScript. It includes tests for newer features
+  of ECMAScript. So, this spec runner will fail when run on older browsers. This is okay. It lets us know the
+  limitations of the browsers we test them on. This spec runner _is_ apart of the build.
+  -->
+
+  <!-- include source files here... -->
+  <!--
+  Should never have any since we are testing the behavior of the native JavaScript library. One exception to this rule
+  may be to include a polyfill that supplies the expected native behaviour for older browsers.
+  -->
+
+  <!-- Include native spec files here... -->
+  <script src="ArraySpec.js"></script>
+  <script src="BooleanSpec.js"></script>
+  <script src="ClassSpec.js"></script>
+  <script src="DateSpec.js"></script>
+  <script src="FunctionSpec.js"></script>
+  <script src="GlobalSpec.js"></script>
+  <script src="ObjectSpec.js"></script>
+  <script src="NaNSpec.js"></script>
+  <script src="TypeOfSpec.js"></script>
+
+</head>
+<body>
+</body>
+</html>
