@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>The source code</title>
+  <link href="../resources/prettify/prettify.css" type="text/css" rel="stylesheet" />
+  <script type="text/javascript" src="../resources/prettify/prettify.js"></script>
+  <style type="text/css">
+    .highlight { display: block; background-color: #ddd; }
+  </style>
+  <script type="text/javascript">
+    function highlight() {
+      document.getElementById(location.hash.replace(/#/, "")).className = "highlight";
+    }
+  </script>
+</head>
+<body onload="prettyPrint(); highlight();">
+  <pre class="prettyprint lang-js">
+<span id='YJS-core-Base'>/**
+</span> * @class YJS.core.Base
+ * The base class of all objects created with the YJS class system.
+ * 
+ * @requires YJS.core.Class
+ */
+(function (GBL, YJS, nsPath) {
+
+// @if STRICT
+&quot;use strict&quot;;
+// @endif
+
+var NS = YJS.ns(nsPath),
+  YJS_core_Class = YJS.core.Class,
+  YJS_core_Base;
+
+NS.Base = YJS_core_Base = YJS_core_Class.createConstructor('Base');
+
+YJS_core_Class.extend(Object, YJS_core_Base);
+
+YJS_core_Class.addMembers(YJS_core_Base, {
+<span id='YJS-core-Base-method-_initialize'>    /**
+</span>     * @template
+     * @method _initialize
+     * A template method called by the constructor that initializes the object.
+     */
+    _initialize: function () {
+        this._initialize = YJS.notAgainFn;
+    }
+});
+
+})(this, YJS, 'YJS.core');
+
+// ##################################################################################################################
+</pre>
+</body>
+</html>
