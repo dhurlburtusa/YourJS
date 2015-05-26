@@ -38,6 +38,30 @@ YJS.__ = {
         mode: buildMode,
         version: '/* @echo VERSION */'
     },
+    supports: {
+        /**
+         * @private
+         * Tests if a `toString` method specific to functions exists and returns the source of the function.
+         *
+         * This is useful if you need to know if a function definition contains a particular string sequence. This is used by
+         * the class system to determine if `$super` is called in any methods. If the function is declared to call $super,
+         * then the function is wrapped in another function that knows how to prepare the wrapped function so that it calls
+         * the correct super class method.
+         *
+         * ## How The Following Works
+         * 
+         * `RegEx.prototype#test` expects a string for the first argument so it calls `toString` on the function we pass it.
+         * The function contains the sequence of characters `asdf`. If `Function.prototype#toString` returns the source of the
+         * the function, then the string will contain `'asdf'` and the `test` function will return `true`. Otherwise `false`
+         * will be returned.
+         * 
+         * ## Function Design
+         * 
+         * The design of the function to test had to be valid in the eyes of JSHint and had to be designed in such a way that
+         * the critical part of the function would not be removed by JavaScript compressors.
+         */
+        fnToString: /asdf/.test(function () { return GBL.asdf; })
+    },
     tmp: {}
 };
 
@@ -52,7 +76,7 @@ YJS.__ = {
 "use strict";
 // @endif
 
-var __setMember, __setFn, _setConst, _setPrivFn, _setPrivProp, _setProtFn, _setPubFn;
+var _setConst, _setFinalPubFn, __setFn, __setMember, _setPrivFn, _setProtFn, _setPubFn;
 
 // @if DEBUG
     if (typeof Object.defineProperty != 'function') {
@@ -110,9 +134,9 @@ __setMember = function (obj, memberName, dataOrAccessorDesc) {
 __setFn = function (obj, fnName, fn, dataDesc) {
     dataDesc = dataDesc || {};
 // @if DEBUG
-    if (typeof fn != 'function') { throw new TypeError('`fn` must be a function.'); } // TODO: Determine the correct error to throw.
-    if ('get' in dataDesc) { throw new TypeError('Descriptor must not contain a `get` property.'); } // TODO: Determine the correct error to throw.
-    if ('set' in dataDesc) { throw new TypeError('Descriptor must not contain a `set` property.'); } // TODO: Determine the correct error to throw.
+    if (typeof fn != 'function') { throw new TypeError('`fn` must be a function.'); }
+    if ('get' in dataDesc) { throw new TypeError('Descriptor must not contain a `get` property.'); }
+    if ('set' in dataDesc) { throw new TypeError('Descriptor must not contain a `set` property.'); }
 // @endif
     dataDesc.v = fn;
     __setMember(obj, fnName, dataDesc);
@@ -122,13 +146,6 @@ __setFn = function (obj, fnName, fn, dataDesc) {
 _setConst = function (obj, constName, value) {
     __setMember(obj, constName, {
         e: true,
-        v: value
-    });
-};
-
-// ==========================================================================
-_setPrivProp = function (obj, propName, value) {
-    __setMember(obj, propName, {
         v: value
     });
 };
@@ -152,7 +169,7 @@ _setProtFn = function (obj, fnName, fn) {
         throw new TypeError('Protected function names must begin with a single underscore.');
     }
 // @endif
-    __setFn(obj, fnName, fn, { e: true });
+    __setFn(obj, fnName, fn, { e: true, w: true });
 };
 
 // ==========================================================================
@@ -166,11 +183,28 @@ _setPubFn = function (obj, fnName, fn) {
         throw new TypeError('Public function names must not begin with any underscores.');
     }
 // @endif
+    __setFn(obj, fnName, fn, { e: true, w: true });
+};
+
+// ==========================================================================
+_setFinalPubFn = function (obj, fnName, fn) {
+    fnName = fnName.trim();
+// @if DEBUG
+    if (fnName.length === 0) {
+        throw new TypeError('Public function names must not be empty.');
+    }
+    if (fnName.search(/^[^_]+/) === -1) {
+        throw new TypeError('Public function names must not begin with any underscores.');
+    }
+// @endif
     __setFn(obj, fnName, fn, { e: true });
 };
 
 // ==========================================================================
+YJS.__.tmp._setConst = _setConst;
+YJS.__.tmp._setFinalPubFn = _setFinalPubFn;
 YJS.__.tmp._setPrivFn = _setPrivFn;
+YJS.__.tmp._setProtFn = _setProtFn;
 YJS.__.tmp._setPubFn = _setPubFn;
 
 // ==========================================================================
@@ -212,7 +246,7 @@ _setConst(YJS, 'GBL', GBL);
  *     // The second call will effectively do nothing because this is now a call to the no-op function.
  *     myObjInstance.justDoOnceButOkayIfCalledMultipleTimes();
  */
-_setPubFn(YJS, 'noopFn', function noopFn() {});
+_setFinalPubFn(YJS, 'noopFn', function noopFn() {});
 
 // ==========================================================================
 /**
@@ -222,7 +256,7 @@ _setPubFn(YJS, 'noopFn', function noopFn() {});
  * {@link #noopFn no-op function} but might be more suited if a legitament value (as opposed to `undefined`) is
  * expected to be returned.
  */
-_setPubFn(YJS, 'nullFn', function nullFn() { return null; });
+_setFinalPubFn(YJS, 'nullFn', function nullFn() { return null; });
 
 // ==========================================================================
 /**
@@ -249,7 +283,7 @@ _setPubFn(YJS, 'nullFn', function nullFn() { return null; });
  *     // developer can remove the extraneous call.
  *     myObjInstance.onlyCallMeALimitedNumberOfTimes();
  */
-_setPubFn(YJS, 'notAgainFn', function notAgainFn() { throw new Error('This method should have not been called again.'); });
+_setFinalPubFn(YJS, 'notAgainFn', function notAgainFn() { throw new Error('This method should have not been called again.'); });
 
 // ==========================================================================
 /**
@@ -267,7 +301,7 @@ _setPubFn(YJS, 'notAgainFn', function notAgainFn() { throw new Error('This metho
  * 
  * @return {Object} A reference to the last namespace in the dot delimited set of namespaces.
  */
-_setPubFn(YJS, 'ns', function (namespaces) {
+_setFinalPubFn(YJS, 'ns', function (namespaces) {
     var cntx, i, iLen, namespace;
 
     namespaces = namespaces.split('.');
@@ -302,12 +336,10 @@ _setPubFn(YJS, 'ns', function (namespaces) {
 "use strict";
 // @endif
 
-var NS = YJS.ns(nsPath), _setPrivFn, _setPubFn, YJS_core_Core;
+var NS = YJS.ns(nsPath), _setPrivFn, _setFinalPubFn, YJS_core_Core;
 
 _setPrivFn = YJS.__.tmp._setPrivFn;
-_setPubFn = YJS.__.tmp._setPubFn;
-
-delete YJS.__.tmp;
+_setFinalPubFn = YJS.__.tmp._setFinalPubFn;
 
 NS.Core = YJS_core_Core = {};
 
@@ -324,7 +356,7 @@ NS.Core = YJS_core_Core = {};
  * 
  * @param {String} newTopNs The new namespace to use. Must not be the empty string. Must not contain dots.
  */
-_setPubFn(YJS_core_Core, 'aliasNs', function (newTopNs) {
+_setFinalPubFn(YJS_core_Core, 'aliasNs', function (newTopNs) {
     return this.__changeNs__(newTopNs);
 });
 
@@ -341,7 +373,7 @@ _setPubFn(YJS_core_Core, 'aliasNs', function (newTopNs) {
  * 
  * @param {String} newTopNs The new namespace to use. Must not be the empty string. Must not contain dots.
  */
-_setPubFn(YJS_core_Core, 'changeNs', function (newTopNs) {
+_setFinalPubFn(YJS_core_Core, 'changeNs', function (newTopNs) {
     return this.__changeNs__(newTopNs, true);
 });
 
@@ -363,7 +395,7 @@ _setPubFn(YJS_core_Core, 'changeNs', function (newTopNs) {
  * 
  * @param {String} newTopNs The new namespace to use. Must not be the empty string. Must not contain dots.
  */
-_setPubFn(YJS_core_Core, 'restoreOriginalNs', function () {
+_setFinalPubFn(YJS_core_Core, 'restoreOriginalNs', function () {
     GBL.YJS = YJS;
 });
 

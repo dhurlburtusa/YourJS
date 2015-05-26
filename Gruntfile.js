@@ -6,6 +6,9 @@ module.exports = function (grunt) {
 
   src.main = [
     'src/main/js/YJS/core/Core.js',
+    'src/main/js/YJS/core/Class.js',
+    'src/main/js/YJS/core/Base.js',
+    'src/main/js/YJS/core/ClassManager.js',
     'src/main/js/YJS/Array.js',
     'src/main/js/YJS/String.js',
     'src/main/js/YJS/log/Entry.js',
