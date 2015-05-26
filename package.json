@@ -4,11 +4,14 @@
   "description": "YourJS is a client-side JavaScript library.",
   "keywords": [
     "YourJS",
+    "class",
+    "class-system",
     "client-side",
     "JavaScript",
     "library",
     "log",
     "logging",
+    "object-oriented",
     "Danny",
     "Hurlburt"
   ],

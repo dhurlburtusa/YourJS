@@ -14,7 +14,7 @@ Some functionality may overlap with other frameworks. However, the goal is to ke
 
 * Logging system.
 
-* Class system (future).
+* Class system.
 
 ## Project Setup
 
@@ -124,12 +124,6 @@ One reason for this is that in the JSON format, `null` is an acceptable value bu
 * Find a tool to ensure all files honor the .editorconfig file.
 
 * Document how to build this project. For example, what are the commands to run.
-
-* Create a class creation package in YJS.core.
-
-  - Change signature of class definition to use properties prefixed with `$` for the special purpose properties.
-
-  - Find an alternative to using arguments.callee.caller. See http://ejohn.org/blog/simple-javascript-inheritance/
 
 * Research to see if there is a way to easily determine if you are in strict mode.
   
