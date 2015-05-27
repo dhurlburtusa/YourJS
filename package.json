@@ -15,17 +15,17 @@
     "Danny",
     "Hurlburt"
   ],
-  "homepage": "https://github.com/dhurlburtusa/YourJs",
+  "homepage": "https://github.com/dhurlburtusa/YourJS",
   "author": {
     "name": "Danny Hurlburt",
     "url": "https://github.com/dhurlburtusa"
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/dhurlburtusa/YourJs.git"
+    "url": "git://github.com/dhurlburtusa/YourJS.git"
   },
   "bugs": {
-    "url": "https://github.com/dhurlburtusa/YourJs/issues"
+    "url": "https://github.com/dhurlburtusa/YourJS/issues"
   },
   "dependencies": {},
   "devDependencies": {

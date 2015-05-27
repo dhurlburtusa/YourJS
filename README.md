@@ -46,9 +46,9 @@ built on its own using the `gen-docs` grunt task. Just run `grunt clean gen-docs
 
 ### Links
 
-The following assumes you have a web-server effectively mapping the path /home/repos/git/github/YourJs to the root of this project.
+The following assumes you have a web-server effectively mapping the path /home/repos/git/github/YourJS to the root of this project.
 
-http://localhost/home/repos/git/github/YourJs/dist/api-docs/
+http://localhost/home/repos/git/github/YourJS/dist/api-docs/
 
 ## Testing
 
@@ -56,9 +56,9 @@ Jasmine is used to provide unit testing via specifications.
 
 ### Links
 
-The following assumes you have a web-server effectively mapping the path /home/repos/git/github/YourJs to the root of this project.
+The following assumes you have a web-server effectively mapping the path /home/repos/git/github/YourJS to the root of this project.
 
-http://localhost/home/repos/git/github/YourJs/src/test/js/unit/spec/SpecRunner.html
+http://localhost/home/repos/git/github/YourJS/src/test/js/unit/spec/SpecRunner.html
 
 ## Code Idioms
 
