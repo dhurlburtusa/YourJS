@@ -62,9 +62,69 @@ YJS.__ = {
          */
         fnToString: /asdf/.test(function () { return GBL.asdf; })
     },
-    tmp: {}
+    tmp: {
+        // LOG: set below.
+/* Uncomment when needed. Be sure to update YJS.log.Level to reference these values. Delete them when we are done with
+   them.
+        log: {
+            Level: {
+                DEBUG: 0,
+                INFO: 2000,
+                LOG: 4000,
+                WARN: 6000,
+                ERROR: 8000,
+                FATAL: 10000
+            }
+        }
+*/
+    }
 };
 
+/*
+ * Until the YourJS logging system has been loaded, this will act as a placeholder for core code to use.
+ */
+YJS.__.tmp.LOG = {
+/* Uncomment when needed.
+    debug: function () {
+        return GBL.console.debug.apply(GBL.console, arguments);
+    },
+*/
+    error: function () {
+        return GBL.console.error.apply(GBL.console, arguments);
+    },
+/* Uncomment when needed.
+    fatal: function () {
+        return GBL.console.error.apply(GBL.console, arguments);
+    },
+    info: function () {
+        return GBL.console.info.apply(GBL.console, arguments);
+    },
+    log: function () {
+        return GBL.console.log.apply(GBL.console, arguments);
+    },
+    logAt: function (logLevel, template, varargs) {
+        var YJS_log_Level = YJS.__.tmp.log.Level,
+            console = GBL.console,
+            args;
+
+        args = Array.prototype.slice.call(arguments, 1); // Copy arguments ignoring the logLevel arg.
+        if (logLevel < YJS_log_Level.INFO) {
+            console.debug.apply(console, args);
+        } else if (logLevel < YJS_log_Level.LOG) {
+            console.info.apply(console, args);
+        } else if (logLevel < YJS_log_Level.WARN) {
+            console.log.apply(console, args);
+        } else if (logLevel < YJS_log_Level.ERROR) {
+            console.warn.apply(console, args);
+        } else {
+            console.error.apply(console, args); // Error and fatal.
+        }
+    },
+*/
+    warn: function () {
+        return GBL.console.warn.apply(GBL.console, arguments);
+    }
+};
 
 })(this, 'YJS');
 
@@ -77,6 +137,12 @@ YJS.__ = {
 // @endif
 
 var _setConst, _setFinalPubFn, __setFn, __setMember, _setPrivFn, _setProtFn, _setPubFn;
+
+YJS.core = {
+    Class: {
+        $LOG: YJS.__.tmp.LOG
+    }
+};
 
 // @if DEBUG
     if (typeof Object.defineProperty != 'function') {
@@ -110,7 +176,7 @@ __setMember = function (obj, memberName, dataOrAccessorDesc) {
     if ('w' in dataOrAccessorDesc) { desc.writable = !!dataOrAccessorDesc.w; }
 // @if DEBUG
     if (('value' in desc || 'writable' in desc) && ('get' in desc || 'set' in desc)) {
-        GBL.console.warn('The getter/setter will be ignored since a value or a writable property was set on the descriptor.');
+        YJS.core.Class.$LOG.warn('The getter/setter will be ignored since a value or a writable property was set on the descriptor.');
     }
 // @endif
     Object.defineProperty(obj, memberName, desc);
@@ -341,7 +407,9 @@ var NS = YJS.ns(nsPath), _setPrivFn, _setFinalPubFn, YJS_core_Core;
 _setPrivFn = YJS.__.tmp._setPrivFn;
 _setFinalPubFn = YJS.__.tmp._setFinalPubFn;
 
-NS.Core = YJS_core_Core = {};
+NS.Core = YJS_core_Core = {
+    $LOG: YJS.__.tmp.LOG
+};
 
 // ==========================================================================
 /**
@@ -404,15 +472,15 @@ _setPrivFn(YJS_core_Core, '__changeNs__', function (newTopNs, removeOriginal) {
 // @if DEBUG
     var existingTopNs;
     if (!newTopNs) {
-        GBL.console.error("`newTopNs` must not be empty.");
+        YJS_core_Core.$LOG.error("`newTopNs` must not be empty.");
     } else {
         if (newTopNs.indexOf('.') > -1) {
-            GBL.console.error("`newTopNs` must not contain any dots ('.').");
+            YJS_core_Core.$LOG.error("`newTopNs` must not contain any dots ('.').");
         }
     }
     existingTopNs = GBL[newTopNs];
     if (existingTopNs && existingTopNs !== YJS) {
-        GBL.console.warn(newTopNs + ' already exists.');
+        YJS_core_Core.$LOG.warn(newTopNs + ' already exists.');
     }
 // @endif
     GBL[newTopNs] = YJS;

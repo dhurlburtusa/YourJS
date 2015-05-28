@@ -20,7 +20,8 @@ module.exports = function (grunt) {
     'src/main/js/YJS/log/ConfigBuilder.js',
     'src/main/js/YJS/log/Config.js',
     'src/main/js/YJS/log/Log.js',
-    'src/main/js/YJS/log/Factory.js'
+    'src/main/js/YJS/log/Factory.js',
+    'src/main/js/YJS/core/_post_log.js'
   ];
 
   src.polyfill = [

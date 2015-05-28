@@ -16,7 +16,9 @@ var NS = YJS.ns(nsPath),
     YJS_core_Class = YJS.core.Class,
     YJS_core_ClassManager;
 
-NS.ClassManager = YJS_core_ClassManager = {};
+NS.ClassManager = YJS_core_ClassManager = {
+    $LOG: YJS.__.tmp.LOG
+};
 
 // ==========================================================================
 (function () {
@@ -126,7 +128,7 @@ YJS_core_Class.setPrivFn(YJS_core_ClassManager, '__removeForbidden', function (c
         declParam = FORBIDDEN_DECLARATION_PARAMS[i];
 // @if DEBUG
         if (clazzDef.hasOwnProperty(declParam)) {
-            GBL.console.warn(declParam + ' is forbidden in a class-definition and will be ignored.');
+            SELF.$LOG.warn(declParam + ' is forbidden in a class-definition and will be ignored.');
         }
 // @endif
         delete clazzDef[declParam];

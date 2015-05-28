@@ -28,7 +28,10 @@ delete YJS.__.tmp._setPrivFn;
 delete YJS.__.tmp._setProtFn;
 delete YJS.__.tmp._setPubFn;
 
-NS.Class = YJS_core_Class = {};
+NS.Class = YJS_core_Class = {
+    // Until the logging system is defined, temporarily set to a stand-in log.
+    $LOG: YJS.__.tmp.LOG
+};
 
 $superRegEx = YJS.__.supports.fnToString ? /(\.\$super\s*\()|(\.\$super\.(apply|call)\()/ : /.+/;
 
@@ -344,7 +347,7 @@ _setFinalPubFn(YJS_core_Class, 'extend', function (SuperClazz, Clazz) {
 
     if (Clazz.$isClazz === true && Clazz.$superclazz === SuperClazz) {
 // @if DEBUG
-        GBL.console.warn('' + Clazz + ' already extends ' + SuperClazz + '.');
+        YJS.core.Class.$LOG.warn('' + Clazz + ' already extends ' + SuperClazz + '.');
 // @endif
         return;
     }
