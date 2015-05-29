@@ -145,8 +145,6 @@ One reason for this is that in the JSON format, `null` is an acceptable value bu
 
 * Research to see if there is a way to easily determine if you are in strict mode.
   
-* Run unit tests on JS bundles.
-
 * JSDuck Related:
 
   - Config JSDuck

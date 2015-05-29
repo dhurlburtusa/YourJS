@@ -34,7 +34,7 @@ module.exports = function (grunt) {
 
   cfg.jasmine = {
     main: {
-      src: src.main,
+      src: ['tmp/js/<%= pkg.name.toLowerCase() %>-all-debug.js'],
       options: {
         specs: 'src/test/js/unit/spec/**/*Spec.js',
         helpers: 'src/test/js/unit/spec/**/*Helper.js'
@@ -78,7 +78,7 @@ module.exports = function (grunt) {
           YJS: false // False means readonly
         }
       },
-      src: src.main
+      src: ['tmp/js/<%= pkg.name.toLowerCase() %>-all-debug.js']
     },
     polyfills: {
       options: { browser: true, freeze: false },
