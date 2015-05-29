@@ -137,8 +137,6 @@ One reason for this is that in the JSON format, `null` is an acceptable value bu
 
 ## TODOs
 
-* Link to Maven lifecycle goals.
-
 * Make `clean` task not required. That is, fix what is causing the following error:
   
       Running "initialize" task
