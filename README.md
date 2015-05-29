@@ -35,9 +35,9 @@ Use `grunt clean package` to run the unit tests and build the API documentation.
 
 ### Maven-like Tasks
 
-The `Gruntfile.js` has been designed to run tasks similar to [Maven][]'s lifecycle goals. The lifecycle goals are ordered.
-That is, when you run task `B` (`grunt B`), task `A` will be run first followed by task `B`. If task `C` (`grunt C`)
-is run, then task `A` is run first. Then task `B` is run And finally task `C` is run.
+The `Gruntfile.js` has been designed to run tasks similar to [Maven][]'s [lifecycle][MavenLifecycle] goals. The
+lifecycle goals are ordered. That is, when you run task `B` (`grunt B`), task `A` will be run first followed by task
+`B`. If task `C` (`grunt C`) is run, then task `A` is run first. Then task `B` is run And finally task `C` is run.
 
 ## Runtime Dependencies
 
@@ -223,5 +223,6 @@ One reason for this is that in the JSON format, `null` is an acceptable value bu
 [GruntGettingStartedExistingProj]: http://gruntjs.com/getting-started#working-with-an-existing-grunt-project
 [JSDuck]: https://github.com/senchalabs/jsduck/
 [Maven]: http://maven.apache.org/
+[MavenLifecycle]: http://maven.apache.org/guides/introduction/introduction-to-the-lifecycle.html
 [nodejs]: http://nodejs.org/
 [npm]: https://www.npmjs.com/
