@@ -33,6 +33,12 @@ For a list of available tasks, run `grunt --help`.
 
 Use `grunt clean package` to run the unit tests and build the API documentation.
 
+### Maven-like Tasks
+
+The `Gruntfile.js` has been designed to run tasks similar to [Maven][]'s lifecycle goals. The lifecycle goals are ordered.
+That is, when you run task `B` (`grunt B`), task `A` will be run first followed by task `B`. If task `C` (`grunt C`)
+is run, then task `A` is run first. Then task `B` is run And finally task `C` is run.
+
 ## Runtime Dependencies
 
 * Some polyfills when run on older browsers.
@@ -44,6 +50,16 @@ Use `grunt clean package` to run the unit tests and build the API documentation.
 The API documentation of YourJS is handled by [JSDuck][]. It is built during the `package` grunt task. It can also be
 built on its own using the `gen-docs` grunt task. Just run `grunt clean gen-docs`.
 
+With packaging
+
+    grunt clean package
+
+With minimal tasks
+
+    grunt clean gen-docs
+
+The `clean` task is optional in the above commands but is highly recommended.
+
 ### Links
 
 The following assumes you have a web-server effectively mapping the path /home/repos/git/github/YourJS to the root of this project.
@@ -53,6 +69,8 @@ http://localhost/home/repos/git/github/YourJS/dist/api-docs/
 ## Testing
 
 Jasmine is used to provide unit testing via specifications.
+
+Just run `grunt clean test` to run the unit tests.
 
 ### Links
 
@@ -119,11 +137,11 @@ One reason for this is that in the JSON format, `null` is an acceptable value bu
 
 ## TODOs
 
+* Link to Maven lifecycle goals.
+
 * When using Jasmine 2.x, be sure to use toThrowError instead of toThrow if a specific error is expected.
 
 * Find a tool to ensure all files honor the .editorconfig file.
-
-* Document how to build this project. For example, what are the commands to run.
 
 * Research to see if there is a way to easily determine if you are in strict mode.
   
@@ -199,5 +217,6 @@ One reason for this is that in the JSON format, `null` is an acceptable value bu
 [grunt]: http://gruntjs.com/
 [GruntGettingStartedExistingProj]: http://gruntjs.com/getting-started#working-with-an-existing-grunt-project
 [JSDuck]: https://github.com/senchalabs/jsduck/
+[Maven]: http://maven.apache.org/
 [nodejs]: http://nodejs.org/
 [npm]: https://www.npmjs.com/
