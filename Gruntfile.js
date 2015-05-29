@@ -4,36 +4,16 @@ module.exports = function (grunt) {
 
   var cfg = {}, src = {};
 
-  src.main = [
-    'src/main/js/YJS/core/Core.js',
-    'src/main/js/YJS/core/Class.js',
-    'src/main/js/YJS/core/Base.js',
-    'src/main/js/YJS/core/ClassManager.js',
-    'src/main/js/YJS/Array.js',
-    'src/main/js/YJS/String.js',
-    'src/main/js/YJS/log/Entry.js',
-    'src/main/js/YJS/log/Level.js',
-    'src/main/js/YJS/log/Appender.js',
-    'src/main/js/YJS/log/ArrayAppender.js',
-    'src/main/js/YJS/log/ConsoleAppender.js',
-    'src/main/js/YJS/log/Logger.js',
-    'src/main/js/YJS/log/ConfigBuilder.js',
-    'src/main/js/YJS/log/Config.js',
-    'src/main/js/YJS/log/Log.js',
-    'src/main/js/YJS/log/Factory.js',
-    'src/main/js/YJS/core/_post_log.js'
-  ];
-
-  src.polyfill = [
-    'src/polyfill/js/**/*.js'
-  ];
-
   cfg.pkg = grunt.file.readJSON('package.json');
 
   cfg.clean = ['dist', 'tmp'];
 
   cfg.jasmine = {
-    main: {
+    /*
+    NOTE: Currently, a lot of the specs depend on the debug version which will throw an error. Therefore, some of the other
+    bundles can't be used.
+    */
+    bundle_all_debug: {
       src: ['tmp/js/<%= pkg.name.toLowerCase() %>-all-debug.js'],
       options: {
         specs: 'src/test/js/unit/spec/**/*Spec.js',
@@ -43,8 +23,8 @@ module.exports = function (grunt) {
   };
 
   cfg.jsduck = {
-    main: {
-      src: src.main,
+    bundle_all_debug: {
+      src: 'tmp/js/<%= pkg.name.toLowerCase() %>-all-debug.js',
       dest: 'dist/api-docs/'
     }
   };
@@ -71,7 +51,7 @@ module.exports = function (grunt) {
       options: { node: true },
       src: 'Gruntfile.js'
     },
-    main: {
+    bundle_all_debug: {
       options: {
         browser: true,
         globals: {
@@ -82,7 +62,7 @@ module.exports = function (grunt) {
     },
     polyfills: {
       options: { browser: true, freeze: false },
-      src: src.polyfill
+      src: 'src/polyfill/js/**/*.js'
     }
 //    specs: ['src/test/js/unit/spec/YJS/**/*.js']
   };
@@ -149,13 +129,9 @@ module.exports = function (grunt) {
   };
 
   cfg.watch = {
-    jasmine: {
-      files: [cfg.jasmine.main.src, cfg.jasmine.main.options.specs],
-      tasks: ['jasmine:main']
-    },
-    jshint: {
-      files: cfg.jshint.main.src,
-      tasks: ['jshint:main']
+    test: {
+      files: ['src/bundle/js/**/*.js', 'src/main/js/**/*.js', 'src/polyfill/js/**/*.js', 'src/test/js/unit/spec/**/*Spec.js'],
+      tasks: ['clean', 'test']
     }
   };
 
@@ -175,6 +151,7 @@ module.exports = function (grunt) {
 
   grunt.registerTask('gen-docs', 'Generate API documentation.', function () {
     grunt.task.run('initialize');
+    grunt.task.run('preprocess');
     grunt.task.run('jsduck');
   });
 
