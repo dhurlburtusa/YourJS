@@ -17,7 +17,9 @@
 var NS = YJS.ns(nsPath),
     YJS_String;
 
-NS.String = YJS_String = {};
+NS.String = YJS_String = {
+    $LOG: YJS.__.tmp.LOG
+};
 
 // ==========================================================================
 /**

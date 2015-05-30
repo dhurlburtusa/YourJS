@@ -7,3 +7,4 @@
 // @include pkg-default.pp.js
 // @include pkg-log.pp.js
 // @include ../../main/js/YJS/core/_post_log.js
+// @include ../../main/js/YJS/_post_log.js

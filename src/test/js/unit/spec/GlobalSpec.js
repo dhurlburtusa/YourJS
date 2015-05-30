@@ -10,7 +10,7 @@ describe("Global", function () {
 
     describe(".isNaN", function () {
 
-        xit("should not be used except to determine whether parseFloat or parseInt returned NaN since it does not work as expected", function () {
+        xit("should not be used except to determine whether `parseFloat` or `parseInt` returned `NaN` since it does not work as expected", function () {
             // After writing the following expectations, it was determined that isNaN does not do what is intuitive.
         });
 

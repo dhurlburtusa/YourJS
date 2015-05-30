@@ -12,6 +12,4 @@ YJS_core_Class.setConst(YJS_core.Core, '$LOG', YJS_log_Factory.get('YJS.core.Cor
 YJS_core_Class.setConst(YJS_core.Class, '$LOG', YJS_log_Factory.get('YJS.core.Class'));
 YJS_core_Class.setConst(YJS_core.ClassManager, '$LOG', YJS_log_Factory.get('YJS.core.ClassManager'));
 
-delete YJS.__.tmp.LOG;
-
 })(this, YJS);
