@@ -104,11 +104,10 @@ _setFinalPubFn(YJS_core_Class, 'createConstructor', function (simpleName) {
     var code, ctor, evil;
     
     simpleName = simpleName || "";
-// @if DEBUG
+
     if (simpleName.length > 0 && !simpleName.match(/[$a-z_][$\w]*/i)) {
         throw new TypeError('`simpleName` contains illegal characters. Must be a valid JavaScript identifier.');
     }
-// @endif
 
     // A way to use eval without JSLint or JSHint from whining.
     evil = GBL['eval'];
