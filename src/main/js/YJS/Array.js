@@ -51,6 +51,55 @@ YJS_Array.copy = function (arrayLikeObj) {
 
 // ==========================================================================
 /**
+ * Determines the index of the specified `value` in the specified `array`.
+ * 
+ *     var array = [0, 1, null, 2, '', false, true, NaN, undefined, 0, 1, null, 2];
+ *     YJS.Array.indexOf(array, 0); // 0
+ *     YJS.Array.indexOf(array, 1); // 1
+ *     YJS.Array.indexOf(array, null); // 2
+ *     YJS.Array.indexOf(array, 2); // 3
+ *     YJS.Array.indexOf(array, ''); // 4
+ *     YJS.Array.indexOf(array, false); // 5
+ *     YJS.Array.indexOf(array, true); // 6
+ *     YJS.Array.indexOf(array, NaN); // 7
+ *     [NaN].indexOf(NaN); // -1
+ *     YJS.Array.indexOf(array, undefined); // 8
+ *     YJS.Array.indexOf(array, 0, 9); // 9
+ *     YJS.Array.indexOf(array, null, 9); // 11
+ *     // First argument is non-array:
+ *     YJS.Array.indexOf(undefined); // -1
+ *     YJS.Array.indexOf(null); // -1
+ * 
+ * See the Jasmine Specs for more example uses.
+ * 
+ * NOTE: This function behaves the same as the native `Array.prototype.indexOf` except that it can also find `NaN`.
+ * 
+ * @param {?Array} array The array to check.
+ * @param {Object} value The value to find the index of.
+ * @param {Number} [from] The index at which to begin the search.
+ * 
+ * @return {Number} The index of value in the array if found, otherwise `-1`.
+ */
+YJS_Array.indexOf = function (array, value, from) {
+   var YJS_Number = YJS.Number,
+       i, item, iLen, valueBeNaN;
+
+   if (Array.isArray(array)) {
+       valueBeNaN = YJS_Number.itBeNaN(value);
+       iLen = array.length;
+       for (i = from < 0 ? Math.max(0, iLen + from) : from || 0; i < iLen; ++i) {
+           item = array[i];
+           if (item === value || valueBeNaN && YJS_Number.itBeNaN(item)) {
+               return i;
+           }
+       }
+   }
+
+   return -1;
+};
+
+// ==========================================================================
+/**
  * Wraps a value in an array if it's not already an array. Returns:
  *
  * * An empty array if given value is `undefined`.
