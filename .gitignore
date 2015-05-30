@@ -1,5 +1,6 @@
 
 .grunt
+_specRunner.html
 dist
 node_modules
 tmp
