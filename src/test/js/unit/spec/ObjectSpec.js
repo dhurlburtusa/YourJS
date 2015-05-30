@@ -171,6 +171,7 @@ describe("Object", function () {
             it("that is not configurable", function () {
                 /* but Object.defineProperty can be called again with the same configuration without throwing an error. */
                 expect(function () {
+                    'use strict';
                     Object.defineProperty(obj, 'foo', {});
 
                     obj = {};
@@ -319,6 +320,7 @@ describe("Object", function () {
                 Object.defineProperty(obj, 'foo', { configurable: true });
 
                 // Expect foo to now exist
+                expect('foo' in obj).toBe(true);
                 expect(obj.hasOwnProperty('foo')).toBe(true);
             });
 
@@ -344,6 +346,123 @@ describe("Object", function () {
             it("that is not writable", function () {
                 obj.foo = 'bar';
                 expect(obj.foo).toBeUndefined();
+            });
+
+            describe("that can be redefined", function () {
+
+                describe("with { value: 'bar' }", function () {
+
+                    beforeEach(function () {
+                        expect(obj.foo).toBeUndefined();
+                        Object.defineProperty(obj, 'foo', { value: 'bar' });
+                    });
+                    
+                    it("now has the new value", function () {
+                        if (!GBL.phantom) {
+                            expect(obj.foo).toBe('bar');
+                        }
+                    });
+                    
+                    it("but still maintains all other configuration (i.e., configurable: true, enumerable: false, and writable: false)", function () {
+                        // Is still not enumerable
+                        var isEnumerable = false, key;
+                        for (key in obj) {
+                            if (key == 'foo') { isEnumerable = true; break; }
+                        }
+                        expect(isEnumerable).toBe(false);
+                        
+                        // Is still not writable
+                        if (!GBL.phantom) {
+                            expect(obj.foo).toBe('bar');
+                        }
+                        obj.foo = 'qux';
+                        if (!GBL.phantom) {
+                            expect(obj.foo).toBe('bar');
+                        }
+
+                        // Is still configurable if property can be deleted.
+                        expect(obj.hasOwnProperty('foo')).toBe(true);
+                        delete obj.foo;
+                        expect(obj.hasOwnProperty('foo')).toBe(false);
+                    });
+                    
+                });
+
+                describe("with { configurable: false, value: 'bar' }", function () {
+
+                    beforeEach(function () {
+                        expect(obj.foo).toBeUndefined();
+                        Object.defineProperty(obj, 'foo', { configurable: false, value: 'bar' });
+                    });
+                    
+                    it("now has the new value", function () {
+                        if (!GBL.phantom) {
+                            expect(obj.foo).toBe('bar');
+                        }
+                    });
+                    
+                    it("is no longer configurable", function () {
+                        expect(obj.hasOwnProperty('foo')).toBe(true);
+                        delete obj.foo;
+                        expect(obj.hasOwnProperty('foo')).toBe(true);
+                    });
+                    
+                    it("but still maintains all other configuration (i.e., enumerable: false, and writable: false)", function () {
+                        // Is still not enumerable
+                        var isEnumerable = false, key;
+                        for (key in obj) {
+                            if (key == 'foo') { isEnumerable = true; break; }
+                        }
+                        expect(isEnumerable).toBe(false);
+                        
+                        // Is still not writable
+                        if (!GBL.phantom) {
+                            expect(obj.foo).toBe('bar');
+                        }
+                        obj.foo = 'qux';
+                        if (!GBL.phantom) {
+                            expect(obj.foo).toBe('bar');
+                        }
+                    });
+                    
+                });
+
+                it("be enumerable", function () {
+                    var isEnumerable, key;
+                    
+                    isEnumerable = false;
+                    Object.defineProperty(obj, 'foo', { configurable: true, enumerable: true });
+                    expect(obj.foo).toBeUndefined();
+                    for (key in obj) {
+                        if (key == 'foo') { isEnumerable = true; break; }
+                    }
+                    expect(isEnumerable).toBe(true);
+                    
+                    isEnumerable = false;
+                    Object.defineProperty(obj, 'foo', { enumerable: true });
+                    expect(obj.foo).toBeUndefined();
+                    for (key in obj) {
+                        if (key == 'foo') { isEnumerable = true; break; }
+                    }
+                    expect(isEnumerable).toBe(true);
+                });
+
+                it("be configurable and writable", function () {
+                    Object.defineProperty(obj, 'foo', { configurable: true, writable: true });
+                    expect(obj.foo).toBeUndefined();
+                    obj.foo = 'bar';
+                    expect(obj.foo).toBe('bar');
+                });
+
+                it("be writable but no longer configurable", function () {
+                    Object.defineProperty(obj, 'foo', { writable: true });
+                    expect(obj.foo).toBeUndefined();
+                    obj.foo = 'bar';
+                    expect(obj.foo).toBe('bar');
+                    
+                    Object.defineProperty(obj, 'foo', { configurable: false, enumerable: true });
+                });
+
             });
 
         });
@@ -900,6 +1019,7 @@ describe("Object", function () {
 
                 // Expect foo to now exist
                 expect(obj.hasOwnProperty('foo')).toBe(true);
+                expect('foo' in obj).toBe(true);
             });
 
             it("with the value set to `'bar'`", function () {
@@ -932,7 +1052,18 @@ describe("Object", function () {
             });
 
         });
-
+        
+/* TODO: Complete the following.
+        describe("called with { get: ..., configurable: true } defines a property", function () {
+        });
+        
+        describe("called with { get: ..., enumerable: true } defines a property", function () {
+        });
+        
+        describe("called with { get: ..., configurable: true, enumerable: true } defines a property", function () {
+        });
+*/
+        
         describe("called with { set: ... } defines a property", function () {
             var obj;
 
@@ -975,6 +1106,17 @@ describe("Object", function () {
             });
 
         });
+        
+/* TODO: Complete the following.
+        describe("called with { set: ..., configurable: true } defines a property", function () {
+        });
+        
+        describe("called with { set: ..., enumerable: true } defines a property", function () {
+        });
+        
+        describe("called with { set: ..., configurable: true, enumerable: true } defines a property", function () {
+        });
+*/
 
         describe("called with { get: ..., set: ... } defines a property", function () {
             var obj;
@@ -1019,6 +1161,52 @@ describe("Object", function () {
                 expect(obj.foo).toBe('baz');
             });
 
+        });
+
+    });
+        
+/* TODO: Complete the following.
+        describe("called with { get: ..., set: ..., configurable: true } defines a property", function () {
+        });
+        
+        describe("called with { get: ..., set: ..., enumerable: true } defines a property", function () {
+        });
+        
+        describe("called with { get: ..., set: ..., configurable: true, enumerable: true } defines a property", function () {
+        });
+*/
+
+    describe("defined with ECMA5 object initializer", function () {
+        
+        it("should understand the get and set keywords", function () {
+            var isEnumerable, key, obj;
+            
+            obj = {
+                _: {
+                    foo: 'bar'
+                },
+                get foo() {
+                    return this._['foo'];
+                },
+                set foo(foo) {
+                    this._['foo'] = foo;
+                }
+            };
+            expect(obj.hasOwnProperty('foo')).toBe(true);
+            expect('foo' in obj).toBe(true);
+            isEnumerable = false;
+            for (key in obj) {
+                if (key == 'foo') { isEnumerable = true; break; }
+            }
+            expect(isEnumerable).toBe(true);
+            expect(obj.foo).toBe('bar');
+            expect(typeof obj.foo).toBe('string');
+            obj.foo = 'qux';
+            expect(typeof obj.foo).toBe('string');
+            expect(obj.foo).toBe('qux');
+            obj.foo = true;
+            expect(typeof obj.foo).toBe('boolean');
+            
         });
 
     });
