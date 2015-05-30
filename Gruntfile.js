@@ -156,8 +156,7 @@ module.exports = function (grunt) {
   });
 
   grunt.registerTask('initialize', function () {
-    var fs = require('fs');
-    fs.mkdirSync('dist');
+    grunt.file.mkdir('dist');
   });
 
   grunt.registerTask('generate-sources', function () {

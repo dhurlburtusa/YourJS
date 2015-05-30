@@ -137,11 +137,6 @@ One reason for this is that in the JSON format, `null` is an acceptable value bu
 
 ## TODOs
 
-* Make `clean` task not required. That is, fix what is causing the following error:
-  
-      Running "initialize" task
-      Warning: EEXIST, file already exists 'C:\home\repos\git\github\YourJS\dist' Use --force to continue.
-
 * When using Jasmine 2.x, be sure to use toThrowError instead of toThrow if a specific error is expected.
 
 * Update the Jasmine unit specs to be able to run with the non-debug bundles.
