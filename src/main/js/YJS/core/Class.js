@@ -88,9 +88,9 @@ _setFn = function (obj, fnName, fn) {
 };
 
 // ==========================================================================
-/**
+/*
  * @private
- * @method createConstructor
+ * @method createCtor
  * Creates a new constructor function with the specified name. The constructor will call a function named
  * `_initialize` if it exists.
  * 
@@ -100,7 +100,7 @@ _setFn = function (obj, fnName, fn) {
  * @return {true} return.$isClazz A flag indicating that this function represents a constructor for a class.
  * @return {String} return.$simpleName The name of the constructor. May prove useful for debugging.
  */
-_setFinalPubFn(YJS_core_Class, 'createConstructor', function (simpleName) {
+_setFinalPubFn(YJS_core_Class, 'createCtor', function (simpleName) {
     var code, ctor, evil;
     
     simpleName = simpleName || "";

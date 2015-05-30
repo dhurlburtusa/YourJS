@@ -243,7 +243,7 @@ YJS_core_Class.setPubFn(YJS_core_ClassManager, 'define', function (fqClassName, 
         clazzDef = {};
     }
 
-    Clazz = YJS_core_Class.createConstructor(clazzSimpleName);
+    Clazz = YJS_core_Class.createCtor(clazzSimpleName);
     YJS_core_Class.setConst(Clazz, '$name', fqClassName);
 
     if (clazzDef.hasOwnProperty('$extend')) {

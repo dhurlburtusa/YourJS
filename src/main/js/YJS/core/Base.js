@@ -15,7 +15,7 @@ var NS = YJS.ns(nsPath),
   YJS_core_Class = YJS.core.Class,
   YJS_core_Base;
 
-NS.Base = YJS_core_Base = YJS_core_Class.createConstructor('Base');
+NS.Base = YJS_core_Base = YJS_core_Class.createCtor('Base');
 
 YJS_core_Class.extend(Object, YJS_core_Base);
 

@@ -7,12 +7,12 @@
 
 describe("YJS.core.Class", function () {
 
-    describe(".createConstructor", function () {
+    describe(".createCtor", function () {
         
         it("should create a new constructor function each time", function () {
             var name = 'Foo', Foo1, Foo2;
             
-            Foo1 = YJS.core.Class.createConstructor(name);
+            Foo1 = YJS.core.Class.createCtor(name);
             
             expect(typeof Foo1).toBe('function');
             expect(Foo1.$simpleName).toBe('Foo');
@@ -22,7 +22,7 @@ describe("YJS.core.Class", function () {
                 Foo1.$isClazz = false;
             }).toThrow();
             
-            Foo2 = YJS.core.Class.createConstructor(name);
+            Foo2 = YJS.core.Class.createCtor(name);
             
             expect(typeof Foo2).toBe('function');
             expect(Foo2.$simpleName).toBe('Foo');
@@ -35,10 +35,10 @@ describe("YJS.core.Class", function () {
         describe("called with unusual but valid names", function () {
         
             it("should not throw an error", function () {
-                expect(function () { YJS.core.Class.createConstructor(''); }).not.toThrow();
-                expect(function () { YJS.core.Class.createConstructor('$foo'); }).not.toThrow();
-                expect(function () { YJS.core.Class.createConstructor('$foo$'); }).not.toThrow();
-                expect(function () { YJS.core.Class.createConstructor('_foo_bar_'); }).not.toThrow();
+                expect(function () { YJS.core.Class.createCtor(''); }).not.toThrow();
+                expect(function () { YJS.core.Class.createCtor('$foo'); }).not.toThrow();
+                expect(function () { YJS.core.Class.createCtor('$foo$'); }).not.toThrow();
+                expect(function () { YJS.core.Class.createCtor('_foo_bar_'); }).not.toThrow();
             });
             
         });
@@ -46,33 +46,33 @@ describe("YJS.core.Class", function () {
         describe("called with invalid names", function () {
         
             it("should throw an error", function () {
-                expect(function () { YJS.core.Class.createConstructor(' '); }).toThrow();
-                expect(function () { YJS.core.Class.createConstructor(' $foo'); }).not.toThrow();
-                expect(function () { YJS.core.Class.createConstructor(' $foo$'); }).not.toThrow();
-                expect(function () { YJS.core.Class.createConstructor(' _foo_bar_'); }).not.toThrow();
-                expect(function () { YJS.core.Class.createConstructor('~foo'); }).toThrow();
-                expect(function () { YJS.core.Class.createConstructor('!foo'); }).toThrow();
-                expect(function () { YJS.core.Class.createConstructor('1foo'); }).toThrow();
-                expect(function () { YJS.core.Class.createConstructor('@foo'); }).toThrow();
-                expect(function () { YJS.core.Class.createConstructor('#foo'); }).toThrow();
-                expect(function () { YJS.core.Class.createConstructor('%foo'); }).toThrow();
-                expect(function () { YJS.core.Class.createConstructor('^foo'); }).toThrow();
-                expect(function () { YJS.core.Class.createConstructor('&foo'); }).toThrow();
-//                expect(function () { YJS.core.Class.createConstructor('*foo'); }).toThrow();
-                expect(function () { YJS.core.Class.createConstructor('-foo'); }).toThrow();
-                expect(function () { YJS.core.Class.createConstructor('+foo'); }).toThrow();
-                expect(function () { YJS.core.Class.createConstructor('=foo'); }).toThrow();
-                expect(function () { YJS.core.Class.createConstructor(':foo'); }).toThrow();
-                expect(function () { YJS.core.Class.createConstructor(';foo'); }).toThrow();
-                expect(function () { YJS.core.Class.createConstructor('.foo'); }).toThrow();
-                expect(function () { YJS.core.Class.createConstructor(',foo'); }).toThrow();
-                expect(function () { YJS.core.Class.createConstructor('<foo'); }).toThrow();
-                expect(function () { YJS.core.Class.createConstructor('>foo'); }).toThrow();
-                expect(function () { YJS.core.Class.createConstructor('/foo'); }).toThrow();
-                expect(function () { YJS.core.Class.createConstructor('?foo'); }).toThrow();
-                expect(function () { YJS.core.Class.createConstructor('foo-bar'); }).toThrow();
-                expect(function () { YJS.core.Class.createConstructor('Foo-Bar'); }).toThrow();
-                expect(function () { YJS.core.Class.createConstructor('Foo Bar'); }).toThrow();
+                expect(function () { YJS.core.Class.createCtor(' '); }).toThrow();
+                expect(function () { YJS.core.Class.createCtor(' $foo'); }).not.toThrow();
+                expect(function () { YJS.core.Class.createCtor(' $foo$'); }).not.toThrow();
+                expect(function () { YJS.core.Class.createCtor(' _foo_bar_'); }).not.toThrow();
+                expect(function () { YJS.core.Class.createCtor('~foo'); }).toThrow();
+                expect(function () { YJS.core.Class.createCtor('!foo'); }).toThrow();
+                expect(function () { YJS.core.Class.createCtor('1foo'); }).toThrow();
+                expect(function () { YJS.core.Class.createCtor('@foo'); }).toThrow();
+                expect(function () { YJS.core.Class.createCtor('#foo'); }).toThrow();
+                expect(function () { YJS.core.Class.createCtor('%foo'); }).toThrow();
+                expect(function () { YJS.core.Class.createCtor('^foo'); }).toThrow();
+                expect(function () { YJS.core.Class.createCtor('&foo'); }).toThrow();
+//                expect(function () { YJS.core.Class.createCtor('*foo'); }).toThrow();
+                expect(function () { YJS.core.Class.createCtor('-foo'); }).toThrow();
+                expect(function () { YJS.core.Class.createCtor('+foo'); }).toThrow();
+                expect(function () { YJS.core.Class.createCtor('=foo'); }).toThrow();
+                expect(function () { YJS.core.Class.createCtor(':foo'); }).toThrow();
+                expect(function () { YJS.core.Class.createCtor(';foo'); }).toThrow();
+                expect(function () { YJS.core.Class.createCtor('.foo'); }).toThrow();
+                expect(function () { YJS.core.Class.createCtor(',foo'); }).toThrow();
+                expect(function () { YJS.core.Class.createCtor('<foo'); }).toThrow();
+                expect(function () { YJS.core.Class.createCtor('>foo'); }).toThrow();
+                expect(function () { YJS.core.Class.createCtor('/foo'); }).toThrow();
+                expect(function () { YJS.core.Class.createCtor('?foo'); }).toThrow();
+                expect(function () { YJS.core.Class.createCtor('foo-bar'); }).toThrow();
+                expect(function () { YJS.core.Class.createCtor('Foo-Bar'); }).toThrow();
+                expect(function () { YJS.core.Class.createCtor('Foo Bar'); }).toThrow();
             });
             
         });
