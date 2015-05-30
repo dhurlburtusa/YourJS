@@ -116,6 +116,21 @@ describe("YJS.Array", function () {
 
     });
 
+    describe(".unique", function () {
+
+        it("should remove duplicates and return a new array", function () {
+            var input, obj, output;
+
+            obj = { foo: 'bar' };
+            input = [null, undefined, 'foo', true, obj, null, 0, true, {}, false, 1, 1, obj, 1, 3, {}, 2, 3, 1, 1];
+            output = YJS.Array.unique(input);
+
+            expect(output).not.toBe(input);
+            expect(output).toEqual([null, undefined, 'foo', true, obj, 0, {}, false, 1, 3, {}, 2]);
+        });
+
+    });
+
     describe(".wrap", function () {
 
         it("should return empty array if value is undefined", function () {

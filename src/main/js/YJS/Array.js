@@ -100,6 +100,41 @@ YJS_Array.indexOf = function (array, value, from) {
 
 // ==========================================================================
 /**
+ * Creates a new array only containing the unique items of the specified array. That is, it effectively turns an array
+ * into a set of items.
+ * 
+ * NOTE: Two equivalent objects like 2 empty object literals are not duplicates because they are separate objects in
+ * memory that happen to have the exact same properties. However, 2 duplicate references are considered duplicates.
+ * 
+ *     var obj = { foo: 'bar' };
+ *     var noDups =YJS.Array.unique([1, 2, {}, 1, obj, 4, 3, obj, {}, 6, 3]);
+ *     console.log(noDups); // [1, 2, {}, obj, 4, 3, {}, 6].
+ * 
+ * @param {?Array} array The array to remove duplicates from and thereby make unique.
+ * @param {Object} [options] The options to use when making the array unique. (Currently none.)
+ * 
+ * @return {Array} A new array with the duplicate items removed. The original array is not modified.
+ */
+YJS_Array.unique = function (array, options) {
+    var YJS_Array =YJS.Array,
+        clone, i, item, iLen;
+
+    if (Array.isArray(array)) {
+        clone = [];
+        for (i = 0, iLen = array.length; i < iLen; ++i) {
+            item = array[i];
+
+            if (YJS_Array.indexOf(clone, item) === -1) {
+                clone.push(item);
+            }
+        }
+        array = clone;
+    }
+    return array;
+};
+
+// ==========================================================================
+/**
  * Wraps a value in an array if it's not already an array. Returns:
  *
  * * An empty array if given value is `undefined`.
