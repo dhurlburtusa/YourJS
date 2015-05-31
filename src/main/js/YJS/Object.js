@@ -43,10 +43,10 @@ NS.Object = YJS_Object = {
  *   path.
  */
 YJS_Object.put = function (object, path, value, options) {
-    var i, iLen, key, keys, context;
+    var context, i, iLen, key, keys;
 
     options = options || {};
-    options.force = options.force === true ? true : false;
+    options.force = options.force === false ? false : true;
 
     keys = path.split('.');
     context = object;
@@ -54,7 +54,7 @@ YJS_Object.put = function (object, path, value, options) {
     for (i = 0, iLen = keys.length; i < iLen; ++i) {
         key = keys[i];
         // If key is blank, no context, context is not an Object, then...
-        if (key.length === 0 || !context || typeof context !== 'object' || context.constructor !== Object) {
+        if (key.length === 0 || !context || !(context instanceof Array || context instanceof Object)) {
             break;
         }
         if (!context.hasOwnProperty(key)) {
