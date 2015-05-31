@@ -1,0 +1,2828 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>The source code</title>
+  <link href="../resources/prettify/prettify.css" type="text/css" rel="stylesheet" />
+  <script type="text/javascript" src="../resources/prettify/prettify.js"></script>
+  <style type="text/css">
+    .highlight { display: block; background-color: #ddd; }
+  </style>
+  <script type="text/javascript">
+    function highlight() {
+      document.getElementById(location.hash.replace(/#/, "")).className = "highlight";
+    }
+  </script>
+</head>
+<body onload="prettyPrint(); highlight();">
+  <pre class="prettyprint lang-js">(function (GBL, topNs) {
+
+&quot;use strict&quot;;
+var YJS = GBL[topNs], buildMode;
+
+/*
+ * Prevents any code from modifying `Object.prototype` from this point on.
+ * 
+ * Any polyfills used to modify missing functionality of `Object` should be included before the YJS library.
+ */
+//(Object.freeze || Object)(Object.prototype);
+
+    if (YJS) {
+        GBL.console.warn('The `' + topNs + '` namespace already exists. Was another third-party library included that uses the same namespace or has this library been included more than once?');
+    }
+<span id='YJS'>/**
+</span> * @singleton
+ * @class YJS
+ */
+if (!YJS) { GBL[topNs] = YJS = {}; }
+
+buildMode = 'debug';
+YJS.__ = {
+    build: {
+        mode: buildMode,
+        version: '0.0.0'
+    },
+    supports: {
+<span id='YJS-property-fnToString'>        /**
+</span>         * @private
+         * Tests if a `toString` method specific to functions exists and returns the source of the function.
+         *
+         * This is useful if you need to know if a function definition contains a particular string sequence. This is used by
+         * the class system to determine if `$super` is called in any methods. If the function is declared to call $super,
+         * then the function is wrapped in another function that knows how to prepare the wrapped function so that it calls
+         * the correct super class method.
+         *
+         * ## How The Following Works
+         * 
+         * `RegEx.prototype#test` expects a string for the first argument so it calls `toString` on the function we pass it.
+         * The function contains the sequence of characters `asdf`. If `Function.prototype#toString` returns the source of the
+         * the function, then the string will contain `'asdf'` and the `test` function will return `true`. Otherwise `false`
+         * will be returned.
+         * 
+         * ## Function Design
+         * 
+         * The design of the function to test had to be valid in the eyes of JSHint and had to be designed in such a way that
+         * the critical part of the function would not be removed by JavaScript compressors.
+         */
+        fnToString: /asdf/.test(function () { return GBL.asdf; })
+    },
+    tmp: {
+        // LOG: set below.
+/* Uncomment when needed. Be sure to update YJS.log.Level to reference these values. Delete them when we are done with
+   them.
+        log: {
+            Level: {
+                DEBUG: 0,
+                INFO: 2000,
+                LOG: 4000,
+                WARN: 6000,
+                ERROR: 8000,
+                FATAL: 10000
+            }
+        }
+*/
+    }
+};
+
+/*
+ * Until the YourJS logging system has been loaded, this will act as a placeholder for core code to use.
+ */
+YJS.__.tmp.LOG = {
+/* Uncomment when needed.
+    debug: function () {
+        return GBL.console.debug.apply(GBL.console, arguments);
+    },
+*/
+    error: function () {
+        return GBL.console.error.apply(GBL.console, arguments);
+    },
+/* Uncomment when needed.
+    fatal: function () {
+        return GBL.console.error.apply(GBL.console, arguments);
+    },
+    info: function () {
+        return GBL.console.info.apply(GBL.console, arguments);
+    },
+    log: function () {
+        return GBL.console.log.apply(GBL.console, arguments);
+    },
+    logAt: function (logLevel, template, varargs) {
+        var YJS_log_Level = YJS.__.tmp.log.Level,
+            console = GBL.console,
+            args;
+
+        args = Array.prototype.slice.call(arguments, 1); // Copy arguments ignoring the logLevel arg.
+        if (logLevel &lt; YJS_log_Level.INFO) {
+            console.debug.apply(console, args);
+        } else if (logLevel &lt; YJS_log_Level.LOG) {
+            console.info.apply(console, args);
+        } else if (logLevel &lt; YJS_log_Level.WARN) {
+            console.log.apply(console, args);
+        } else if (logLevel &lt; YJS_log_Level.ERROR) {
+            console.warn.apply(console, args);
+        } else {
+            console.error.apply(console, args); // Error and fatal.
+        }
+    },
+*/
+    warn: function () {
+        return GBL.console.warn.apply(GBL.console, arguments);
+    }
+};
+
+})(this, 'YJS');
+
+// ##################################################################################################################
+
+(function (GBL, YJS) {
+
+&quot;use strict&quot;;
+var _setConst, _setFinalPubFn, __setFn, __setMember, _setPrivFn, _setProtFn, _setPubFn;
+
+YJS.core = {
+    Class: {
+        $LOG: YJS.__.tmp.LOG
+    }
+};
+
+    if (typeof Object.defineProperty != 'function') {
+        GBL.console.error('YJS depends on `Object.defineProperty`. Some older browsers do NOT support this function. Consider adding a polyfill like `es5-shim` to fulfill this missing dependency.');
+    }
+// ==========================================================================
+<span id='YJS-method-__setMember'>/**
+</span> * @private
+ * @param {Object} obj The object to add the member (property/function) to.
+ * @param {String} memberName The name of the member to set.
+ * @param {Object} dataOrAccessorDesc The member descriptor. May be a data-descriptor or an accessor-descriptor. See
+ *   [Object.defineProperty](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/defineProperty)
+ *   for details.
+ * @param {Boolean} [dataOrAccessorDesc.c=false] The `configurable` flag of the descriptor.
+ * @param {Boolean} [dataOrAccessorDesc.e=false] The `enumerable` flag of the descriptor.
+ * @param {Function} [dataOrAccessorDesc.g=undefined] The `get` property of the descriptor.
+ * @param {Function} [dataOrAccessorDesc.s=undefined] The `set` property of the descriptor.
+ * @param {Mixed} [dataOrAccessorDesc.v=undefined] The value of the member. It may be any value -- be it a function,
+ *   a primitive, etc.
+ * @param {Boolean} [dataOrAccessorDesc.w=false] The `writable` flag of the descriptor.
+ */
+__setMember = function (obj, memberName, dataOrAccessorDesc) {
+    var desc = {};
+    desc.configurable = !!dataOrAccessorDesc.c;
+    desc.enumerable = !!dataOrAccessorDesc.e;
+    if ('g' in dataOrAccessorDesc) { desc.get = dataOrAccessorDesc.g; }
+    if ('s' in dataOrAccessorDesc) { desc.set = dataOrAccessorDesc.s; }
+    if ('v' in dataOrAccessorDesc) { desc.value = dataOrAccessorDesc.v; }
+    if ('w' in dataOrAccessorDesc) { desc.writable = !!dataOrAccessorDesc.w; }
+    if (('value' in desc || 'writable' in desc) &amp;&amp; ('get' in desc || 'set' in desc)) {
+        YJS.core.Class.$LOG.warn('The getter/setter will be ignored since a value or a writable property was set on the descriptor.');
+    }
+    Object.defineProperty(obj, memberName, desc);
+};
+
+// ==========================================================================
+<span id='YJS-method-__setFn'>/**
+</span> * @private
+ * @param {Object} obj The object to add the member (property/function) to.
+ * @param {String} memberName The name of the member to set.
+ * @param {Object} dataDesc The member descriptor. May be a data-descriptor or an accessor-descriptor. See
+ *   [Object.defineProperty](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/defineProperty)
+ *   for details.
+ * @param {Boolean} [dataDesc.c=false] The `configurable` flag of the descriptor.
+ * @param {Boolean} [dataDesc.e=false] The `enumerable` flag of the descriptor.
+ * @param {Function} [dataDesc.g=undefined] The `get` property of the descriptor.
+ * @param {Function} [dataDesc.s=undefined] The `set` property of the descriptor.
+ * @param {Mixed} [dataDesc.v=undefined] The value of the member. It may be any value -- be it a function, a primitive, etc.
+ * @param {Boolean} [dataDesc.w=false] The `writable` flag of the descriptor.
+ */
+__setFn = function (obj, fnName, fn, dataDesc) {
+    dataDesc = dataDesc || {};
+    if (typeof fn != 'function') { throw new TypeError('`fn` must be a function.'); }
+    if ('get' in dataDesc) { throw new TypeError('Descriptor must not contain a `get` property.'); }
+    if ('set' in dataDesc) { throw new TypeError('Descriptor must not contain a `set` property.'); }
+    dataDesc.v = fn;
+    __setMember(obj, fnName, dataDesc);
+};
+
+// ==========================================================================
+_setConst = function (obj, constName, value) {
+    __setMember(obj, constName, {
+        e: true,
+        v: value
+    });
+};
+
+// ==========================================================================
+_setPrivFn = function (obj, fnName, fn) {
+    fnName = fnName.trim();
+    if (fnName.search(/^__[^_]+/) === -1) {
+        throw new TypeError('Private function names must begin with double underscores.');
+    }
+    __setFn(obj, fnName, fn);
+};
+
+// ==========================================================================
+_setProtFn = function (obj, fnName, fn) {
+    fnName = fnName.trim();
+    if (fnName.search(/^_[^_]+/) === -1) {
+        throw new TypeError('Protected function names must begin with a single underscore.');
+    }
+    __setFn(obj, fnName, fn, { e: true, w: true });
+};
+
+// ==========================================================================
+_setPubFn = function (obj, fnName, fn) {
+    fnName = fnName.trim();
+    if (fnName.length === 0) {
+        throw new TypeError('Public function names must not be empty.');
+    }
+    if (fnName.search(/^[^_]+/) === -1) {
+        throw new TypeError('Public function names must not begin with any underscores.');
+    }
+    __setFn(obj, fnName, fn, { e: true, w: true });
+};
+
+// ==========================================================================
+_setFinalPubFn = function (obj, fnName, fn) {
+    fnName = fnName.trim();
+    if (fnName.length === 0) {
+        throw new TypeError('Public function names must not be empty.');
+    }
+    if (fnName.search(/^[^_]+/) === -1) {
+        throw new TypeError('Public function names must not begin with any underscores.');
+    }
+    __setFn(obj, fnName, fn, { e: true });
+};
+
+// ==========================================================================
+YJS.__.tmp._setConst = _setConst;
+YJS.__.tmp._setFinalPubFn = _setFinalPubFn;
+YJS.__.tmp._setPrivFn = _setPrivFn;
+YJS.__.tmp._setProtFn = _setProtFn;
+YJS.__.tmp._setPubFn = _setPubFn;
+
+// ==========================================================================
+<span id='YJS-property-GBL'>/**
+</span> * @member YJS
+ * @readonly
+ * @property GBL
+ * A reference to the global namespace. In a web-browser environment, this is a reference to the global `window`
+ * object.
+ */
+_setConst(YJS, 'GBL', GBL);
+
+// ==========================================================================
+<span id='YJS-method-noopFn'>/**
+</span> * @member YJS
+ * @method noopFn
+ * A function that does nothing.
+ * 
+ * What use is a function that does nothing? Well, many times a particular member of an object is expected to be a
+ * function. In order to avoid errors, this member can be assigned the no-op function. This will allow code treating
+ * the member as a function to continue to function without error.
+ * 
+ *     // `requiredFn` is the object member expected to be a function.
+ *     MyObj.prototype.requiredFn = YJS.noopFn;
+ *     ...
+ *     myObjInstance.requiredFn(); // Won't throw an error.
+ * 
+ * Some other uses:
+ * 
+ *     MyObj.prototype.justDoOnceButOkayIfCalledMultipleTimes = function () {
+ *         ...
+ *         // Adds an instance declaration of this function. It doesn't affect the prototype declaration.
+ *         // Therefore, new instances of MyObj will continue to behave as expected.
+ *         this.justDoOnceButOkayIfCalledMultipleTimes = YJS.noopFn;
+ *     };
+ *     ...
+ *     // The following call will do whatever the prototype function was designed to do.
+ *     myObjInstance.justDoOnceButOkayIfCalledMultipleTimes();
+ *     // The second call will effectively do nothing because this is now a call to the no-op function.
+ *     myObjInstance.justDoOnceButOkayIfCalledMultipleTimes();
+ */
+_setFinalPubFn(YJS, 'noopFn', function noopFn() {});
+
+// ==========================================================================
+<span id='YJS-method-nullFn'>/**
+</span> * @member YJS
+ * @method nullFn
+ * The null function is simply a function that returns `null`. It can be used in a similar fashion to the
+ * {@link #noopFn no-op function} but might be more suited if a legitament value (as opposed to `undefined`) is
+ * expected to be returned.
+ */
+_setFinalPubFn(YJS, 'nullFn', function nullFn() { return null; });
+
+// ==========================================================================
+<span id='YJS-method-notAgainFn'>/**
+</span> * @member YJS
+ * @method notAgainFn
+ * A function that throws an error with a message stating that this method should have not been called again. This
+ * could be useful in situations where a function on an object should only be called a limited number of times.
+ * When that limit is reached, the function can assign itself this function. Then the next call to the function will
+ * throw an error. This can prove useful to find extraneous calls to functions.
+ * 
+ *     MyObj.prototype.onlyCallMeALimitedNumberOfTimes = function () {
+ *         ...
+ *         // Adds an instance declaration of this function. It doesn't affect the prototype declaration.
+ *         // Therefore, new instances of MyObj will continue to behave as expected.
+ *         if (limitReached) {
+ *             this.onlyCallMeALimitedNumberOfTimes = YJS.notAgainFn;
+ *         }
+ *     };
+ *     ...
+ *     // The following call will do whatever the prototype function was designed to do.
+ *     myObjInstance.onlyCallMeALimitedNumberOfTimes();
+ *     ...
+ *     // The following will throw an Error when the limit has been reached. Now the
+ *     // developer can remove the extraneous call.
+ *     myObjInstance.onlyCallMeALimitedNumberOfTimes();
+ */
+_setFinalPubFn(YJS, 'notAgainFn', function notAgainFn() { throw new Error('This method should have not been called again.'); });
+
+// ==========================================================================
+<span id='YJS-method-ns'>/**
+</span> * @member YJS
+ * @method ns
+ * Creates new namespaces when necessary.
+ * 
+ *     var Foo = YJS.ns('Foo');
+ *     YJS.ns('Bar');
+ *     Bar.someMethod = function (...) { ... };
+ *     var App_example = YJS.ns('App.example');
+ *     App_example.Bar = ...;
+ * 
+ * @param {String} namespaces A dot (`'.'`) delimited set of namespaces to be created if necessary.
+ * 
+ * @return {Object} A reference to the last namespace in the dot delimited set of namespaces.
+ */
+_setFinalPubFn(YJS, 'ns', function (namespaces) {
+    var cntx, i, iLen, namespace;
+
+    namespaces = namespaces.split('.');
+    cntx = GBL;
+    for (i = 0, iLen = namespaces.length; i &lt; iLen; ++i) {
+        namespace = namespaces[i];
+        if (namespace) {
+            if (!(namespace in cntx)) {
+                cntx[namespace] = {};
+            }
+            cntx = cntx[namespace];
+        }
+    }
+    return cntx;
+});
+
+})(this, YJS);
+
+// ##################################################################################################################
+
+/*
+ * @dependency A console polyfill in development.
+ */
+
+<span id='YJS-core-Core'>/**
+</span> * @class YJS.core.Core
+ * Enumeration of core methods.
+ */
+(function (GBL, YJS, nsPath) {
+
+&quot;use strict&quot;;
+var NS = YJS.ns(nsPath), _setPrivFn, _setFinalPubFn, YJS_core_Core;
+
+_setPrivFn = YJS.__.tmp._setPrivFn;
+_setFinalPubFn = YJS.__.tmp._setFinalPubFn;
+
+NS.Core = YJS_core_Core = {
+    $LOG: YJS.__.tmp.LOG
+};
+
+// ==========================================================================
+<span id='YJS-core-Core-method-aliasNs'>/**
+</span> * @method aliasNs
+ * Allows this library to be referenced via a different top-level namespace.
+ * 
+ *     var YJSNs = YJS;
+ *     YJS.core.Core.aliasNs('MyLibrary');
+ *     (YJS === MyLibrary); // true
+ *     (YJSNs === MyLibrary); // true
+ *     (typeof YJS === 'undefined'); // false
+ * 
+ * @param {String} newTopNs The new namespace to use. Must not be the empty string. Must not contain dots.
+ */
+_setFinalPubFn(YJS_core_Core, 'aliasNs', function (newTopNs) {
+    return this.__changeNs__(newTopNs);
+});
+
+// ==========================================================================
+<span id='YJS-core-Core-method-changeNs'>/**
+</span> * @method changeNs
+ * Allows this library to be referenced via a different top-level namespace. Referencing the library through `YJS` will
+ * no longer work after a call to this method. However, any {@link YJS.core.Core#aliasNs aliases} created will still work.
+ * 
+ *     var YJSNs = YJS;
+ *     YJS.core.Core.changeNs('MyLibrary');
+ *     (YJSNs === MyLibrary); // true
+ *     (typeof YJS === 'undefined'); // true
+ * 
+ * @param {String} newTopNs The new namespace to use. Must not be the empty string. Must not contain dots.
+ */
+_setFinalPubFn(YJS_core_Core, 'changeNs', function (newTopNs) {
+    return this.__changeNs__(newTopNs, true);
+});
+
+// ==========================================================================
+<span id='YJS-core-Core-method-restoreOriginalNs'>/**
+</span> * @method restoreOriginalNs
+ * Allows the original `YJS` namespace to be restored after a call to #changeNs.
+ * 
+ *     var YJSNs = YJS;
+ *     YJS.core.Core.changeNs('MyLibrary');
+ *     (YJSNs === MyLibrary); // true
+ *     (typeof YJS === 'undefined'); // true
+ *     // The restoreOrginalNs function will need to be called through the new
+ *     // namespace or any existing aliases like
+ *     // YJS.core.Core.restoreOriginalNs();
+ *     MyLibrary.core.Core.restoreOriginalNs();
+ *     (typeof YJS === 'undefined'); // false
+ *     (YJS === MyLibrary); // true
+ * 
+ * @param {String} newTopNs The new namespace to use. Must not be the empty string. Must not contain dots.
+ */
+_setFinalPubFn(YJS_core_Core, 'restoreOriginalNs', function () {
+    GBL.YJS = YJS;
+});
+
+// ==========================================================================
+_setPrivFn(YJS_core_Core, '__changeNs__', function (newTopNs, removeOriginal) {
+    var existingTopNs;
+    if (!newTopNs) {
+        YJS_core_Core.$LOG.error(&quot;`newTopNs` must not be empty.&quot;);
+    } else {
+        if (newTopNs.indexOf('.') &gt; -1) {
+            YJS_core_Core.$LOG.error(&quot;`newTopNs` must not contain any dots ('.').&quot;);
+        }
+    }
+    existingTopNs = GBL[newTopNs];
+    if (existingTopNs &amp;&amp; existingTopNs !== YJS) {
+        YJS_core_Core.$LOG.warn(newTopNs + ' already exists.');
+    }
+    GBL[newTopNs] = YJS;
+    if (removeOriginal &amp;&amp; 'YJS' != newTopNs) {
+        delete GBL.YJS;
+    }
+    return YJS;
+});
+
+})(this, YJS, 'YJS.core');
+
+// ##################################################################################################################
+
+
+<span id='YJS-core-Class'>/**
+</span> * @singleton
+ * @class YJS.core.Class
+ * A helper class for defining object oriented like classes in JavaScript.
+ */
+(function (GBL, YJS, nsPath) {
+
+&quot;use strict&quot;;
+var NS = YJS.ns(nsPath),
+    __create$superPreparer, _setConst, _setFinalPubFn, _setFn, _setPrivFn, _setProtFn, _setPubFn,
+    $superRegEx, YJS_core_Class;
+
+_setConst = YJS.__.tmp._setConst;
+_setFinalPubFn = YJS.__.tmp._setFinalPubFn;
+_setPrivFn = YJS.__.tmp._setPrivFn;
+_setProtFn = YJS.__.tmp._setProtFn;
+_setPubFn = YJS.__.tmp._setPubFn;
+
+// Delete the temporary references. Code following the definition of YJS.core.Class must start using
+// YJS.core.Class.setConst, YJS.core.Class.setPrivFn, YJS.core.Class.setProtFn, and YJS.core.Class.setPubFn.
+delete YJS.__.tmp._setConst;
+delete YJS.__.tmp._setFinalPubFn;
+delete YJS.__.tmp._setPrivFn;
+delete YJS.__.tmp._setProtFn;
+delete YJS.__.tmp._setPubFn;
+
+NS.Class = YJS_core_Class = {
+    // Until the logging system is defined, temporarily set to a stand-in log.
+    $LOG: YJS.__.tmp.LOG
+};
+
+$superRegEx = YJS.__.supports.fnToString ? /(\.\$super\s*\()|(\.\$super\.(apply|call)\()/ : /.+/;
+
+// ==========================================================================
+/*
+ * The idea behind the following came from http://ejohn.org/blog/simple-javascript-inheritance/ which easily allows
+ * methods to contain code like `this.$super(...)` to be able to call the superclass's super method. Alternative
+ * techniques included adding a '$name' property to all the methods in the class and when `this.$super` was called,
+ * a name lookup was done via `arguments.callee.caller.$name`. However, `arguments.callee` is not allowed in strict mode
+ * and Function.caller is non-standard.
+ *
+ * See https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/arguments/callee and
+ * https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function/caller for details.
+ */
+__create$superPreparer = function (fnName, fn) {
+    var contains$super = $superRegEx.test(fn),
+        superPreparerFn;
+
+    superPreparerFn = !contains$super ? fn : function $superPreparer() {
+        var SELF = this, restore$super = false,
+            $super, retVal;
+
+        if (SELF.hasOwnProperty('$super')) {
+            restore$super = true;
+            $super = SELF.$super;
+        }
+        try {
+            // 
+            SELF.$super = SELF.$superclazz.prototype[fnName];
+
+            SELF.$super = typeof SELF.$super == 'function' &amp;&amp; SELF !== fn ? SELF.$super : YJS.noopFn;
+
+            retVal = fn.apply(SELF, arguments);
+        } finally {
+            if (restore$super) {
+                SELF.$super = $super;
+            }
+            return retVal;
+        }
+    };
+    return superPreparerFn;
+};
+
+// ==========================================================================
+_setFn = function (obj, fnName, fn) {
+    fn = __create$superPreparer(fnName, fn);
+    if (fnName.search(/^__[^_]+/) !== -1) {
+        _setPrivFn(obj, fnName, fn);
+    } else if (fnName.search(/^_[^_]+/) !== -1) {
+        _setProtFn(obj, fnName, fn);
+    } else {
+        _setPubFn(obj, fnName, fn);
+    }
+};
+
+// ==========================================================================
+/*
+ * @private
+ * @method createCtor
+ * Creates a new constructor function with the specified name. The constructor will call a function named
+ * `_initialize` if it exists.
+ * 
+ * @param {String} simpleName The name of the constructor. Must not be `null`.
+ * 
+ * @return {Function} the new constructor function.
+ * @return {true} return.$isClazz A flag indicating that this function represents a constructor for a class.
+ * @return {String} return.$simpleName The name of the constructor. May prove useful for debugging.
+ */
+_setFinalPubFn(YJS_core_Class, 'createCtor', function (simpleName) {
+    var code, ctor, evil;
+    
+    simpleName = simpleName || &quot;&quot;;
+
+    if (simpleName.length &gt; 0 &amp;&amp; !simpleName.match(/[$a-z_][$\w]*/i)) {
+        throw new TypeError('`simpleName` contains illegal characters. Must be a valid JavaScript identifier.');
+    }
+
+    // A way to use eval without JSLint or JSHint from whining.
+    evil = GBL['eval'];
+    code = [];
+    code.push(&quot;(function () {&quot;);
+    code.push(&quot;\treturn function &quot; + simpleName + &quot;() {&quot;);
+    code.push(    &quot;\t\tif (typeof this._initialize == 'function') {&quot;);
+    code.push(        &quot;\t\t\tthis._initialize.apply(this, arguments);&quot;);
+    code.push(    &quot;\t\t}&quot;);
+    code.push(&quot;\t};&quot;);
+    code.push(&quot;})();&quot;);
+    code = code.join(&quot;\r\n&quot;);
+    ctor = evil(code);
+    _setConst(ctor, '$isClazz', true);
+    _setConst(ctor, '$simpleName', simpleName);
+    
+    return ctor;
+});
+
+// ==========================================================================
+<span id='YJS-core-Class-method-setConst'>/**
+</span> * @method setConst
+ * Adds a constant to the specified object.
+ * 
+ *     Foo = {};
+ *     ...
+ *     YJS.core.Class.setConst(Foo, 'BAR', 'bar');
+ *     console.log(Foo.BAR); // 'bar'
+ *     Foo.BAR = 'qux'; // Throws error in strict mode.
+ *     console.log(Foo.BAR); // 'bar'
+ *     delete Foo.BAR; // Throws error in strict mode.
+ * 
+ * @param {Object} obj The object to add the constant to.
+ * @param {String} constName The name of the constant to set. Must not contain lowercase letters.
+ * @param {Mixed} [value=undefined] The value of the constant. It may be any value except a function -- be it a
+ *   primitive, an object, etc. Because objects are mutable, unless frozen or sealed, the properties of the could
+ *   be changed. For function 'properties', use #setPubFn, #setProtFn, or #setPrivFn instead.
+ */
+_setFinalPubFn(YJS_core_Class, 'setConst', _setConst);
+
+// ==========================================================================
+<span id='YJS-core-Class-method-setPrivFn'>/**
+</span> * @method setPrivFn
+ * Adds a 'private' function to the specified object. It is private in the sense that it will not be enumerable, it
+ * can't be redefined, and it is required to be named with double underscores.
+ * 
+ *     Foo = function ();
+ *     ...
+ *     YJS.core.Class.setPrivFn(Foo.prototype, '__doSomethingPrivate', function () {
+ *         // Logic to do something private goes here.
+ *     });
+ *     
+ *     for (var key in Foo.prototype) {
+ *         // Won't log '__doSomethingPrivate' because it is not enumerable.
+ *         console.log(key);
+ *     }
+ *     ...
+ *     var foo = new Foo();
+ *     // The following is still possible because JavaScript doesn't have true private
+ *     // functions. And the closure trick to effectively create private functions is
+ *     // not employed.
+ *     foo.__doSomethingPrivate();
+ * 
+ * @param {Object} obj The object to add the private function to. This may be and usually should be a prototype object
+ *   so all instances of the object have this function.
+ * @param {String} fnName The name of the function to set. Must begin with double underscores.
+ * @param {Function} fn The private function.
+ */
+_setFinalPubFn(YJS_core_Class, 'setPrivFn', _setPrivFn);
+
+// ==========================================================================
+<span id='YJS-core-Class-method-setProtFn'>/**
+</span> * @method setProtFn
+ * Adds a 'protected' function to the specified object. It is protected in the sense that its name is required to begin
+ * with a single underscore. Protected functions are enumerable since they are apart of the public API.
+ * 
+ *     Foo = function ();
+ *     ...
+ *     YJS.core.Class.setProtFn(Foo.prototype, 'initialize', function () {
+ *         // Logic to initialize Foo goes here.
+ *         this.initialize = YJS.notAgainFn; // Still can be hidden in object instance.
+ *     });
+ *     ...
+ *     YJS.core.Class.setProtFn(Foo.prototype, '_findBar', function () {
+ *         // Logic to find bar goes here.
+ *     });
+ * 
+ * @param {Object} obj The object to add the protected function to. This may be and usually should be a prototype object
+ *   so all instances of the object have this function.
+ * @param {String} fnName The name of the function to set. Must begin with a single underscore.
+ * @param {Function} fn The protected function.
+ */
+_setFinalPubFn(YJS_core_Class, 'setProtFn', _setProtFn);
+
+// ==========================================================================
+<span id='YJS-core-Class-method-setPubFn'>/**
+</span> * @method setPubFn
+ * Adds a public function to the specified object. Public functions are enumerable since they are apart of the
+ * public API.
+ * 
+ *     Foo = function ();
+ *     ...
+ *     YJS.core.Class.setPubFn(Foo.prototype, 'initialize', function () {
+ *         // Logic to initialize Foo goes here.
+ *         this.initialize = YJS.notAgainFn; // Still can be hidden in object instance.
+ *     });
+ *     ...
+ *     YJS.core.Class.setPubFn(Foo.prototype, 'findBar', function () {
+ *         // Logic to find bar goes here.
+ *     });
+ * 
+ * @param {Object} obj The object to add the public function to. This may be and usually should be a prototype object
+ *   so all instances of the object have this function.
+ * @param {String} fnName The name of the function to set. Must not begin with any underscores.
+ * @param {Function} fn The public function.
+ */
+_setFinalPubFn(YJS_core_Class, 'setPubFn', _setPubFn);
+
+// ==========================================================================
+<span id='YJS-core-Class-method-__addMembers'>/**
+</span> * @private
+ * @method __addMembers
+ * Adds members to the specified object.
+ * 
+ * @param {Object} obj
+ * @param {Object} members
+ */
+_setPrivFn(YJS_core_Class, '__addMembers', function (obj, members) {
+    var name, member;
+
+    for (name in members) {
+        if (members.hasOwnProperty(name)) {
+            member = members[name];
+
+            if (name.search(/^[$_A-Z]+$/) !== -1) {
+                _setConst(obj, name, member);
+            } else {
+                if (typeof member == 'function') {
+                    _setFn(obj, name, member);
+                } else {
+                    obj[name] = member;
+                }
+            }
+        }
+    }
+});
+
+// ==========================================================================
+<span id='YJS-core-Class-method-addMembers'>/**
+</span> * @method addMembers
+ * Adds members to the specified class's prototype.
+ * 
+ *     Foo = function (...) { ... };
+ *     YJS.core.Class.addMembers(Foo, {
+ *         bar: function () { return 'bar'; },
+ *         baz: 'qux',
+ *         CORGE: 'constant',
+ *         public: function (...) { ... },
+ *         _protected: function (...) { ... },
+ *         __private: function (...) { ... },
+ *         ...
+ *     });
+ *     var foo = new Foo();
+ *     console.log(foo.bar()); // 'bar'
+ *     console.log(foo.baz); // 'qux'
+ *     console.log(foo.CORGE); // 'constant'
+ *     foo.CORGE = 'qux'; // Throws error.
+ * 
+ * @param {Function} Clazz The class to have members added to the prototype.
+ * @param {Object} members The members to add. The key/value pairs represent the member-name/member-value.
+ */
+_setFinalPubFn(YJS_core_Class, 'addMembers', function (Clazz, members) {
+    if (typeof Clazz != 'function') {
+        throw new TypeError('`Clazz` must be a constructor function.');
+    }
+    YJS.core.Class.__addMembers(Clazz.prototype, members);
+});
+
+// ==========================================================================
+<span id='YJS-core-Class-method-addStatics'>/**
+</span> * @method addStatics
+ * Adds static members to the specified class.
+ * 
+ *     Foo = function (...) { ... };
+ *     YJS.core.Class.addStatics(Foo, {
+ *         bar: function () { return 'bar'; },
+ *         BAZ: 'qux',
+ *         ...
+ *     });
+ *     console.log(Foo.bar()); // 'bar'
+ *     console.log(Foo.BAZ); // 'qux'
+ * 
+ * @param {Function} Clazz The class to have static members added.
+ * @param {Object} members The members to add. The key/value pairs represent the member-name/member-value.
+ */
+_setFinalPubFn(YJS_core_Class, 'addStatics', function (Clazz, members) {
+    if (typeof Clazz != 'function') {
+        throw new TypeError('`Clazz` must be a constructor function.');
+    }
+    YJS.core.Class.__addMembers(Clazz, members);
+});
+
+// ==========================================================================
+<span id='YJS-core-Class-method-extend'>/**
+</span> * @method extend
+ * Makes a class extend a superclass.
+ * 
+ *     var BaseClass = function () { ... };
+ *     BaseClass.prototype.foo = function () { return 'foo'; };
+ *     BaseClass.prototype.bar = &quot;Bar&quot;;
+ *     var DerivedClass = function () { ... };
+ *     YJS.core.Class.extend(BaseClass, DerivedClass);
+ *     var obj = new DerivedClass();
+ *     console.log(obj.foo()); // &quot;foo&quot;;
+ *     console.log(obj.bar); // &quot;Bar&quot;;
+ *     obj.constructor; // Reference to the class that defined obj.
+ *     obj.$clazz; // Reference to the class that defined obj, DerivedClass.
+ *     obj.$superclazz; // Shortcut reference to the superclass, BaseClass.
+ *     obj.constructor.$superclazz; // Reference to the superclass, BaseClass.
+ *     obj.$clazz.$superclazz; // Reference to the superclass, BaseClass.
+ *     DerivedClass.$isClazz; // true
+ *     DerivedClass.$superclazz; // Reference to the superclass, BaseClass.
+ * 
+ * NOTE: The Class's prototype property will be an instance of the specified superclass after calling this method.
+ * 
+ * @param {Function} SuperClazz The constructor function of the superclass.
+ * @param {Function} Clazz The constructor function of class extending the superclass.
+ */
+_setFinalPubFn(YJS_core_Class, 'extend', function (SuperClazz, Clazz) {
+    var setConst = YJS.core.Class.setConst,
+        _initialize, Clazz_prototype, restoreInitializer;
+
+    if (Clazz.$isClazz === true &amp;&amp; Clazz.$superclazz === SuperClazz) {
+        YJS.core.Class.$LOG.warn('' + Clazz + ' already extends ' + SuperClazz + '.');
+        return;
+    }
+    setConst(Clazz, '$isClazz', true);
+    setConst(Clazz, '$superclazz', SuperClazz);
+
+    // The following idea to skip initialization when instantiating the superclass came from
+    // http://ejohn.org/blog/simple-javascript-inheritance/. Since we don't care about the superclass being
+    // initialized for the purpose of using the instance as the prototype of the subclass, we can skip a lot of
+    // unnecessary CPU cycles. We have no idea what is in the superclass constructor. It could be making some AJAX
+    // call to the server.
+    restoreInitializer = false;
+    if (typeof SuperClazz.prototype._initialize == 'function') {
+        restoreInitializer = true;
+        _initialize = SuperClazz.prototype._initialize;
+        SuperClazz.prototype._initialize = YJS.noopFn;
+    }
+    try {
+        Clazz.prototype = new SuperClazz();
+    } finally {
+        if (restoreInitializer) {
+            SuperClazz.prototype._initialize = _initialize;
+        }
+    }
+    Clazz_prototype = Clazz.prototype;
+
+    setConst(Clazz_prototype, 'constructor', Clazz);
+    setConst(Clazz_prototype, '$clazz', Clazz);
+    setConst(Clazz_prototype, '$superclazz', SuperClazz);
+
+});
+
+})(this, YJS, 'YJS.core');
+
+// ##################################################################################################################
+
+
+<span id='YJS-core-Base'>/**
+</span> * @class YJS.core.Base
+ * The base class of all objects created with the YJS class system.
+ * 
+ * @requires YJS.core.Class
+ */
+(function (GBL, YJS, nsPath) {
+
+&quot;use strict&quot;;
+var NS = YJS.ns(nsPath),
+  YJS_core_Class = YJS.core.Class,
+  YJS_core_Base;
+
+NS.Base = YJS_core_Base = YJS_core_Class.createCtor('Base');
+
+YJS_core_Class.extend(Object, YJS_core_Base);
+
+YJS_core_Class.addMembers(YJS_core_Base, {
+<span id='YJS-core-Base-method-_initialize'>    /**
+</span>     * @template
+     * @method _initialize
+     * A template method called by the constructor that initializes the object.
+     */
+    _initialize: function () {
+        this._initialize = YJS.notAgainFn;
+    }
+});
+
+})(this, YJS, 'YJS.core');
+
+// ##################################################################################################################
+
+
+<span id='YJS-core-ClassManager'>/**
+</span> * @singleton
+ * @class YJS.core.ClassManager
+ * 
+ * @requires YJS.core.Base
+ * @requires YJS.core.Class
+ */
+(function (GBL, YJS, nsPath) {
+
+&quot;use strict&quot;;
+var NS = YJS.ns(nsPath),
+    YJS_core_Class = YJS.core.Class,
+    YJS_core_ClassManager;
+
+NS.ClassManager = YJS_core_ClassManager = {
+    $LOG: YJS.__.tmp.LOG
+};
+
+// ==========================================================================
+(function () {
+    /*
+     * These are forbidden because they are expected by the native-API (constructor) or are expected to be correct
+     * by the internal API.
+     */
+    var FORBIDDEN_DECLARATION_PARAMS = ['$clazz', '$superclazz', 'constructor'];
+    Object.freeze(FORBIDDEN_DECLARATION_PARAMS);
+    YJS_core_Class.setConst(YJS_core_ClassManager, 'FORBIDDEN_DECLARATION_PARAMS', FORBIDDEN_DECLARATION_PARAMS);
+})();
+
+// ==========================================================================
+(function () {
+    var RESERVED_DECLARATION_PARAMS = ['$extend', '$members', '$mixins', '$requires', '$singleton', '$statics', '$uses'];
+    Object.freeze(RESERVED_DECLARATION_PARAMS);
+    YJS_core_Class.setConst(YJS_core_ClassManager, 'RESERVED_DECLARATION_PARAMS', RESERVED_DECLARATION_PARAMS);
+})();
+
+// ==========================================================================
+YJS_core_Class.setConst(YJS_core_ClassManager, '__', {
+    clazzCache: {
+        'YJS.core.Base': YJS.core.Base
+    }
+});
+
+// ==========================================================================
+YJS_core_Class.setPrivFn(YJS_core_ClassManager, '__extend', function (superclazzName, Clazz) {
+    var SuperClazz = this.__.clazzCache[superclazzName];
+    if (typeof SuperClazz != 'function') {
+        SuperClazz = GBL[superclazzName];
+        if (typeof SuperClazz != 'function') {
+            throw new TypeError(&quot;`&quot; + superclazzName + &quot;` must be declared via `YJS.define` before `&quot; + Clazz + &quot;` can extend it.&quot;);
+        }
+    }
+    YJS.core.Class.extend(SuperClazz, Clazz);
+});
+
+// ==========================================================================
+<span id='YJS-core-ClassManager-method-__makeNamespaces'>/**
+</span> * @private
+ * @method __makeNamespaces
+ * Makes the necessary namespaces.
+ * 
+ *     __makeNamespaces(['Foo', 'bar']); // Makes the `Foo` namespaces if necessary. Then makes the `bar` namespace within the `Foo` namespace. Returns a reference to the `bar` namespace.
+ * 
+ * @param {String[]} namespaces The namespaces to make in hierarchical order.
+ * 
+ * @return {Object} A reference to the parent/last namespace.
+ */
+YJS_core_Class.setPrivFn(YJS_core_ClassManager, '__makeNamespaces', function (namespaces) {
+    var i, len, namespace, parentNamespace;
+
+    parentNamespace = YJS.GBL;
+
+    len = namespaces.length;
+
+    if (len &gt; 0) {
+        for (i = 0; i &lt; len; ++i) {
+            namespace = namespaces[i];
+            if (!parentNamespace[namespace]) {
+                parentNamespace[namespace] = {};
+            }
+            parentNamespace = parentNamespace[namespace];
+        }
+    }
+    return parentNamespace;
+});
+
+// ==========================================================================
+YJS_core_Class.setPrivFn(YJS_core_ClassManager, '__copy', function (input, recurse) {
+    var SELF = YJS.core.ClassManager,
+        out = {},
+        key;
+    
+    recurse = typeof recurse == 'boolean' ? recurse : true;
+    for (key in input) {
+        if (input.hasOwnProperty(key)) {
+            out[key] = input[key];
+        }
+    }
+    
+    if (recurse) {
+        if (out.$members) {
+            out.$members = SELF.__copy(out.$members, false);
+        }
+
+        if (out.$mixins) {
+            out.$mixins = SELF.__copy(out.$mixins, false);
+        }
+
+        if (out.$statics) {
+            out.$statics = SELF.__copy(out.$statics, false);
+        }
+    }
+    
+    return out;
+});
+
+// ==========================================================================
+YJS_core_Class.setPrivFn(YJS_core_ClassManager, '__removeForbidden', function (clazzDef) {
+    var SELF = YJS.core.ClassManager,
+        FORBIDDEN_DECLARATION_PARAMS = SELF.FORBIDDEN_DECLARATION_PARAMS,
+        declParam, i, iLen;
+    
+    for (i = 0, iLen = FORBIDDEN_DECLARATION_PARAMS.length; i &lt; iLen; ++i) {
+        declParam = FORBIDDEN_DECLARATION_PARAMS[i];
+        if (clazzDef.hasOwnProperty(declParam)) {
+            SELF.$LOG.warn(declParam + ' is forbidden in a class-definition and will be ignored.');
+        }
+        delete clazzDef[declParam];
+    }
+    
+});
+
+// ==========================================================================
+YJS_core_Class.setPrivFn(YJS_core_ClassManager, '__removeReserved', function (clazzDef) {
+    var SELF = YJS.core.ClassManager,
+        RESERVED_DECLARATION_PARAMS = SELF.RESERVED_DECLARATION_PARAMS,
+        declParam, i, iLen;
+    
+    for (i = 0, iLen = RESERVED_DECLARATION_PARAMS.length; i &lt; iLen; ++i) {
+        declParam = RESERVED_DECLARATION_PARAMS[i];
+        delete clazzDef[declParam];
+    }
+    
+});
+
+// ==========================================================================
+<span id='YJS-core-ClassManager-method-define'>/**
+</span> * @method define
+ * Allows a class to be defined.
+ * 
+ *     YJS.core.ClassManager.define('Foo.bar.Baz', {
+ *             $requires: ['Bla.blubb.Blabla', ... ],
+ *             $uses: ['Toto.titi.Tata', ... ],
+ *             
+ *             $statics: {
+ *                 corge: function (...) { ... },
+ *                 GRAULT: 'grault'
+ *             },
+ *             _initialize: function (arg1) {
+ *                 var SELF = this;
+ *                 
+ *                 SELF.$super.apply(SELF, arguments);
+ *             },
+ *             publicMethod1: function (...) { ... },
+ *             ...
+ *             publicMethodN: function (...) { ... },
+ *             _protectedMethod1: function (...) { ... },
+ *             ...
+ *             _protectedMethodN: function (...) { ... },
+ *             __privateMethod1: function (...) { ... },
+ *             ...
+ *             __privateMethodN: function (...) { ... }
+ *         },
+ *         function (Clazz) {
+ *             console.log('Foo.bar.Baz is now defined.');
+ *         }
+ *     );
+ *     ...
+ *     YJS.core.ClassManager.define('Foo.bar.Qux', {
+ *             $extend: 'Foo.bar.Baz',
+ *             
+ *             $statics: {
+ *                 garply: function (...) { ... },
+ *                 WALDO: 'waldo'
+ *             },
+ *             _initialize: function (arg1, arg2) {
+ *                 var SELF = this;
+ *                 
+ *                 SELF.$super(arg1);
+ *             },
+ *             publicMethod1: function (...) { ... },
+ *             ...
+ *             publicMethodN: function (...) { ... },
+ *             _protectedMethod1: function (...) { ... },
+ *             ...
+ *             _protectedMethodN: function (...) { ... },
+ *             __privateMethod1: function (...) { ... },
+ *             ...
+ *             __privateMethodN: function (...) { ... }
+ *         },
+ *         function (Clazz) {
+ *             console.log('Foo.bar.Qux is now defined.');
+ *         }
+ *     );
+ *     ...
+ *     // YJS.define is an alias for YJS.core.ClassManager.define.
+ *     YJS.define('Foo.bar.Quux', {
+ *             $extend: 'Foo.bar.Qux',
+ *             $singleton: true,
+ *             ...
+ *         },
+ *         function (Clazz) {
+ *             console.log('Foo.bar.Quux is now defined.');
+ *         }
+ *     );
+ * 
+ * @param {String} fqClassName The fully-qualified classname include namespace and package(s).
+ * @param {Object} clazzDef The class definition.
+ * @param {Function} [onClassDefined] An optional callback to be called after defining the class. Useful for making
+ *   additional modifications to the class.
+ */
+YJS_core_Class.setPubFn(YJS_core_ClassManager, 'define', function (fqClassName, clazzDef, onClassDefined) {
+    var SELF = this,
+        Clazz, clazzSimpleName, members, namespaces, parentNamespace, superClazzName;
+
+    namespaces = fqClassName.split('.');
+    clazzSimpleName = namespaces.pop();
+    // NOTE: YJS.ns doesn't work here.
+    parentNamespace = SELF.__makeNamespaces(namespaces);
+
+    if (typeof clazzDef == 'function') {
+        clazzDef = clazzDef();
+    }
+    if (clazzDef) {
+        clazzDef = SELF.__copy(clazzDef, true);
+    } else {
+        clazzDef = {};
+    }
+
+    Clazz = YJS_core_Class.createCtor(clazzSimpleName);
+    YJS_core_Class.setConst(Clazz, '$name', fqClassName);
+
+    if (clazzDef.hasOwnProperty('$extend')) {
+        superClazzName = '' + clazzDef.$extend;
+    } else {
+        superClazzName = 'YJS.core.Base';
+    }
+    SELF.__extend(superClazzName, Clazz);
+
+    if (clazzDef.hasOwnProperty('$statics')) {
+        YJS_core_Class.addStatics(Clazz, clazzDef.$statics);
+    }
+
+    // TODO: Do something with the $mixins, $members, and $singleton clazzDef properties.
+
+    members = clazzDef.$members;
+
+    SELF.__removeReserved(clazzDef);
+    SELF.__removeForbidden(clazzDef);
+    YJS_core_Class.addMembers(Clazz, clazzDef);
+    if (members) {
+        SELF.__removeForbidden(members);
+        YJS_core_Class.addMembers(Clazz, members);
+    }
+
+    YJS_core_Class.setConst(parentNamespace, clazzSimpleName, Clazz);
+
+    
+    if (onClassDefined) {
+        onClassDefined.call(Clazz, Clazz);
+    }
+
+    SELF.__.clazzCache[fqClassName] = Clazz;
+});  
+
+<span id='YJS-method-define'>/**
+</span> * @member YJS
+ * @method define
+ * An alias for YJS.core.ClassManager#define.
+ */
+YJS_core_Class.setPubFn(YJS, 'define', YJS_core_ClassManager.define);
+
+})(this, YJS, 'YJS.core');
+
+// ##################################################################################################################
+
+
+/*
+ * @dependency YJS
+ */
+
+<span id='YJS-Array'>/**
+</span> * @singleton
+ * @class YJS.Array
+ * A set of array related methods.
+ */
+(function (YJS, nsPath) {
+
+&quot;use strict&quot;;
+var NS = YJS.ns(nsPath),
+    YJS_Array;
+
+NS.Array = YJS_Array = {
+    $LOG: YJS.__.tmp.LOG
+};
+
+// ==========================================================================
+<span id='YJS-Array-method-copy'>/**
+</span> * Creates a copy of the array-like object and returns an array with all the same items.
+ * 
+ *     function () {
+ *         var args = YJS.Array.copy(arguments);
+ *         ...
+ *     };
+ * 
+ *     YJS.Array.copy(); // null
+ * 
+ * NOTE: This will only do a shallow copy. Items that are references to objects will be copied as a new reference to
+ * the same object. This new reference will be able to mutate the object just like the original reference.
+ * 
+ * TODO: Handle various array-like objects like a NodeList, CSSRuleList, etc.
+ * 
+ * @param {Array|Arguments} arrayLikeObj An array like object.
+ * 
+ * @return {Array} A copy of the array-like object or `null` if the argument is not array-like.
+ */
+YJS_Array.copy = function (arrayLikeObj) {
+    var copy = null;
+    if (arrayLikeObj &amp;&amp; typeof arrayLikeObj.length == 'number') {
+        copy = [].slice.call(arrayLikeObj, 0);
+    }
+    return copy;
+};
+
+// ==========================================================================
+<span id='YJS-Array-method-indexOf'>/**
+</span> * Determines the index of the specified `value` in the specified `array`.
+ * 
+ *     var array = [0, 1, null, 2, '', false, true, NaN, undefined, 0, 1, null, 2];
+ *     YJS.Array.indexOf(array, 0); // 0
+ *     YJS.Array.indexOf(array, 1); // 1
+ *     YJS.Array.indexOf(array, null); // 2
+ *     YJS.Array.indexOf(array, 2); // 3
+ *     YJS.Array.indexOf(array, ''); // 4
+ *     YJS.Array.indexOf(array, false); // 5
+ *     YJS.Array.indexOf(array, true); // 6
+ *     YJS.Array.indexOf(array, NaN); // 7
+ *     [NaN].indexOf(NaN); // -1
+ *     YJS.Array.indexOf(array, undefined); // 8
+ *     YJS.Array.indexOf(array, 0, 9); // 9
+ *     YJS.Array.indexOf(array, null, 9); // 11
+ *     // First argument is non-array:
+ *     YJS.Array.indexOf(undefined); // -1
+ *     YJS.Array.indexOf(null); // -1
+ * 
+ * See the Jasmine Specs for more example uses.
+ * 
+ * NOTE: This function behaves the same as the native `Array.prototype.indexOf` except that it can also find `NaN`.
+ * 
+ * @param {?Array} array The array to check.
+ * @param {Object} value The value to find the index of.
+ * @param {Number} [from] The index at which to begin the search.
+ * 
+ * @return {Number} The index of value in the array if found, otherwise `-1`.
+ */
+YJS_Array.indexOf = function (array, value, from) {
+   var YJS_Number = YJS.Number,
+       i, item, iLen, valueBeNaN;
+
+   if (Array.isArray(array)) {
+       valueBeNaN = YJS_Number.itBeNaN(value);
+       iLen = array.length;
+       for (i = from &lt; 0 ? Math.max(0, iLen + from) : from || 0; i &lt; iLen; ++i) {
+           item = array[i];
+           if (item === value || valueBeNaN &amp;&amp; YJS_Number.itBeNaN(item)) {
+               return i;
+           }
+       }
+   }
+
+   return -1;
+};
+
+// ==========================================================================
+<span id='YJS-Array-method-unique'>/**
+</span> * Creates a new array only containing the unique items of the specified array. That is, it effectively turns an array
+ * into a set of items.
+ * 
+ * NOTE: Two equivalent objects like 2 empty object literals are not duplicates because they are separate objects in
+ * memory that happen to have the exact same properties. However, 2 duplicate references are considered duplicates.
+ * 
+ *     var obj = { foo: 'bar' };
+ *     var noDups =YJS.Array.unique([1, 2, {}, 1, obj, 4, 3, obj, {}, 6, 3]);
+ *     console.log(noDups); // [1, 2, {}, obj, 4, 3, {}, 6].
+ * 
+ * @param {?Array} array The array to remove duplicates from and thereby make unique.
+ * @param {Object} [options] The options to use when making the array unique. (Currently none.)
+ * 
+ * @return {Array} A new array with the duplicate items removed. The original array is not modified.
+ */
+YJS_Array.unique = function (array, options) {
+    var YJS_Array =YJS.Array,
+        clone, i, item, iLen;
+
+    if (Array.isArray(array)) {
+        clone = [];
+        for (i = 0, iLen = array.length; i &lt; iLen; ++i) {
+            item = array[i];
+
+            if (YJS_Array.indexOf(clone, item) === -1) {
+                clone.push(item);
+            }
+        }
+        array = clone;
+    }
+    return array;
+};
+
+// ==========================================================================
+<span id='YJS-Array-method-wrap'>/**
+</span> * Wraps a value in an array if it's not already an array. Returns:
+ *
+ * * An empty array if given value is `undefined`.
+ * * Itself if given value is already an array.
+ * * An array with `null` as the single item if given value is `null`.
+ * * An array with one item which is the given value, otherwise.
+ * 
+ * Here are some example uses.
+ * 
+ *     YJS.Array.wrap(); // [] (new empty array)
+ *     YJS.Array.wrap([]); // A reference to the passed-in empty array ([]).
+ *     YJS.Array.wrap([1,2,3]); // A reference to passed-in array ([1,2,3]).
+ *     YJS.Array.wrap(null); // [null]
+ *     YJS.Array.wrap(0); // [0]
+ *     YJS.Array.wrap(false); // [false]
+ *     YJS.Array.wrap(&quot;&quot;); // [&quot;&quot;]
+ * 
+ * See the Jasmine Specs for more example uses.
+ * 
+ * NOTE: This function behaves like `Ext.Array.from` but does not return an empty array when `null` is passed in. In
+ * that case, an array with `null` as the single item is returned. It also doesn't handle some &quot;iterables&quot; like
+ * NodeList that `Ext.Array.from` does.
+ * 
+ * TODO: Handle various array-like objects. 
+ * 
+ * @param {?Mixed} value The value to wrap in an array if it's not already an array.
+ * 
+ * @return {Array.&lt;Mixed&gt;} The value as an array.
+ */
+YJS_Array.wrap = function (value) {
+    if (value === undefined) {
+        return [];
+    }
+
+    if (Array.isArray(value)) {
+        return value;
+    }
+
+    return [value];
+};
+
+})(YJS, 'YJS');
+
+// ##################################################################################################################
+
+
+/*
+ * @dependency YJS
+ */
+
+<span id='YJS-Number'>/**
+</span> * @singleton
+ * @class YJS.Number
+ * A set of number related methods.
+ */
+(function (YJS, nsPath) {
+
+&quot;use strict&quot;;
+var NS = YJS.ns(nsPath),
+    YJS_Number;
+
+NS.Number = YJS_Number = {
+    $LOG: YJS.__.tmp.LOG
+};
+
+// ==========================================================================
+<span id='YJS-Number-method-itBeNaN'>/**
+</span> * Determines whether the value be the global `NaN` constant. This function behaves differently than the native
+ * `isNaN` function. The native `isNaN` does a check on the input and determines whether it is not a number. It will
+ * return `true` for anything that is not a number. However, this function will only return `true` if the input is
+ * `NaN`.
+ * 
+ *     isNaN(NaN); // true
+ *     YJS.Number.itBeNaN(NaN); // true
+ *     isNaN({}); // true
+ *     YJS.Number.itBeNaN({}); // false
+ *     isNaN(undefined); // true
+ *     YJS.Number.itBeNaN(undefined); // false
+ * 
+ * @param {Mixed} value The value to determine if it be `NaN`.
+ * 
+ * @return {Boolean} `true` if value be `NaN`, `false` otherwise.
+ */
+YJS_Number.itBeNaN = function (value) {
+    /* NOTE: This method was not named isNaN so it is not confused with the global isNaN function which returns true
+     * in some cases for values that are not NaN.
+     * NOTE: NaN === NaN is false and so can't be used to determine if the value be NaN.
+     */
+    var itBeNaN = false;
+
+    if (typeof value === 'number' &amp;&amp; isNaN(value)) {
+        itBeNaN = true;
+    }
+    return itBeNaN;
+};
+
+})(YJS, 'YJS');
+
+// ##################################################################################################################
+
+
+/*
+ * @dependency YJS
+ */
+
+<span id='YJS-Object'>/**
+</span> * @singleton
+ * @class YJS.Object
+ * A set of object related methods.
+ */
+(function (YJS, nsPath) {
+
+&quot;use strict&quot;;
+var NS = YJS.ns(nsPath),
+    YJS_Object;
+
+NS.Object = YJS_Object = {
+    $LOG: YJS.__.tmp.LOG
+};
+
+// ==========================================================================
+<span id='YJS-Object-method-put'>/**
+</span> * Sets the value on an object at the specified path.
+ * 
+ *     var object = { other: 'not affected', top: 'will be changed' };
+ *     YJS.Object.put(object, 'top', 'was changed');
+ * 
+ *     object = { other: 'not affected', top: 'will be changed' };
+ *     YJS.Object.put(object, 'top.next', 'was changed', { force: true });
+ *     // object now is: { other: 'not affected', top: { next: 'was changed' } }
+ * 
+ * See the Jasmine Specs for more example uses.
+ * 
+ * @param {Object} object The object to set the value on.
+ * @param {String} path The path to the value. A path is a special selector that should lead to a unique point in the
+ *   object. Currently, only dot notation is understood. E.g., `'top.next.last'`.
+ * @param {Mixed} value The value to set.
+ * @param {Object} [options] The options to use.
+ * @param {Boolean} [options.force=false] Flag indicating whether to force the creation of missing objects along the
+ *   path.
+ */
+YJS_Object.put = function (object, path, value, options) {
+    var context, i, iLen, key, keys;
+
+    options = options || {};
+    options.force = options.force === false ? false : true;
+
+    keys = path.split('.');
+    context = object;
+
+    for (i = 0, iLen = keys.length; i &lt; iLen; ++i) {
+        key = keys[i];
+        // If key is blank, no context, context is not an Object, then...
+        if (key.length === 0 || !context || !(context instanceof Array || context instanceof Object)) {
+            break;
+        }
+        if (!context.hasOwnProperty(key)) {
+            if (options.force === true) {
+                context[key] = {};
+            } else {
+                break;
+            }
+        }
+        if (i === iLen - 1) {
+            context[key] = value;
+        } else {
+            context = context[key];
+        }
+    }
+};
+
+})(YJS, 'YJS');
+
+// ##################################################################################################################
+
+
+/*
+ * @dependency YJS
+ */
+
+<span id='YJS-String'>/**
+</span> * @singleton
+ * @class YJS.String
+ * A set of String related methods.
+ */
+(function (GBL, YJS, nsPath) {
+
+&quot;use strict&quot;;
+var NS = YJS.ns(nsPath),
+    YJS_String;
+
+NS.String = YJS_String = {
+    $LOG: YJS.__.tmp.LOG
+};
+
+// ==========================================================================
+<span id='YJS-String-method-printf'>/**
+</span> * A utility function that behaves similar to the C programming language's printf function.
+ * 
+ *     YJS.String.printf('Hello World!'); // &quot;Hello World!&quot;
+ *     YJS.String.printf('Hello', ' World!', ' What a beautiful day!'); // &quot;Hello World! What a beautiful day!&quot;
+ *     YJS.String.printf('%s %s', 'Hello', 'World!'); // &quot;Hello World!&quot;
+ *     YJS.String.printf('%s %s', 'Hello'); // &quot;Hello %s&quot;
+ *     YJS.String.printf('%s must be between %i and %f.', 'It', 1.2, 3.14); // &quot;It must be between 1 and 3.14.&quot;
+ *     YJS.String.printf('%s %s', 'Hello', 'World!', ' What a beautiful day!'); // &quot;Hello World! What a beautiful day!&quot;
+ * 
+ * Three different placeholders are understood.
+ * 
+ * * %f converts the replacement value to a float before replacing.
+ * * %i converts the replacement value to an integer before replacing.
+ * * %s converts the replacement value to a string before replacing.
+ * 
+ * @param {String} pattern The string pattern/template with the printf style placeholders.
+ * @param {Mixed} [varargs] The replacement values.
+ * 
+ * @return {String} a string with the placeholders replaced with the specified replacement values.
+ */
+YJS_String.printf = function (pattern, varargs) {
+    var args, i, iLen, out;
+
+    out = pattern;
+    args = arguments;
+    i = 1;
+
+    if (pattern &amp;&amp; args.length &gt; 1) {
+        out = out.replace(/%[ifs]/g, function (placeholder) {
+            var replacement;
+
+            replacement = placeholder;
+            if (i &lt; args.length) {
+                replacement = args[i];
+            }
+            i += 1;
+            switch (placeholder) {
+            case &quot;%i&quot;:
+                replacement = GBL.parseInt(replacement);
+                break;
+            case &quot;%f&quot;:
+                replacement = GBL.parseFloat(replacement);
+                break;
+            }
+            return replacement;
+        });
+        
+        out = [out];
+        for (iLen = args.length; i &lt; iLen; ++i) {
+            out.push(args[i]);
+        }
+        out = out.join('');
+    }
+    
+    return out;
+};
+
+})(this, YJS, 'YJS');
+
+// ##################################################################################################################
+
+
+/*
+ * @dependency YJS
+ */
+
+<span id='YJS-Utils'>/**
+</span> * @singleton
+ * @class YJS.Utils
+ * A set of utility methods.
+ * 
+ * @requires YJS.core.Class
+ * 
+ * @uses YJS.Number
+ * @uses YJS.log.Factory
+ */
+(function (YJS, nsPath) {
+
+&quot;use strict&quot;;
+var NS = YJS.ns(nsPath),
+    YJS_Utils;
+
+NS.Utils = YJS_Utils = {
+    $LOG: YJS.__.tmp.LOG
+};
+
+// ==========================================================================
+<span id='YJS-Utils-method-typeOf'>/**
+</span> * Returns the type of the specified value as a string. The list of possible types are:
+ *
+ * - `array`: If the specified value is an array.
+ * - `boolean`: If the specified value is a boolean value.
+ * - `date`: If the specified value is a `Date` object.
+ * - `function`: If the specified value is a function reference.
+ * - `nan`: If the specified value is `NaN`.
+ * - `negative_infinity`: If the specified value is `Number.NEGATIVE_INFINITY`.
+ * - `null`: If the specified value is `null`.
+ * - `number`: If the specified value is a number.
+ * - `object`: If the specified value is an object.
+ * - `positive_infinity`: If the specified value is `Number.POSITIVE_INFINITY`.
+ * - `regexp`: If the specified value is a regular expression.
+ * - `string`: If the specified value is a string.
+ * - `undefined`: If the specified value is `undefined`.
+ * - `undetermined`: If the specified value has an undetermined type. If this ever happens, then update this function
+ *   to appropriately handle the value.
+ * 
+ * @param {?Mixed} value The value to determine the type of.
+ * 
+ * @return {String} The type of the specified value.
+ */
+YJS_Utils.typeOf = function (value) {
+    var typeOf, typeToString;
+    if (value === null) {
+        return 'null';
+    }
+
+    typeOf = typeof value;
+
+    if (typeOf === 'undefined' || typeOf === 'string' || typeOf === 'boolean' || typeOf === 'function') {
+        return typeOf;
+    }
+
+    typeToString = Object.prototype.toString.call(value);
+
+    switch (typeToString) {
+        case '[object Array]':
+            return 'array';
+        case '[object Date]':
+            return 'date';
+        case '[object Boolean]':
+            return 'boolean';
+        case '[object Number]':
+            if (value === Number.NEGATIVE_INFINITY) {
+                return 'negative_infinity';
+            } else if (value === Number.POSITIVE_INFINITY) {
+                return 'positive_infinity';
+            } else if (YJS.Number.itBeNaN(value)) {
+                return 'nan';
+            }
+            return 'number';
+        case '[object RegExp]':
+            return 'regexp';
+        case '[object String]':
+            return 'string';
+    }
+
+    if (typeOf === 'object') {
+        return 'object';
+    }
+
+    YJS.Utils.$LOG.warn('Unable to determine type of &quot;' + value + '&quot;. Please update YJS.Utils.typeOf function to handle it.');
+    return 'undetermined';
+};
+
+})(YJS, 'YJS');
+
+// ##################################################################################################################
+
+
+/*
+ * @dependency YJS
+ */
+
+<span id='YJS-log-Entry'>/**
+</span> * @class YJS.log.Entry
+ * A log-entry represents a message and the level at which it is to be logged.
+ * 
+ * @requires YJS.log.Level
+ * 
+ * @uses YJS.String
+ */
+(function (YJS, nsPath) {
+
+&quot;use strict&quot;;
+var NS = YJS.ns(nsPath);
+
+// ==========================================================================
+<span id='YJS-log-Entry-method-constructor'>/**
+</span> * @method constructor
+ * Creates an immutable log-entry with the specified level, message template, and data.
+ * 
+ * @param {Object} [cfgs]
+ * @param {Mixed[]} [cfgs.data=[]] The data to merge with the template and/or to append to the end of the message.
+ * @param {Number} [cfgs.level=YJS.log.Level.DEBUG] The level at which to log the message. See YJS.log.Level for
+ *   pre-defined log-level values. Other levels beside the pre-defined are allowed too.
+ * @param {String} [cfgs.template=&quot;&quot;] The message template with optional placeholders (aka substitution strings) that
+ *   is used to help form the log message.
+ */
+NS.Entry = function (cfgs) {
+    var SELF = this, data, level, template;
+    
+    cfgs = cfgs || {};
+    data = cfgs.data || [];
+    level = cfgs.level || YJS.log.Level.DEBUG;
+    template = &quot;&quot; + (cfgs.template || &quot;&quot;);
+    
+    if (typeof level !== 'number') {
+        throw new TypeError('cfgs.level must be a number.');
+    }
+    
+    SELF._ = {};
+    
+<span id='YJS-log-Entry-property-level'>    /**
+</span>     * @readonly
+     * @property {Number}
+     * The level the message is to be logged at.
+     */
+    SELF.level = level;
+<span id='YJS-log-Entry-property-template'>    /**
+</span>     * @readonly
+     * @property {String}
+     * The message template with optional placeholders that is to be logged.
+     */
+    SELF.template = template;
+<span id='YJS-log-Entry-property-data'>    /**
+</span>     * @readonly
+     * @property {Mixed[]}
+     * The data to merge with the template and/or to append to the end of the message.
+     */
+    SELF.data = data;
+    
+    Object.freeze(SELF);
+};
+
+<span id='YJS-log-Entry-method-getMessage'>/**
+</span> * Returns the message formed from merging the message template with the data. It uses YJS.String#printf to do the
+ * resolution.
+ */
+NS.Entry.prototype.getMessage = function () {
+    var SELF = this, args;
+    
+    if (!SELF._.resolvedMsg) {
+        args = [SELF.template].concat(SELF.data);
+        SELF._.resolvedMsg = YJS.String.printf.apply(YJS.String, args);
+    }
+    return SELF._.resolvedMsg;
+};
+
+})(YJS, 'YJS.log');
+
+// ##################################################################################################################
+
+
+/*
+ * @dependency YJS
+ */
+
+<span id='YJS-log-Level'>/**
+</span> * @class YJS.log.Level
+ * Enumeration of various log levels.
+ */
+(function (YJS, nsPath) {
+
+&quot;use strict&quot;;
+var NS = YJS.ns(nsPath);
+
+NS.Level = {
+<span id='YJS-log-Level-property-DEBUG'>    /**
+</span>     * @property {Number}
+     * The `debug` log-level.
+     */
+    DEBUG: 0,
+<span id='YJS-log-Level-property-INFO'>    /**
+</span>     * @property {Number}
+     * The `info` log-level.
+     */
+    INFO: 2000,
+<span id='YJS-log-Level-property-LOG'>    /**
+</span>     * @property {Number}
+     * The `log` log-level.
+     */
+    LOG: 4000,
+<span id='YJS-log-Level-property-WARN'>    /**
+</span>     * @property {Number}
+     * The `warn` log-level.
+     */
+    WARN: 6000,
+<span id='YJS-log-Level-property-ERROR'>    /**
+</span>     * @property {Number}
+     * The `error` log-level.
+     */
+    ERROR: 8000,
+<span id='YJS-log-Level-property-FATAL'>    /**
+</span>     * @property {Number}
+     * The `fatal` log-level.
+     */
+    FATAL: 10000
+};
+
+})(YJS, 'YJS.log');
+
+// ##################################################################################################################
+
+
+/*
+ * @dependency YJS
+ */
+
+<span id='YJS-log-Appender'>/**
+</span> * @abstract
+ * @class YJS.log.Appender
+ * The base class all appender subclasses should inherit from.
+ * 
+ * Different implementations may handle the appending (aka logging) of the messages differently. Some implementations
+ * may only handle messages at certain levels, ignoring the rest. Some may format the message even further. Some may
+ * aggregate the messages. Some may buffer up the messages until a certain threshold is meet. While others may simply
+ * ignore all messages.
+ * 
+ * Each implementation SHOULD document how it handles the messages it appends.
+ * 
+ * @uses YJS.log.Entry
+ */
+(function (YJS, nsPath) {
+
+&quot;use strict&quot;;
+var NS = YJS.ns(nsPath),
+    YJS_log_Appender;
+
+NS.Appender = YJS_log_Appender = function () {};
+
+// ==========================================================================
+<span id='YJS-log-Appender-method-append'>/**
+</span> * @abstract
+ * Appends/handles the log entry.
+ * 
+ * @param {YJS.log.Entry} logEntry The log entry to append.
+ */
+YJS_log_Appender.prototype.append = function () {
+    throw new Error(&quot;Subclasses must override the `append` method.&quot;);
+};
+
+})(YJS, 'YJS.log');
+
+// ##################################################################################################################
+
+
+/*
+ * @dependency YJS
+ */
+
+<span id='YJS-log-ArrayAppender'>/**
+</span> * @class YJS.log.ArrayAppender
+ * An ArrayAppender is a YJS.log.Appender that appends (aka logs) messages to an array.
+ *
+ * @extends YJS.log.Appender
+ * 
+ * @uses YJS.log.Entry
+ */
+(function (YJS, nsPath) {
+
+&quot;use strict&quot;;
+var NS = YJS.ns(nsPath),
+    YJS_log_ArrayAppender,
+    YJS_log_ArrayAppender_prototype;
+
+// ==========================================================================
+<span id='YJS-log-ArrayAppender-method-constructor'>/**
+</span> * @method constructor
+ * Creates a new array appender.
+ * 
+ * @param {Object} cfg
+ * @param {Number} [cfg.maxEntries=5000]
+ */
+NS.ArrayAppender = YJS_log_ArrayAppender = function (cfg) {
+    cfg = cfg || {};
+    this._ = {
+        cfg: {
+            maxEntries: typeof cfg.maxEntries == 'number' ? Math.max(cfg.maxEntries, 0) : 5000
+        },
+        logEntries: []
+    };
+};
+
+YJS_log_ArrayAppender.prototype = YJS_log_ArrayAppender_prototype = new YJS.log.Appender(); // Subclasses the abstract YJS.log.Appender class.
+
+// ==========================================================================
+<span id='YJS-log-ArrayAppender-method-append'>/**
+</span> * Appends the log entry to the array.
+ * 
+ * @param {YJS.log.Entry} logEntry The log entry to append.
+ */
+YJS_log_ArrayAppender_prototype.append = function (logEntry) {
+    this._.logEntries.push(logEntry);
+    this._removeExtraneousEntries();
+};
+
+// ==========================================================================
+<span id='YJS-log-ArrayAppender-method-getLogEntries'>/**
+</span> * @return {YJS.log.Entry[]} A reference to the current log entries.
+ */
+YJS_log_ArrayAppender_prototype.getLogEntries = function () {
+    return this._.logEntries;
+};
+
+// ==========================================================================
+<span id='YJS-log-ArrayAppender-method-_removeExtraneousEntries'>/**
+</span> * @protected
+ * Remove any extraneous log entries. The oldest entries are removed first.
+ */
+YJS_log_ArrayAppender_prototype._removeExtraneousEntries = function () {
+    var logEntries = this._.logEntries,
+        maxEntries = this._.cfg.maxEntries;
+
+    while (logEntries.length &gt; maxEntries) {
+        logEntries.shift(); // Remove oldest log entries.
+    }
+};
+
+// ==========================================================================
+<span id='YJS-log-ArrayAppender-static-property-INSTANCE'>/**
+</span> * @static
+ * @property INSTANCE
+ * The pre-instantiated singleton instance of an ArrayAppender with the default configuration. (No reason to keep
+ * multiple instances around.)
+ */
+YJS_log_ArrayAppender.INSTANCE = new YJS.log.ArrayAppender();
+
+})(YJS, 'YJS.log');
+
+// ##################################################################################################################
+
+
+/*
+ * @dependency YJS
+ */
+
+<span id='YJS-log-ConsoleAppender'>/**
+</span> * @class YJS.log.ConsoleAppender
+ * A ConsoleAppender is a YJS.log.Appender that appends (aka logs) messages to the web-console provided by modern web
+ * browsers. For older web browsers, any logged messages are effectively ignored and will not cause errors when the
+ * web-console &quot;API&quot; is not available.
+ *
+ * @extends YJS.log.Appender 
+ * 
+ * @uses YJS.log.Level
+ */
+(function (GBL, YJS, nsPath) {
+
+&quot;use strict&quot;;
+var NS = YJS.ns(nsPath),
+    YJS_log_ConsoleAppender,
+    YJS_log_ConsoleAppender_prototype,
+    console = GBL.console,
+    noopFn = YJS.noopFn;
+
+    if (console) {
+        console.debug = console.debug || console.info || console.log || noopFn;
+        console.info = console.info || console.debug || console.log || noopFn;
+        console.log = console.log || console.info || console.debug || noopFn;
+        console.warn = console.warn || console.log || console.error || console.info || console.debug || noopFn;
+        console.error = console.error || console.warn || console.log || console.info || console.debug || noopFn;
+    }
+
+// ==========================================================================
+<span id='YJS-log-ConsoleAppender-method-constructor'>/**
+</span> * @method constructor
+ * Creates a new web-console appender.
+ */
+NS.ConsoleAppender = YJS_log_ConsoleAppender = function () {};
+
+YJS_log_ConsoleAppender.prototype = YJS_log_ConsoleAppender_prototype = new YJS.log.Appender(); // Subclasses the abstract YJS.log.Appender class.
+
+// ==========================================================================
+<span id='YJS-log-ConsoleAppender-method-append'>/**
+</span> * Appends/logs the message to the web-console at the most appropriate level.
+ * 
+ * - YJS.log.Level.DEBUG logs to `console.debug`.
+ * - YJS.log.Level.INFO logs to `console.info`.
+ * - YJS.log.Level.LOG logs to `console.log`.
+ * - YJS.log.Level.WARN logs to `console.warn`.
+ * - YJS.log.Level.ERROR logs to `console.error`.
+ * - YJS.log.Level.FATAL logs to `console.error`.
+ * 
+ * Note: YJS.log.LogEntry#getMessage is not used to get the merged message before logging to the web-console. Many
+ * implementations of the web-console allow logging with a template and substitution data. So, this native functionality
+ * has been maintained.
+ * 
+ * @param {YJS.log.Entry} logEntry The log entry to append.
+ */
+YJS_log_ConsoleAppender_prototype.append = function (logEntry) {
+    var YJS_log_Level = YJS.log.Level,
+        console = GBL.console,
+        args, logLevel;
+
+    logLevel = logEntry.level;
+    args = [logEntry.template].concat(logEntry.data);
+    if (logLevel &lt; YJS_log_Level.INFO) {
+        console.debug.apply(console, args);
+    } else if (logLevel &lt; YJS_log_Level.LOG) {
+        console.info.apply(console, args);
+    } else if (logLevel &lt; YJS_log_Level.WARN) {
+        console.log.apply(console, args);
+    } else if (logLevel &lt; YJS_log_Level.ERROR) {
+        console.warn.apply(console, args);
+    } else {
+        console.error.apply(console, args); // Error and fatal.
+    }
+};
+
+// ==========================================================================
+<span id='YJS-log-ConsoleAppender-static-property-INSTANCE'>/**
+</span> * @static
+ * @property INSTANCE
+ * The pre-instantiated singleton instance of a ConsoleAppender. (No reason to keep multiple instances around.)
+ */
+YJS_log_ConsoleAppender.INSTANCE = new YJS.log.ConsoleAppender();
+
+})(this, YJS, 'YJS.log');
+
+// ##################################################################################################################
+
+
+/*
+ * @dependency YJS
+ */
+
+<span id='YJS-log-Logger'>/**
+</span> * @class YJS.log.Logger
+ * A logger determines what {@link YJS.log.Log}s it handles based on its configured minimum and maximum log
+ * levels. However, prior to this, the current log configuration uses each logger's name pattern to determine which
+ * loggers should handle which logs based on the log's name. The logger with the longest matching pattern will be
+ * given authority to handle the log. If the logger also determines it handles a log at the log's specified level,
+ * then it delegates the logging work to the list of configured {@link YJS.log.Appender}s.
+ * 
+ * @requires YJS.log.ArrayAppender
+ * @requires YJS.log.ConsoleAppender
+ * @uses YJS.String
+ * @uses YJS.log.Entry
+ * @uses YJS.log.Appender
+ */
+(function (GBL, YJS, nsPath) {
+
+&quot;use strict&quot;;
+var NS = YJS.ns(nsPath),
+    YJS_log_Logger, YJS_log_Logger_prototype;
+
+// ==========================================================================
+<span id='YJS-log-Logger-method-constructor'>/**
+</span> * @method constructor
+ * Constructs a Logger which will usually be given to a ConfigBuilder.
+ * 
+ * @param {Object} cfgs
+ * @param {String} cfgs.pattern A pattern of the log names that this logger will handle. Used by the current
+ *   {@link YJS.log.Config log configuration} to determine whether this logger or another logger should handle a log.
+ * @param {YJS.log.Appender|YJS.log.Appender[]} [cfgs.appenders=[]] The log appenders each handled log will be passed to.
+ * @param {Number} [cfgs.maxLevel=Number.MAX_VALUE] The maximum log-level to handle. See YJS.log.Level for pre-defined
+ *   log-level values. Other levels beside the pre-defined are allowed too.
+ * @param {Number} [cfgs.minLevel=-Number.MAX_VALUE] The minimum log-level to handle. See YJS.log.Level for pre-defined
+ *   log-level values. Other levels beside the pre-defined are allowed too.
+ */
+NS.Logger = YJS_log_Logger = function (cfgs) {
+    // TODO: Assert everything is valid.
+    this._ = {
+        appenders: YJS.Array.wrap(cfgs.appenders || []),
+        maxLevel: typeof cfgs.maxLevel == 'number' ? cfgs.maxLevel : Number.MAX_VALUE,
+        minLevel: typeof cfgs.minLevel == 'number' ? cfgs.minLevel : -Number.MAX_VALUE
+    };
+    // TODO: Assert pattern is valid.
+<span id='YJS-log-Logger-property-pattern'>    /**
+</span>     * @readonly
+     * @property {String}
+     * A pattern of the log names that this logger will handle.
+     */
+    this.pattern = cfgs.pattern;
+    
+    Object.freeze(this);
+};
+
+YJS_log_Logger_prototype = YJS_log_Logger.prototype;
+
+// ==========================================================================
+<span id='YJS-log-Logger-method-willHandle'>/**
+</span> * Checks if this logger will handle a log at the specified log-level.
+ * 
+ * @param {Number} logLevel The log-level to check against. See YJS.log.Level for pre-defined log-level values.
+ *   Other levels beside the pre-defined are allowed too.
+ * 
+ * @return {Boolean} `true` if this logger will handle a log at the specified log-level, `false` otherwise.
+ */
+YJS_log_Logger_prototype.willHandle = function (logLevel) {
+    var willHandle = false;
+    
+    if (logLevel &gt;= this._.minLevel &amp;&amp; logLevel &lt;= this._.maxLevel) {
+        willHandle = true;
+    }
+    return willHandle;
+};
+
+// ==========================================================================
+<span id='YJS-log-Logger-method-logAt'>/**
+</span> * Logs the given message/template at the specified level.
+ * 
+ * @param {Number} logLevel The level at which to log the message. See YJS.log.Level for pre-defined log-level values.
+ *   Other levels beside the pre-defined are allowed too.
+ * @param {String} template The message template with optional placeholders (aka substitution strings) that is used to
+ *   help form the log message.
+ * @param {Mixed...} data The data to merge with the template and/or to append to the end of the message.
+ */
+YJS_log_Logger_prototype.logAt = function (logLevel, template, varargs) {
+    /*
+     * IMPLEMENTATION NOTE: The above signature was choosen over passing a single YJS.log.Entry argument to help minimize
+     * the need to unnecessarily instantiate objects that won't be used. That is, the _createLogEntry method is not called
+     * until after checking if this logger will even handle a log at this level and if it has any appenders to delegate
+     * the handling to.
+     */
+    var SELF = this,
+        appender, appenders, i, iLen, logEntry;
+
+    if (SELF.willHandle(logLevel)) {
+        appenders = SELF._.appenders;
+        if (appenders.length &gt; 0) {
+            logEntry = SELF._createLogEntry.apply(SELF, arguments);
+            for (i = 0, iLen = appenders.length; i &lt; iLen; ++i) {
+                appender = appenders[i];
+                try {
+                    appender.append(logEntry);
+                } catch (e) {
+                    if (GBL.console &amp;&amp; typeof GBL.console.error == 'function') {
+                        GBL.console.error(e);
+                    }
+                }
+            }
+        }
+    }
+};
+
+// ==========================================================================
+<span id='YJS-log-Logger-method-_createLogEntry'>/**
+</span> * @template
+ * @protected
+ * Creates a new log entry based on the given arguments.
+ * 
+ * @param {Number} logLevel The level at which to log the message. See YJS.log.Level for pre-defined log-level values.
+ *   Other levels beside the pre-defined are allowed too.
+ * @param {String} template The message template with optional placeholders (aka substitution strings) that is used to
+ *   help form the log message.
+ * @param {Mixed...} data The data to merge with the template and/or to append to the end of the message.
+ */
+YJS_log_Logger_prototype._createLogEntry = function (logLevel, template, varargs) {
+    var logEntry = new YJS.log.Entry({
+        level: logLevel,
+        template: template,
+        data: Array.prototype.slice.call(arguments, 2) // Copy arguments ignoring the logLevel and template args.
+    });
+    return logEntry;
+};
+
+// ==========================================================================
+<span id='YJS-log-Logger-static-property-ROOT_DEFAULT'>/**
+</span> * @static
+ * @property ROOT_DEFAULT
+ * A reference to the default root logger. This logger is configured with a single appender -- the
+ * YJS.log.ConsoleAppender.
+ */
+YJS_log_Logger.ROOT_DEFAULT = new YJS.log.Logger({
+    appenders: [YJS.log.ConsoleAppender.INSTANCE],
+    pattern: '.'
+});
+
+// ==========================================================================
+<span id='YJS-log-Logger-static-property-ROOT_ARRAY'>/**
+</span> * @static
+ * @property ROOT_ARRAY
+ * A reference to a root logger configured with a single {@link YJS.log.ArrayAppender} array appender.
+ */
+YJS_log_Logger.ROOT_ARRAY = new YJS.log.Logger({
+    appenders: [YJS.log.ArrayAppender.INSTANCE],
+    pattern: '.'
+});
+
+})(this, YJS, 'YJS.log');
+
+// ##################################################################################################################
+
+
+/*
+ * @dependency YJS
+ */
+
+<span id='YJS-log-ConfigBuilder'>/**
+</span> * @class YJS.log.ConfigBuilder
+ * A builder of YJS.log.Config objects.
+ * 
+ * @uses YJS.log.Config
+ * @uses YJS.log.Logger
+ */
+(function (YJS, nsPath) {
+
+&quot;use strict&quot;;
+var NS = YJS.ns(nsPath),
+    YJS_log_ConfigBuilder, YJS_log_ConfigBuilder_prototype;
+
+// ==========================================================================
+<span id='YJS-log-ConfigBuilder-method-constructor'>/**
+</span> * @method constructor
+ * Constructs a fresh ConfigBuilder.
+ * 
+ *     var ajaxAppender, consoleAppender, builder, config, htmlElementAppender, logger;
+ *     
+ *     consoleAppender = YJS.log.ConsoleAppender.INSTANCE;
+ *     htmlElementAppender = new YJS.log.HtmlElementAppender({
+ *         ...
+ *     });
+ *     ajaxAppender = new YJS.log.AjaxAppender({
+ *         minLevel: YJS.log.Level.FATAL,
+ *         throttle: 5000,
+ *         ...
+ *     });
+ *     builder = new YJS.log.ConfigBuilder();
+ *     logger = new YJS.log.Logger({
+ *         appenders: [ajaxAppender],
+ *         minLevel: YJS.log.Level.FATAL,
+ *         pattern: 'PageError'
+ *     });
+ *     builder.addLoggers(logger);
+ *     logger = new YJS.log.Logger({
+ *         appenders: [consoleAppender, htmlElementAppender, ajaxAppender],
+ *         minLevel: YJS.log.Level.LOG,
+ *         pattern: 'MyApp.app'
+ *     });
+ *     builder.addLoggers(logger);
+ *     ...
+ *     logger = new YJS.log.Logger({
+ *         appenders: [consoleAppender, htmlElementAppender, ajaxAppender],
+ *         minLevel: YJS.log.Level.LOG,
+ *         pattern: '.'
+ *     });
+ *     builder.addLoggers(logger);
+ *     config = builder.build();
+ *     YJS.log.Log.setConfig(config);
+ *     ...
+ *     var LOG = YJS.log.LogFactory.get('MyApp.app.Foo');
+ *     ...
+ *     LOG.log('...'); // Logs via the 'MyApp.app' logger. Will log to web-console and to HTML element.
+ *     ...
+ *     LOG.logAt(YJS.log.Level.FATAL, '...'); // Logs via the 'MyApp.app' logger. Will log to web-console and to HTML element.
+ *     
+ */
+NS.ConfigBuilder = YJS_log_ConfigBuilder = function () {
+    this._ = {
+        loggers: []
+    };
+};
+
+YJS_log_ConfigBuilder_prototype = YJS_log_ConfigBuilder.prototype;
+
+// ==========================================================================
+<span id='YJS-log-ConfigBuilder-method-addLoggers'>/**
+</span> * Adds more loggers to the config.
+ * 
+ * @param {YJS.log.Logger|YJS.log.Logger[]} loggers
+ */
+YJS_log_ConfigBuilder_prototype.addLoggers = function (loggers) {
+    var i, iLen;
+    loggers = YJS.Array.wrap(loggers);
+    for (i = 0, iLen = loggers.length; i &lt; iLen; ++i) {
+        this._.loggers.push(loggers[i]);
+    }
+};
+
+// ==========================================================================
+<span id='YJS-log-ConfigBuilder-method-build'>/**
+</span> * Builds a new YJS.log.Config instance based on the current state of this builder.
+ * 
+ * @return {YJS.log.Config} The new logging configuration.
+ */
+YJS_log_ConfigBuilder_prototype.build = function () {
+    var config = new YJS.log.Config({ loggers: this._.loggers });
+    return config;
+};
+
+})(YJS, 'YJS.log');
+
+// ##################################################################################################################
+
+
+/*
+ * @dependency YJS
+ */
+
+<span id='YJS-log-Config'>/**
+</span> * @class YJS.log.Config
+ * The logging configuration. This determines which {@link YJS.log.Logger Loggers} the {@link YJS.log.Log Logs} use.
+ * This is based on pattern matching of the log's name. In turn, each YJS.log.Logger determines which
+ * {@link YJS.log.Appender Appenders} to delegate to.
+ * 
+ * @uses YJS.log.Log
+ * @uses YJS.log.Logger
+ */
+(function (YJS, nsPath) {
+
+&quot;use strict&quot;;
+var NS = YJS.ns(nsPath),
+    YJS_log_Config;
+
+// ==========================================================================
+<span id='YJS-log-Config-method-constructor'>/**
+</span> * @method constructor
+ * 
+ * @param {Object} cfgs
+ * @param {YJS.log.Logger[]} cfgs.loggers The loggers to be used in the configuration. If a root logger (one with a `'.'`
+ *   pattern) is not included, then the {@link YJS.log.Logger#ROOT_DEFAULT default root logger} will be added.
+ */
+NS.Config = YJS_log_Config = function (cfgs) {
+    var _, i, iLen, key, logger, loggers;
+
+    this._ = _ = {
+        loggerLut: {}
+    };
+    loggers = cfgs.loggers;
+    for (i = 0, iLen = loggers.length; i &lt; iLen; ++i) {
+        logger = loggers[i];
+        key = logger.pattern;
+        _.loggerLut[key] = logger;
+    }
+    // Ensure a root logger exists.
+    _.loggerLut['.'] = _.loggerLut['.'] || YJS.log.Logger.ROOT_DEFAULT;
+
+    _.resolvedLoggerLut = {};
+};
+
+// ==========================================================================
+<span id='YJS-log-Config-method-findLoggerFor'>/**
+</span> * Searches for a {@link YJS.log.Logger Logger} with the longest pattern that matches the name of the specified
+ * {@link YJS.log.Log Log}. If a more specific {@link YJS.log.Logger Logger} is not found, then the root logger
+ * will be returned.
+ * 
+ * @param {YJS.log.Log} log
+ * 
+ * @return {YJS.log.Logger} the logger that will handle the specified log. It will always return a logger instance.
+ *   `null` or `undefined` will never be returned.
+ */
+YJS_log_Config.prototype.findLoggerFor = function (log) {
+    var _ = this._,
+        key, logger, loggerLut, name, nameParts;
+
+    name = log.name;
+    loggerLut = _.loggerLut;
+
+    logger = _.resolvedLoggerLut[name];
+    if (!logger) {
+        nameParts = name.split('.');
+        while (nameParts.length) {
+            key = nameParts.join('.');
+            logger = loggerLut[key];
+            if (logger) {
+                _.resolvedLoggerLut[name] = logger;
+                break;
+            }
+            nameParts.pop();
+        }
+    }
+    // Fallback to root logger if necessary.
+    logger = logger || loggerLut['.'];
+    return logger;
+};
+
+// ==========================================================================
+<span id='YJS-log-Config-static-property-DEFAULT'>/**
+</span> * @static
+ * @property DEFAULT
+ * The default log configuration. It simply has the default root logger which allows logging to the web-console at any
+ * log level.
+ */
+// jshint singleGroups: false
+YJS_log_Config.DEFAULT = (function () {
+    var config, configBuilder;
+
+    configBuilder = new YJS.log.ConfigBuilder();
+    config = configBuilder.build();
+    return config;
+})();
+
+})(YJS, 'YJS.log');
+
+// ##################################################################################################################
+
+
+/*
+ * @dependency YJS
+ */
+
+<span id='YJS-log-Log'>/**
+</span> * @class YJS.log.Log
+ * A log is the primary object used for logging. Logs are created using the {@link YJS.log.Factory log factory}.
+ * 
+ *     var LOG = YJS.log.Factory.get('mylog');
+ * 
+ * The above call will create and return a reference to the `mylog` log. Because logs are associated with a name, one
+ * could create a named log to log all the AJAX calls in their code.
+ * 
+ *     App.AJAX_LOG = YJS.log.Factory.get('ajax');
+ *     ...
+ *     App.AJAX_LOG.info('Request sent.');
+ *     App.AJAX_LOG.info('Response received.');
+ *     ...
+ *     App.AJAX_LOG.error('Response timed out');
+ * 
+ * Named logs give you more control over which messages will ultimately be logged. One could, for example, setup the
+ * log configuration so only error-level or higher messages are logged for the `ajax` log but have info-level or higher
+ * messages logged for the `mylog` log.
+ * 
+ * Log messages may contain placeholder strings and they may be used as a template. The placeholders will be filled in
+ * using the arguments following the first argument. Any extra arguments will be appended to the end of the message.
+ * 
+ *     LOG.error('%s must be between %i and %i', 'Foo', 1, 10, ' and must be integral.');
+ * 
+ * See YJS.String#printf for details. It works very similar to how some browsers support string substitutions with
+ * console#log and console's other similar methods.
+ * 
+ * @requires YJS.log.Config
+ * @uses YJS.log.Level
+ */
+(function (YJS, nsPath) {
+
+&quot;use strict&quot;;
+var NS = YJS.ns(nsPath),
+    YJS_log_Log, YJS_log_Log_prototype;
+
+// ==========================================================================
+<span id='YJS-log-Log-method-constructor'>/**
+</span> * @method constructor
+ * Creates a immutable log with the specified name. Typically, this constructor is _not_ used directly. Instead,
+ * YJS.log.Factory#get is used.
+ * 
+ * @param {Object} [cfgs]
+ * @param {String} [cfgs.name=&quot;&quot;] The name of the log. A dot (.) may be used to separate the name parts. Name parts
+ *   must not contain whitespace and must have a length greater than zero with one exception. The name itself may be
+ *   the empty string.
+ * @throws TypeError
+ */
+NS.Log = YJS_log_Log = function (cfgs) {
+    var name;
+    
+    cfgs = cfgs || {};
+    name = cfgs.name || &quot;&quot;;
+    
+    var n, nLen, nameParts;
+    if (typeof name != 'string') {
+        throw new TypeError('cfgs.name must be a string');
+    }
+    if (name.match(/\s/)) {
+        throw new TypeError('cfgs.name must not contain whitespace.');
+    }
+    if (name.length &gt; 0) {
+        nameParts = name.split('.');
+        for (n = 0, nLen = nameParts.length; n &lt; nLen; ++n) {
+            if (nameParts[n].length === 0) {
+                throw new TypeError('cfgs.name must not have empty name parts.');
+            }
+        }
+    }
+    
+<span id='YJS-log-Log-property-name'>    /**
+</span>     * @readonly
+     * @property {String}
+     * The name of this log.
+     */
+    this.name = name;
+    Object.freeze(this);
+};
+
+YJS_log_Log._ = {
+    cfg: YJS.log.Config.DEFAULT
+};
+
+// ==========================================================================
+<span id='YJS-log-Log-static-method-getConfig'>/**
+</span> * @static
+ * Returns a reference to the currently active configuration. If a configuration has not been set, then a reference
+ * to the {@link YJS.log.Config#DEFAULT default} configuration will be returned.
+ * 
+ * See YJS.log.Log#setConfig to change the currently active configuration.
+ * 
+ * @return {YJS.log.Config} The currently active configuration.
+ */
+YJS_log_Log.getConfig = function () {
+    var SELF = YJS.log.Log;
+    return SELF._.cfg;
+};
+
+// ==========================================================================
+<span id='YJS-log-Log-static-method-setConfig'>/**
+</span> * @static
+ * Sets the current runtime configuration. This is the configuration used by all logs. Setting this will affect all
+ * existing logs and any new logs. Individual logs don't have their own configuration. However, individual logs can be
+ * affected by the configuration.
+ * 
+ * In other words, only one configuration is active at a time. 
+ * 
+ * @param {YJS.log.Config} config
+ */
+YJS_log_Log.setConfig = function (config) {
+    var SELF = YJS.log.Log;
+    SELF._.cfg = config || YJS.log.Config.DEFAULT;
+};
+
+YJS_log_Log_prototype = YJS_log_Log.prototype;
+
+// ==========================================================================
+<span id='YJS-log-Log-method-debug'>/**
+</span> * Logs messages at the 'debug' level.
+ * 
+ *     YJS.LOG.debug('Foo was 10. Expected 12.');
+ *     YJS.LOG.debug('%s was %i. Expected %i.', 'Foo', 10, 12);
+ *     YJS.LOG.debug('%s was %i.', 'Foo', 10, ' Expected 12.');
+ * 
+ * @param {String} template The message template with optional placeholders (aka substitution strings) that is used to
+ *   help form the log message.
+ * @param {Mixed...} data The data to merge with the template and/or to append to the end of the message.
+ */
+YJS_log_Log_prototype.debug = function (args) {
+    args = Array.prototype.slice.call(arguments, 0);
+    this.logAt.apply(this, [YJS.log.Level.DEBUG].concat(args));
+};
+
+// ==========================================================================
+<span id='YJS-log-Log-method-fatal'>/**
+</span> * Logs messages at the 'fatal' level.
+ * 
+ *     YJS.LOG.fatal('Foo was 10. Expected 12. Aborting!!');
+ *     YJS.LOG.fatal('%s was %i. Expected %i. %s!!', 'Foo', 10, 12, 'Aborting');
+ *     YJS.LOG.fatal('%s was %i.', 'Foo', 10, ' Expected 12.', ' Aborting!!');
+ * 
+ * @param {String} template The message template with optional placeholders (aka substitution strings) that is used to
+ *   help form the log message.
+ * @param {Mixed...} data The data to merge with the template and/or to append to the end of the message.
+ */
+YJS_log_Log_prototype.fatal = function (args) {
+    args = Array.prototype.slice.call(arguments, 0);
+    this.logAt.apply(this, [YJS.log.Level.FATAL].concat(args));
+};
+
+// ==========================================================================
+<span id='YJS-log-Log-method-error'>/**
+</span> * Logs messages at the 'error' level.
+ * 
+ *     YJS.LOG.error('Foo was 10. Expected 12. Shutting down Foo.');
+ *     YJS.LOG.error('%s was %i. Expected %i. Shutting down %s.', 'Foo', 10, 12, 'Foo');
+ *     YJS.LOG.error('%s was %i.', 'Foo', 10, ' Expected 12.', ' Shutting down Foo.');
+ * 
+ * @param {String} template The message template with optional placeholders (aka substitution strings) that is used to
+ *   help form the log message.
+ * @param {Mixed...} data The data to merge with the template and/or to append to the end of the message.
+ */
+YJS_log_Log_prototype.error = function (args) {
+    args = Array.prototype.slice.call(arguments, 0);
+    this.logAt.apply(this, [YJS.log.Level.ERROR].concat(args));
+};
+
+// ==========================================================================
+<span id='YJS-log-Log-method-info'>/**
+</span> * Logs messages at the 'info' level.
+ * 
+ *     YJS.LOG.info('BTW, Foo was 10. Expected 12.');
+ *     YJS.LOG.info('BTW, %s was %i. Expected %i.', 'Foo', 10, 12);
+ *     YJS.LOG.info('BTW, %s was %i.', 'Foo', 10, ' Expected 12.');
+ * 
+ * @param {String} template The message template with optional placeholders (aka substitution strings) that is used to
+ *   help form the log message.
+ * @param {Mixed...} data The data to merge with the template and/or to append to the end of the message.
+ */
+YJS_log_Log_prototype.info = function (args) {
+    args = Array.prototype.slice.call(arguments, 0);
+    this.logAt.apply(this, [YJS.log.Level.INFO].concat(args));
+};
+
+// ==========================================================================
+<span id='YJS-log-Log-method-log'>/**
+</span> * Logs messages at the 'log' level.
+ * 
+ *     YJS.LOG.log('Not again. Foo was 10. Expected 12.');
+ *     YJS.LOG.log('Not again. %s was %i. Expected %i.', 'Foo', 10, 12);
+ *     YJS.LOG.log('Not again. %s was %i.', 'Foo', 10, ' Expected 12.');
+ * 
+ * @param {String} template The message template with optional placeholders (aka substitution strings) that is used to
+ *   help form the log message.
+ * @param {Mixed...} data The data to merge with the template and/or to append to the end of the message.
+ */
+YJS_log_Log_prototype.log = function (args) {
+    args = Array.prototype.slice.call(arguments, 0);
+    this.logAt.apply(this, [YJS.log.Level.LOG].concat(args));
+};
+
+// ==========================================================================
+<span id='YJS-log-Log-method-logAt'>/**
+</span> * Logs messages at the specified level which allows the ability to chose different log-levels at compile-time and/or
+ * at runtime.
+ * 
+ *     var logLevel = getRuntimeLogLevel();
+ *     var LOG = YJS.log.Factory.get('mylog');
+ *     ...
+ *     LOG.logAt(logLevel, &quot;You may or may not see this.&quot;);
+ * 
+ * @param {Number} logLevel The level at which to log the message. See YJS.log.Level for pre-defined log-level values.
+ *   Other levels beside the pre-defined are allowed too.
+ * @param {String} template The message template with optional placeholders (aka substitution strings) that is used to
+ *   help form the log message.
+ * @param {Mixed...} data The data to merge with the template and/or to append to the end of the message.
+ */
+YJS_log_Log_prototype.logAt = function (args) {
+    var config = YJS.log.Log.getConfig(),
+        logger;
+
+    logger = config.findLoggerFor(this);
+    logger.logAt.apply(logger, arguments);
+};
+
+// ==========================================================================
+<span id='YJS-log-Log-method-warn'>/**
+</span> * Logs messages at the 'warn' level.
+ * 
+ *     YJS.LOG.warn('Warning! Foo was 10. Expected 12.');
+ *     YJS.LOG.warn('Warning! %s was %i. Expected %i.', 'Foo', 10, 12);
+ *     YJS.LOG.warn('Warning! %s was %i.', 'Foo', 10, ' Expected 12.');
+ * 
+ * @param {String} template The message template with optional placeholders (aka substitution strings) that is used to
+ *   help form the log message.
+ * @param {Mixed...} data The data to merge with the template and/or to append to the end of the message.
+ */
+YJS_log_Log_prototype.warn = function (args) {
+    args = Array.prototype.slice.call(arguments, 0);
+    this.logAt.apply(this, [YJS.log.Level.WARN].concat(args));
+};
+
+})(YJS, 'YJS.log');
+
+// ##################################################################################################################
+
+
+/*
+ * @dependency YJS
+ */
+
+<span id='YJS-log-Factory'>/**
+</span> * @singleton
+ * @class YJS.log.Factory
+ * A log factory is used to create instances of {@link YJS.log.Log named log} objects. Because the named logs are
+ * stateless beyond their name, the log factory ensures only one instance of a log is ever created with any given
+ * name.
+ * 
+ * @uses YJS.log.Log
+ */
+(function (GBL, YJS, nsPath) {
+
+&quot;use strict&quot;;
+var NS = YJS.ns(nsPath),
+    YJS_log_Factory;
+
+NS.Factory = YJS_log_Factory = {
+    _: {
+        lut: {}
+    },
+    __: {
+        // The following is used by the unit tests.
+        reset: function () {
+            YJS_log_Factory._.lut = {};
+        }
+    }
+};
+
+// ==========================================================================
+<span id='YJS-log-Factory-method-get'>/**
+</span> * Returns the log instance with the specified name. Multiple calls with the same name will return the exact same
+ * instance.
+ * 
+ *     var PAGE_LOG = YJS.log.Factory.get(window.document.location.path);
+ *     var NONAME_LOG = YJS.log.Factory.get(&quot;&quot;);
+ *     var LOG = YJS.log.Factory.get(&quot;YJS.core&quot;); // YJS.core log
+ *     LOG.log('A log message');
+ *     var BILOG = YJS.log.Factory.get(&quot;BrowserInfo&quot;);
+ *     BILOG.info('The browser is ...');
+ *     BILOG.info('This browser supports ...');
+ * 
+ * @param {String} name The name of the log. A dot (.) may be used to separate the name parts. Name parts
+ *   must not contain whitespace and must have a length greater than zero with one exception. The name itself may be
+ *   the empty string.
+ * 
+ * @return {YJS.log.Log} The log instance with the specified name.
+ * @throws TypeError
+ */
+YJS_log_Factory.get = function (name) {
+    var SELF = YJS.log.Factory,
+        key, log;
+    
+    key = name;
+    log = SELF._.lut[key];
+    if (!log) {
+        log = new YJS.log.Log({
+            name: key
+        });
+        SELF._.lut[key] = log;
+    }
+    return log;
+};
+
+// ==========================================================================
+<span id='YJS-log-Factory-method-getLogNames'>/**
+</span> * @return {String[]} The names of all the logs created by this factory. The list of names will be in no particular
+ *   order.
+ */
+YJS_log_Factory.getLogNames = function () {
+    var SELF = YJS.log.Factory,
+        name, names = [];
+
+    // TODO: See if Object already provides a simple way to get all the keys.
+    for (name in SELF._.lut) {
+        names.push(name);
+    }
+    return names;
+};
+
+// ==========================================================================
+<span id='YJS-log-Factory-method-getLogList'>/**
+</span> * Returns the list of all logs created by this factory up to this point.
+ * 
+ * @return {YJS.log.Log[]} The list of all logs created by this factory.
+ */
+YJS_log_Factory.getLogList = function () {
+    var SELF = YJS.log.Factory,
+        names = SELF.getLogNames(),
+        i, iLen, log, logs, name;
+
+    names.sort();
+    logs = [];
+    for (i = 0, iLen = names.length; i &lt; iLen; ++i) {
+        name = names[i];
+        log = SELF.get(name);
+        logs.push(log);
+    }
+    return logs;
+};
+
+// ==========================================================================
+<span id='YJS-property-LOG'>/**
+</span> * @member YJS
+ * @property LOG
+ * A predefined YJS.log.Log so that one can start logging without using the YJS.log.Factory or building a custom
+ * YJS.log.Config. Without a call to YJS.log.Log#setConfig, the {@link YJS.log.Config#DEFAULT default configuration}
+ * is used. This means all messages are logged to the web-console. How these messages are logged can be changed
+ * by creating a custom {@link YJS.log.Config configuration} and calling YJS.log.Log#setConfig.
+ * 
+ *     // No call to YJS.log.Log#setConfig has been made yet.
+ *     // The following will log to the web-console.
+ *     YJS.LOG.debug('A %s message demonstating string substitution.', 'debug');
+ *     YJS.LOG.info('An %s message.', 'info');
+ *     YJS.LOG.log('A %s message.', 'log');
+ *     YJS.LOG.warn('A %s message.', 'warn');
+ *     YJS.LOG.error('An %s message.', 'error');
+ *     YJS.LOG.fatal('A %s message.', 'fatal');
+ *     YJS.LOG.logAt(YJS.log.Level.DEBUG, 'A debug message.');
+ *     YJS.LOG.logAt(YJS.log.Level.INFO, 'A info message.');
+ *     YJS.LOG.logAt(YJS.log.Level.LOG, 'A log message.');
+ *     YJS.LOG.logAt(YJS.log.Level.WARN, 'A warn message.');
+ *     YJS.LOG.logAt(YJS.log.Level.ERROR, 'A error message.');
+ *     YJS.LOG.logAt(YJS.log.Level.FATAL, 'A fatal message.');
+ *     YJS.LOG.logAt(0, 'A custom level message.');
+ *     YJS.LOG.logAt(10000, 'Another %s level', 'custom', ' message.');
+ *     
+ *     // Now a custom configuration is built:
+ *     var consoleAppender = YJS.log.ConsoleAppender.INSTANCE;
+ *     var rootLogger = new YJS.log.Logger({
+ *         appenders: consoleAppender,
+ *         minLevel: YJS.log.Level.WARN,
+ *         pattern: '.' // The pattern used for root loggers.
+ *     });
+ *     var configBuilder = new YJS.log.ConfigBuilder();
+ *     configBuilder.addLoggers(rootLogger);
+ *     var config = configBuilder.build();
+ *     YJS.log.Log.setConfig(config);
+ *     ...
+ *     // Now that the logging configuration has changed due to the call to
+ *     // YJS.log.Log#setConfig, the behavior of the logging methods has
+ *     // changed too.
+ *     
+ *     // Won't be logged to the web-console because it's level is too low.
+ *     YJS.LOG.log('Some log message.');
+ *     // Will be logged to the web-console because it's level is high enough.
+ *     YJS.LOG.warn('Some warning message.');
+ */
+YJS.LOG = YJS_log_Factory.get('');
+
+})(this, YJS, 'YJS.log');
+
+// ##################################################################################################################
+
+
+/*
+This is code to be run after the YJS.log namespace has been loaded.
+*/
+(function (GBL, YJS) {
+
+var YJS_core_Class = YJS.core.Class,
+    YJS_core = YJS.core,
+    YJS_log_Factory = YJS.log.Factory;
+
+YJS_core_Class.setConst(YJS_core, '$LOG', YJS_log_Factory.get('YJS.core'));
+YJS_core_Class.setConst(YJS_core.Core, '$LOG', YJS_log_Factory.get('YJS.core.Core'));
+YJS_core_Class.setConst(YJS_core.Class, '$LOG', YJS_log_Factory.get('YJS.core.Class'));
+YJS_core_Class.setConst(YJS_core.ClassManager, '$LOG', YJS_log_Factory.get('YJS.core.ClassManager'));
+
+})(this, YJS);
+
+/*
+This is code to be run after the YJS.log namespace has been loaded.
+*/
+(function (GBL, YJS) {
+
+var YJS_core_Class = YJS.core.Class,
+    YJS_core = YJS.core,
+    YJS_log_Factory = YJS.log.Factory;
+
+YJS_core_Class.setConst(YJS.Array, '$LOG', YJS_log_Factory.get('YJS.Array'));
+YJS_core_Class.setConst(YJS.Number, '$LOG', YJS_log_Factory.get('YJS.Number'));
+YJS_core_Class.setConst(YJS.String, '$LOG', YJS_log_Factory.get('YJS.String'));
+YJS_core_Class.setConst(YJS.Utils, '$LOG', YJS_log_Factory.get('YJS.Utils'));
+
+delete YJS.__.tmp.LOG;
+
+})(this, YJS);
+
+</pre>
+</body>
+</html>
