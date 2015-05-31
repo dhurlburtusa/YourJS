@@ -8,22 +8,22 @@
 
 describe("Date", function () {
 
-    it("should be an instance of Date", function () {
+    it("should be of type `'object'`", function () {
         var date = new Date();
         expect(typeof date).toBe('object');
     });
 
-    it("should be an instance of Date", function () {
+    it("should be an instance of `Date`", function () {
         var date = new Date();
         expect(date instanceof Date).toBe(true);
     });
 
-    it("should be an instance of Object", function () {
+    it("should be an instance of `Object`", function () {
         var date = new Date();
         expect(date instanceof Object).toBe(true);
     });
 
-    it("should not be an instance of Number", function () {
+    it("should not be an instance of `Number`", function () {
         var date = new Date();
         expect(date instanceof Number).toBe(false);
     });

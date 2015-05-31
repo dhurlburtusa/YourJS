@@ -35,7 +35,7 @@ describe("Function", function () {
     describe("created by anonymous function literal with no arguments", function () {
         var func = function () {};
 
-        it("should be an instance of Function", function () {
+        it("should be an instance of `Function`", function () {
             expect(func instanceof Function).toBe(true);
         });
 

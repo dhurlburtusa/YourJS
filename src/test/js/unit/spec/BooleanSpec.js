@@ -8,6 +8,23 @@
 
 describe("Boolean", function () {
 
+    describe("literal", function () {
+
+        it("should not be an instance of `Object` or `Boolean`", function () {
+            expect(true instanceof Object).toBe(false);
+            expect(true instanceof Boolean).toBe(false);
+
+            expect(false instanceof Object).toBe(false);
+            expect(false instanceof Boolean).toBe(false);
+        });
+
+        it("should be of type `'boolean'`", function () {
+            expect(typeof true).toBe('boolean');
+            expect(typeof false).toBe('boolean');
+        });
+
+    });
+
     describe("without new operator", function () {
 
         it("called with true should return true", function () {

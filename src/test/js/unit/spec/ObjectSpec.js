@@ -60,7 +60,7 @@ describe("Object", function () {
 
     describe("instance", function () {
 
-        it("should be an instance of Object", function () {
+        it("should be an instance of `Object`", function () {
             var obj;
 
             obj = {};
@@ -119,6 +119,7 @@ describe("Object", function () {
             expect(fum instanceof Fo).toBe(true);
             expect(fum instanceof Fi).toBe(true);
             expect(fum instanceof Fee).toBe(true);
+            expect(fum instanceof Object).toBe(true);
 
             expect(Fum.prototype.isPrototypeOf(fum)).toBe(true);
             expect(Fo.prototype.isPrototypeOf(fum)).toBe(true);
