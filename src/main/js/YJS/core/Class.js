@@ -1,43 +1,30 @@
+/*
+ * @dependency YJS/core/_bootstrap.js
+ *
+ * @uses YJS.__.supports.fnToString
+ * @uses YJS.__.tmp.LOG
+ */
 
 /**
  * @singleton
  * @class YJS.core.Class
  * A helper class for defining object oriented like classes in JavaScript.
  */
-(function (GBL, YJS, nsPath) {
+(function (GBL, YJS) {
 
 // @if STRICT
 "use strict";
 // @endif
 
-var NS = YJS.ns(nsPath),
-    __create$superPreparer, _setConst, _setFinalPubFn, _setFn, _setPrivFn, _setProtFn, _setPubFn,
-    $superRegEx, YJS_core_Class;
+var __create$superPreparer, $superRegEx, YJS_core_Class;
 
-/* configurable: false, enumerable: true, writable: false */
-_setConst = YJS.__.tmp._setConst;
+// @if DEBUG
+    if (typeof Object.defineProperty != 'function') {
+        GBL.console.error('YJS.core.Class depends on `Object.defineProperty`. Some older browsers do NOT support this function. Consider adding a polyfill like `es5-shim` to fulfill this missing dependency.');
+    }
+// @endif
 
-/* configurable: false, enumerable: true, writable: false */
-_setFinalPubFn = YJS.__.tmp._setFinalPubFn;
-
-/* configurable: false, enumerable: false, writable: false */
-_setPrivFn = YJS.__.tmp._setPrivFn;
-
-/* configurable: false, enumerable: true, writable: true */
-_setProtFn = YJS.__.tmp._setProtFn;
-
-/* configurable: false, enumerable: true, writable: true */
-_setPubFn = YJS.__.tmp._setPubFn;
-
-// Delete the temporary references. Code following the definition of YJS.core.Class must start using
-// YJS.core.Class.setConst, YJS.core.Class.setPrivFn, YJS.core.Class.setProtFn, and YJS.core.Class.setPubFn.
-delete YJS.__.tmp._setConst;
-delete YJS.__.tmp._setFinalPubFn;
-delete YJS.__.tmp._setPrivFn;
-delete YJS.__.tmp._setProtFn;
-delete YJS.__.tmp._setPubFn;
-
-NS.Class = YJS_core_Class = {
+YJS.core.Class = YJS_core_Class = {
     // Until the logging system is defined, temporarily set to a stand-in log.
     $LOG: YJS.__.tmp.LOG
 };
@@ -46,95 +33,90 @@ $superRegEx = YJS.__.supports.fnToString ? /(\.\$super\s*\()|(\.\$super\.(apply|
 
 // ==========================================================================
 /*
- * The idea behind the following came from http://ejohn.org/blog/simple-javascript-inheritance/ which easily allows
- * methods to contain code like `this.$super(...)` to be able to call the superclass's super method. Alternative
- * techniques included adding a '$name' property to all the methods in the class and when `this.$super` was called,
- * a name lookup was done via `arguments.callee.caller.$name`. However, `arguments.callee` is not allowed in strict mode
- * and Function.caller is non-standard.
- *
- * See https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/arguments/callee and
- * https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function/caller for details.
+ * @member YJS.core.Class
+ * @private
+ * @method __setMember
+ * Sets a member with the specified name on the specified object using the specified data descriptor or accessor
+ * descriptor.
+ * 
+ * @param {Object} obj The object to add the member (property/function) to.
+ * @param {String} memberName The name of the member to set.
+ * @param {Object} dataOrAccessorDesc The member descriptor. May be a data-descriptor or an accessor-descriptor. See
+ *   [Object.defineProperty](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/defineProperty)
+ *   for details.
+ * @param {Boolean} [dataOrAccessorDesc.c=false] The `configurable` flag of the descriptor.
+ * @param {Boolean} [dataOrAccessorDesc.e=false] The `enumerable` flag of the descriptor.
+ * @param {Function} [dataOrAccessorDesc.g=undefined] The `get` property of the descriptor.
+ * @param {Function} [dataOrAccessorDesc.s=undefined] The `set` property of the descriptor.
+ * @param {Mixed} [dataOrAccessorDesc.v=undefined] The value of the member. It may be any value -- be it a function,
+ *   a primitive, etc.
+ * @param {Boolean} [dataOrAccessorDesc.w=false] The `writable` flag of the descriptor.
  */
-__create$superPreparer = function (fnName, fn) {
-    var contains$super = $superRegEx.test(fn),
-        superPreparerFn;
-
-    superPreparerFn = !contains$super ? fn : function $superPreparer() {
-        var SELF = this, restore$super = false,
-            $super, retVal;
-
-        if (SELF.hasOwnProperty('$super')) {
-            restore$super = true;
-            $super = SELF.$super;
+/* @scopeless */
+Object.defineProperty(YJS_core_Class, '__setMember', {
+    value: function (obj, memberName, dataOrAccessorDesc) {
+        var desc = {};
+        desc.configurable = !!dataOrAccessorDesc.c;
+        desc.enumerable = !!dataOrAccessorDesc.e;
+        if ('g' in dataOrAccessorDesc) { desc.get = dataOrAccessorDesc.g; }
+        if ('s' in dataOrAccessorDesc) { desc.set = dataOrAccessorDesc.s; }
+        if ('v' in dataOrAccessorDesc) { desc.value = dataOrAccessorDesc.v; }
+        if ('w' in dataOrAccessorDesc) { desc.writable = !!dataOrAccessorDesc.w; }
+// @if DEBUG
+        if (('value' in desc || 'writable' in desc) && ('get' in desc || 'set' in desc)) {
+            YJS.core.Class.$LOG.warn('The getter/setter will be ignored since a value or a writable property was set on the descriptor.');
         }
-        try {
-            // 
-            SELF.$super = SELF.$superclazz.prototype[fnName];
-
-            SELF.$super = typeof SELF.$super == 'function' && SELF !== fn ? SELF.$super : YJS.noopFn;
-
-            retVal = fn.apply(SELF, arguments);
-        } finally {
-            if (restore$super) {
-                SELF.$super = $super;
-            }
-            return retVal;
-        }
-    };
-    return superPreparerFn;
-};
-
-// ==========================================================================
-_setFn = function (obj, fnName, fn) {
-    fn = __create$superPreparer(fnName, fn);
-    if (fnName.search(/^__[^_]+/) !== -1) {
-        _setPrivFn(obj, fnName, fn);
-    } else if (fnName.search(/^_[^_]+/) !== -1) {
-        _setProtFn(obj, fnName, fn);
-    } else {
-        _setPubFn(obj, fnName, fn);
+// @endif
+        Object.defineProperty(obj, memberName, desc);
     }
-};
+});
 
 // ==========================================================================
 /*
+ * @member YJS.core.Class
  * @private
- * @method createCtor
- * Creates a new constructor function with the specified name. The constructor will call a function named
- * `_initialize` if it exists.
+ * @method __setFn
+ * Sets a function with the specified name on the specified object.
  * 
- * @param {String} simpleName The name of the constructor. Must not be `null`.
- * 
- * @return {Function} the new constructor function.
- * @return {true} return.$isClazz A flag indicating that this function represents a constructor for a class.
- * @return {String} return.$simpleName The name of the constructor. May prove useful for debugging.
+ * @param {Object} obj The object to add the member (property/function) to.
+ * @param {String} fnName The name of the member to set.
+ * @param {Function} fn The function to set.
+ * @param {Object} fnDesc The function descriptor.
+ * @param {Boolean} [fnDesc.c=false] The `configurable` flag of the descriptor.
+ * @param {Boolean} [fnDesc.e=false] The `enumerable` flag of the descriptor.
+ * @param {Boolean} [fnDesc.w=false] The `writable` flag of the descriptor.
  */
-_setFinalPubFn(YJS_core_Class, 'createCtor', function (simpleName) {
-    var code, ctor, evil;
-    
-    simpleName = simpleName || "";
-
-    if (simpleName.length > 0 && !simpleName.match(/[$a-z_][$\w]*/i)) {
-        throw new TypeError('`simpleName` contains illegal characters. Must be a valid JavaScript identifier.');
+/* @scopeless */
+YJS_core_Class.__setMember(YJS_core_Class, '__setFn', {
+    v: function (obj, fnName, fn, fnDesc) {
+        fnDesc = fnDesc || {};
+// @if DEBUG
+        if (typeof fn != 'function') { throw new TypeError('`fn` must be a function.'); }
+        if ('g' in fnDesc) { throw new TypeError('Descriptor must not contain a `g` property.'); }
+        if ('s' in fnDesc) { throw new TypeError('Descriptor must not contain a `s` property.'); }
+// @endif
+        fnDesc.v = fn;
+        YJS.core.Class.__setMember(obj, fnName, fnDesc);
     }
-
-    // A way to use eval without JSLint or JSHint from whining.
-    evil = GBL['eval'];
-    code = [];
-    code.push("(function () {");
-    code.push("\treturn function " + simpleName + "() {");
-    code.push(    "\t\tif (typeof this._initialize == 'function') {");
-    code.push(        "\t\t\tthis._initialize.apply(this, arguments);");
-    code.push(    "\t\t}");
-    code.push("\t};");
-    code.push("})();");
-    code = code.join("\r\n");
-    ctor = evil(code);
-    _setConst(ctor, '$isClazz', true);
-    _setConst(ctor, '$simpleName', simpleName);
-    
-    return ctor;
 });
+
+// ==========================================================================
+(function () {
+var setFinalPubFn = function (obj, fnName, fn) {
+    fnName = fnName.trim();
+// @if DEBUG
+    if (fnName.length === 0) {
+        throw new TypeError('Public function names must not be empty.');
+    }
+    if (fnName.search(/^[^_]+/) === -1) {
+        throw new TypeError('Public function names must not begin with any underscores.');
+    }
+// @endif
+    YJS.core.Class.__setFn(obj, fnName, fn, { e: true });
+};
+/* @scopeless */
+YJS_core_Class.__setMember(YJS_core_Class, 'setFinalPubFn', { e: true, v: setFinalPubFn });
+})();
 
 // ==========================================================================
 /**
@@ -161,7 +143,13 @@ _setFinalPubFn(YJS_core_Class, 'createCtor', function (simpleName) {
  *   changed. That is, this method does _not_ make an object's properties constant. For function 'properties',
  *   use #setPubFn, #setProtFn, or #setPrivFn instead.
  */
-_setFinalPubFn(YJS_core_Class, 'setConst', _setConst);
+/* @scopeless */
+YJS_core_Class.setFinalPubFn(YJS_core_Class, 'setConst', function (obj, constName, value) {
+    YJS.core.Class.__setMember(obj, constName, {
+        e: true,
+        v: value
+    });
+});
 
 // ==========================================================================
 /**
@@ -196,7 +184,16 @@ _setFinalPubFn(YJS_core_Class, 'setConst', _setConst);
  * @param {String} fnName The name of the function to set. Must begin with double underscores.
  * @param {Function} fn The private function.
  */
-_setFinalPubFn(YJS_core_Class, 'setPrivFn', _setPrivFn);
+/* @scopeless */
+YJS_core_Class.setFinalPubFn(YJS_core_Class, 'setPrivFn', function (obj, fnName, fn) {
+    fnName = fnName.trim();
+// @if DEBUG
+    if (fnName.search(/^__[^_]+/) === -1) {
+        throw new TypeError('Private function names must begin with double underscores.');
+    }
+// @endif
+    YJS.core.Class.__setFn(obj, fnName, fn);
+});
 
 // ==========================================================================
 /**
@@ -225,7 +222,16 @@ _setFinalPubFn(YJS_core_Class, 'setPrivFn', _setPrivFn);
  * @param {String} fnName The name of the function to set. Must begin with a single underscore.
  * @param {Function} fn The protected function.
  */
-_setFinalPubFn(YJS_core_Class, 'setProtFn', _setProtFn);
+/* @scopeless */
+YJS_core_Class.setFinalPubFn(YJS_core_Class, 'setProtFn', function (obj, fnName, fn) {
+    fnName = fnName.trim();
+// @if DEBUG
+    if (fnName.search(/^_[^_]+/) === -1) {
+        throw new TypeError('Protected function names must begin with a single underscore.');
+    }
+// @endif
+    YJS.core.Class.__setFn(obj, fnName, fn, { e: true, w: true });
+});
 
 // ==========================================================================
 /**
@@ -254,7 +260,111 @@ _setFinalPubFn(YJS_core_Class, 'setProtFn', _setProtFn);
  * @param {String} fnName The name of the function to set. Must not begin with any underscores.
  * @param {Function} fn The public function.
  */
-_setFinalPubFn(YJS_core_Class, 'setPubFn', _setPubFn);
+/* @scopeless */
+YJS_core_Class.setFinalPubFn(YJS_core_Class, 'setPubFn', function (obj, fnName, fn) {
+    fnName = fnName.trim();
+// @if DEBUG
+    if (fnName.length === 0) {
+        throw new TypeError('Public function names must not be empty.');
+    }
+    if (fnName.search(/^[^_]+/) === -1) {
+        throw new TypeError('Public function names must not begin with any underscores.');
+    }
+// @endif
+    YJS.core.Class.__setFn(obj, fnName, fn, { e: true, w: true });
+});
+
+// ==========================================================================
+/*
+ * @private
+ * @method createCtor
+ * Creates a new constructor function with the specified name. The constructor will call a function named
+ * `_initialize` if it exists.
+ * 
+ * @param {String} simpleName The name of the constructor. Must not be `null`.
+ * 
+ * @return {Function} the new constructor function.
+ * @return {true} return.$isClazz A flag indicating that this function represents a constructor for a class.
+ * @return {String} return.$simpleName The name of the constructor. May prove useful for debugging.
+ */
+/* @scopeless */
+YJS_core_Class.setFinalPubFn(YJS_core_Class, 'createCtor', function (simpleName) {
+    var SELF = YJS.core.Class,
+        code, ctor, evil;
+    
+    simpleName = simpleName || "";
+
+    if (simpleName.length > 0 && !simpleName.match(/[$a-z_][$\w]*/i)) {
+        throw new TypeError('`simpleName` contains illegal characters. Must be a valid JavaScript identifier.');
+    }
+
+    // A way to use eval without JSLint or JSHint from whining.
+    evil = GBL['eval'];
+    code = [];
+    code.push("(function () {");
+    code.push("\treturn function " + simpleName + "() {");
+    code.push(    "\t\tif (typeof this._initialize == 'function') {");
+    code.push(        "\t\t\tthis._initialize.apply(this, arguments);");
+    code.push(    "\t\t}");
+    code.push("\t};");
+    code.push("})();");
+    code = code.join("\r\n");
+    ctor = evil(code);
+    SELF.setConst(ctor, '$isClazz', true);
+    SELF.setConst(ctor, '$simpleName', simpleName);
+    
+    return ctor;
+});
+
+// ==========================================================================
+/*
+ * The idea behind the following came from http://ejohn.org/blog/simple-javascript-inheritance/ which easily allows
+ * methods to contain code like `this.$super(...)` to be able to call the superclass's super method. Alternative
+ * techniques included adding a '$name' property to all the methods in the class and when `this.$super` was called,
+ * a name lookup was done via `arguments.callee.caller.$name`. However, `arguments.callee` is not allowed in strict mode
+ * and Function.caller is non-standard.
+ *
+ * See https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/arguments/callee and
+ * https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function/caller for details.
+ */
+__create$superPreparer = function (obj, fnName, fn) {
+    var contains$super, superPreparerFn, wrap;
+
+    /*
+     * Only care about preparing the call to a function's super function when it is apart of a class. That is, static
+     * functions don't have calls to a super function.
+     * 
+     * This optimization helps mimimize memory footprint and improves runtime performance.
+     */
+    // If `obj` is the prototype of a function acting as a class, then ...
+    if (obj.hasOwnProperty('$clazz') && obj.$clazz.hasOwnProperty('$isClazz')) {
+        contains$super = $superRegEx.test(fn);
+        wrap = contains$super;
+    }
+    superPreparerFn = !wrap ? fn : function $superPreparer() {
+        var SELF = this, restore$super = false,
+            $super, retVal;
+
+        if (SELF.hasOwnProperty('$super')) {
+            restore$super = true;
+            $super = SELF.$super;
+        }
+        try {
+            // 
+            SELF.$super = SELF.$superclazz.prototype[fnName];
+
+            SELF.$super = typeof SELF.$super == 'function' && SELF !== fn ? SELF.$super : YJS.noopFn;
+
+            retVal = fn.apply(SELF, arguments);
+        } finally {
+            if (restore$super) {
+                SELF.$super = $super;
+            }
+            return retVal;
+        }
+    };
+    return superPreparerFn;
+};
 
 // ==========================================================================
 /**
@@ -265,18 +375,26 @@ _setFinalPubFn(YJS_core_Class, 'setPubFn', _setPubFn);
  * @param {Object} obj
  * @param {Object} members
  */
-_setPrivFn(YJS_core_Class, '__addMembers', function (obj, members) {
-    var name, member;
+YJS_core_Class.setPrivFn(YJS_core_Class, '__addMembers', function (obj, members) {
+    var SELF = YJS.core.Class,
+        name, member;
 
     for (name in members) {
         if (members.hasOwnProperty(name)) {
             member = members[name];
 
             if (name.search(/^[$_A-Z]+$/) !== -1) {
-                _setConst(obj, name, member);
+                SELF.setConst(obj, name, member);
             } else {
-                if (typeof member == 'function') {
-                    _setFn(obj, name, member);
+                if (typeof member == 'function' && !member.$isClazz) {
+                    member = __create$superPreparer(obj, name, member);
+                    if (name.search(/^__[^_]+/) !== -1) {
+                        SELF.setPrivFn(obj, name, member);
+                    } else if (name.search(/^_[^_]+/) !== -1) {
+                        SELF.setProtFn(obj, name, member);
+                    } else {
+                        SELF.setPubFn(obj, name, member);
+                    }
                 } else {
                     obj[name] = member;
                 }
@@ -309,7 +427,7 @@ _setPrivFn(YJS_core_Class, '__addMembers', function (obj, members) {
  * @param {Function} Clazz The class to have members added to the prototype.
  * @param {Object} members The members to add. The key/value pairs represent the member-name/member-value.
  */
-_setFinalPubFn(YJS_core_Class, 'addMembers', function (Clazz, members) {
+YJS_core_Class.setFinalPubFn(YJS_core_Class, 'addMembers', function (Clazz, members) {
 // @if DEBUG
     if (typeof Clazz != 'function') {
         throw new TypeError('`Clazz` must be a constructor function.');
@@ -335,7 +453,7 @@ _setFinalPubFn(YJS_core_Class, 'addMembers', function (Clazz, members) {
  * @param {Function} Clazz The class to have static members added.
  * @param {Object} members The members to add. The key/value pairs represent the member-name/member-value.
  */
-_setFinalPubFn(YJS_core_Class, 'addStatics', function (Clazz, members) {
+YJS_core_Class.setFinalPubFn(YJS_core_Class, 'addStatics', function (Clazz, members) {
 // @if DEBUG
     if (typeof Clazz != 'function') {
         throw new TypeError('`Clazz` must be a constructor function.');
@@ -370,7 +488,7 @@ _setFinalPubFn(YJS_core_Class, 'addStatics', function (Clazz, members) {
  * @param {Function} SuperClazz The constructor function of the superclass.
  * @param {Function} Clazz The constructor function of class extending the superclass.
  */
-_setFinalPubFn(YJS_core_Class, 'extend', function (SuperClazz, Clazz) {
+YJS_core_Class.setFinalPubFn(YJS_core_Class, 'extend', function (SuperClazz, Clazz) {
     var setConst = YJS.core.Class.setConst,
         _initialize, Clazz_prototype, restoreInitializer;
 
@@ -409,6 +527,6 @@ _setFinalPubFn(YJS_core_Class, 'extend', function (SuperClazz, Clazz) {
 
 });
 
-})(this, YJS, 'YJS.core');
+})(this, YJS);
 
 // ##################################################################################################################
