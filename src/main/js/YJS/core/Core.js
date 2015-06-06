@@ -80,6 +80,8 @@ YJS.__ = {
     }
 };
 
+Object.freeze(YJS.__.build);
+
 /*
  * Until the YourJS logging system has been loaded, this will act as a placeholder for core code to use.
  */
