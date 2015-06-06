@@ -14,10 +14,19 @@ var NS = YJS.ns(nsPath),
     __create$superPreparer, _setConst, _setFinalPubFn, _setFn, _setPrivFn, _setProtFn, _setPubFn,
     $superRegEx, YJS_core_Class;
 
+/* configurable: false, enumerable: true, writable: false */
 _setConst = YJS.__.tmp._setConst;
+
+/* configurable: false, enumerable: true, writable: false */
 _setFinalPubFn = YJS.__.tmp._setFinalPubFn;
+
+/* configurable: false, enumerable: false, writable: false */
 _setPrivFn = YJS.__.tmp._setPrivFn;
+
+/* configurable: false, enumerable: true, writable: true */
 _setProtFn = YJS.__.tmp._setProtFn;
+
+/* configurable: false, enumerable: true, writable: true */
 _setPubFn = YJS.__.tmp._setPubFn;
 
 // Delete the temporary references. Code following the definition of YJS.core.Class must start using
@@ -140,11 +149,17 @@ _setFinalPubFn(YJS_core_Class, 'createCtor', function (simpleName) {
  *     console.log(Foo.BAR); // 'bar'
  *     delete Foo.BAR; // Throws error in strict mode.
  * 
+ * ## Implementation Note
+ * `YJS.core.Class.setConst(obj, 'FOO', value)` is short for
+ * `Object.defineProperty(obj, 'FOO', { enumerable: true, value: value })`;
+ * 
  * @param {Object} obj The object to add the constant to.
  * @param {String} constName The name of the constant to set. Must not contain lowercase letters.
  * @param {Mixed} [value=undefined] The value of the constant. It may be any value except a function -- be it a
- *   primitive, an object, etc. Because objects are mutable, unless frozen or sealed, the properties of the could
- *   be changed. For function 'properties', use #setPubFn, #setProtFn, or #setPrivFn instead.
+ *   primitive, an object, etc. Keep in mind, however, that objects are by default mutable until they are
+ *   {@link Object#freeze frozen} or {@link Object#seal sealed} (assuming browser support). Its properties could be
+ *   changed. That is, this method does _not_ make an object's properties constant. For function 'properties',
+ *   use #setPubFn, #setProtFn, or #setPrivFn instead.
  */
 _setFinalPubFn(YJS_core_Class, 'setConst', _setConst);
 
@@ -167,9 +182,14 @@ _setFinalPubFn(YJS_core_Class, 'setConst', _setConst);
  *     ...
  *     var foo = new Foo();
  *     // The following is still possible because JavaScript doesn't have true private
- *     // functions. And the closure trick to effectively create private functions is
- *     // not employed.
+ *     // functions unless the closure trick to effectively create private functions is
+ *     // used.
  *     foo.__doSomethingPrivate();
+ * 
+ * ## Implementation Note
+ * `YJS.core.Class.setPrivFn(Foo.prototype, '__bar', function () {...})` is short for
+ * `Object.defineProperty(Foo.prototype, '__bar', { value: function () {...} })`.
+ * However, `setPrivFn` also ensures the function name is valid.
  * 
  * @param {Object} obj The object to add the private function to. This may be and usually should be a prototype object
  *   so all instances of the object have this function.
@@ -195,6 +215,11 @@ _setFinalPubFn(YJS_core_Class, 'setPrivFn', _setPrivFn);
  *         // Logic to find bar goes here.
  *     });
  * 
+ * ## Implementation Note
+ * `YJS.core.Class.setProtFn(Foo.prototype, '_bar', function () {...})` is short for
+ * `Object.defineProperty(Foo.prototype, '_bar', { enumerable: true, value: function () {...}, writable: true })`.
+ * However, `setProtFn` also ensures the function name is valid.
+ * 
  * @param {Object} obj The object to add the protected function to. This may be and usually should be a prototype object
  *   so all instances of the object have this function.
  * @param {String} fnName The name of the function to set. Must begin with a single underscore.
@@ -218,6 +243,11 @@ _setFinalPubFn(YJS_core_Class, 'setProtFn', _setProtFn);
  *     YJS.core.Class.setPubFn(Foo.prototype, 'findBar', function () {
  *         // Logic to find bar goes here.
  *     });
+ * 
+ * ## Implementation Note
+ * `YJS.core.Class.setPubFn(Foo.prototype, 'bar', function () {...})` is short for
+ * `Object.defineProperty(Foo.prototype, 'bar', { enumerable: true, value: function () {...}, writable: true })`.
+ * However, `setPubFn` also ensures the function name is valid.
  * 
  * @param {Object} obj The object to add the public function to. This may be and usually should be a prototype object
  *   so all instances of the object have this function.
