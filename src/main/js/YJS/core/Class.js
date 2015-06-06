@@ -367,7 +367,7 @@ __create$superPreparer = function (obj, fnName, fn) {
 };
 
 // ==========================================================================
-/**
+/*
  * @private
  * @method __addMembers
  * Adds members to the specified object.

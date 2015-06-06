@@ -58,7 +58,7 @@ YJS_core_Class.setPrivFn(YJS_core_ClassManager, '__extend', function (superclazz
 });
 
 // ==========================================================================
-/**
+/*
  * @private
  * @method __makeNamespaces
  * Makes the necessary namespaces.
