@@ -32,12 +32,12 @@ var NS = YJS.ns(nsPath),
  * Constructs a Logger which will usually be given to a ConfigBuilder.
  * 
  * @param {Object} cfgs
- * @param {String} cfgs.pattern A pattern of the log names that this logger will handle. Used by the current
+ * @param {string} cfgs.pattern A pattern of the log names that this logger will handle. Used by the current
  *   {@link YJS.log.Config log configuration} to determine whether this logger or another logger should handle a log.
  * @param {YJS.log.Appender|YJS.log.Appender[]} [cfgs.appenders=[]] The log appenders each handled log will be passed to.
- * @param {Number} [cfgs.maxLevel=Number.MAX_VALUE] The maximum log-level to handle. See YJS.log.Level for pre-defined
+ * @param {number} [cfgs.maxLevel=Number.MAX_VALUE] The maximum log-level to handle. See YJS.log.Level for pre-defined
  *   log-level values. Other levels beside the pre-defined are allowed too.
- * @param {Number} [cfgs.minLevel=-Number.MAX_VALUE] The minimum log-level to handle. See YJS.log.Level for pre-defined
+ * @param {number} [cfgs.minLevel=-Number.MAX_VALUE] The minimum log-level to handle. See YJS.log.Level for pre-defined
  *   log-level values. Other levels beside the pre-defined are allowed too.
  */
 NS.Logger = YJS_log_Logger = function (cfgs) {
@@ -50,7 +50,7 @@ NS.Logger = YJS_log_Logger = function (cfgs) {
     // TODO: Assert pattern is valid.
     /**
      * @readonly
-     * @property {String}
+     * @property {string}
      * A pattern of the log names that this logger will handle.
      */
     this.pattern = cfgs.pattern;
@@ -64,10 +64,10 @@ YJS_log_Logger_prototype = YJS_log_Logger.prototype;
 /**
  * Checks if this logger will handle a log at the specified log-level.
  * 
- * @param {Number} logLevel The log-level to check against. See YJS.log.Level for pre-defined log-level values.
+ * @param {number} logLevel The log-level to check against. See YJS.log.Level for pre-defined log-level values.
  *   Other levels beside the pre-defined are allowed too.
  * 
- * @return {Boolean} `true` if this logger will handle a log at the specified log-level, `false` otherwise.
+ * @return {boolean} `true` if this logger will handle a log at the specified log-level, `false` otherwise.
  */
 YJS_log_Logger_prototype.willHandle = function (logLevel) {
     var willHandle = false;
@@ -82,9 +82,9 @@ YJS_log_Logger_prototype.willHandle = function (logLevel) {
 /**
  * Logs the given message/template at the specified level.
  * 
- * @param {Number} logLevel The level at which to log the message. See YJS.log.Level for pre-defined log-level values.
+ * @param {number} logLevel The level at which to log the message. See YJS.log.Level for pre-defined log-level values.
  *   Other levels beside the pre-defined are allowed too.
- * @param {String} template The message template with optional placeholders (aka substitution strings) that is used to
+ * @param {string} template The message template with optional placeholders (aka substitution strings) that is used to
  *   help form the log message.
  * @param {Mixed...} data The data to merge with the template and/or to append to the end of the message.
  */
@@ -122,9 +122,9 @@ YJS_log_Logger_prototype.logAt = function (logLevel, template, varargs) {
  * @protected
  * Creates a new log entry based on the given arguments.
  * 
- * @param {Number} logLevel The level at which to log the message. See YJS.log.Level for pre-defined log-level values.
+ * @param {number} logLevel The level at which to log the message. See YJS.log.Level for pre-defined log-level values.
  *   Other levels beside the pre-defined are allowed too.
- * @param {String} template The message template with optional placeholders (aka substitution strings) that is used to
+ * @param {string} template The message template with optional placeholders (aka substitution strings) that is used to
  *   help form the log message.
  * @param {Mixed...} data The data to merge with the template and/or to append to the end of the message.
  */

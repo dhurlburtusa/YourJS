@@ -46,7 +46,7 @@ NS.Factory = YJS_log_Factory = {
  *     BILOG.info('The browser is ...');
  *     BILOG.info('This browser supports ...');
  * 
- * @param {String} name The name of the log. A dot (.) may be used to separate the name parts. Name parts
+ * @param {string} name The name of the log. A dot (.) may be used to separate the name parts. Name parts
  *   must not contain whitespace and must have a length greater than zero with one exception. The name itself may be
  *   the empty string.
  * 
@@ -70,7 +70,7 @@ YJS_log_Factory.get = function (name) {
 
 // ==========================================================================
 /**
- * @return {String[]} The names of all the logs created by this factory. The list of names will be in no particular
+ * @return {string[]} The names of all the logs created by this factory. The list of names will be in no particular
  *   order.
  */
 YJS_log_Factory.getLogNames = function () {

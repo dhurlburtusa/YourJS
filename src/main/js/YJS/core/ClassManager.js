@@ -65,7 +65,7 @@ YJS_core_Class.setPrivFn(YJS_core_ClassManager, '__extend', function (superclazz
  * 
  *     __makeNamespaces(['Foo', 'bar']); // Makes the `Foo` namespaces if necessary. Then makes the `bar` namespace within the `Foo` namespace. Returns a reference to the `bar` namespace.
  * 
- * @param {String[]} namespaces The namespaces to make in hierarchical order.
+ * @param {string[]} namespaces The namespaces to make in hierarchical order.
  * 
  * @return {Object} A reference to the parent/last namespace.
  */
@@ -220,7 +220,7 @@ YJS_core_Class.setPrivFn(YJS_core_ClassManager, '__removeReserved', function (cl
  *         }
  *     );
  * 
- * @param {String} fqClassName The fully-qualified classname include namespace and package(s).
+ * @param {string} fqClassName The fully-qualified classname include namespace and package(s).
  * @param {Object} clazzDef The class definition.
  * @param {Function} [onClassDefined] An optional callback to be called after defining the class. Useful for making
  *   additional modifications to the class.

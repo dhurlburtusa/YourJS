@@ -49,9 +49,9 @@ NS.Boolean = YJS_Boolean = {
  *     var bool = !boolLike;
  * 
  * @param {Mixed} value The boolean-like value to possibly have the NOT operator applied to it.
- * @param {Boolean} [condition=true] Flag indicating whether to apply the NOT operator to the value.
+ * @param {boolean} [condition=true] Flag indicating whether to apply the NOT operator to the value.
  * 
- * @return {Boolean} the specified value with the NOT operator conditionally applied.
+ * @return {boolean} the specified value with the NOT operator conditionally applied.
  */
 YJS_Boolean.not = function (value, condition) {
     if (arguments.length <= 1) { condition = true; }

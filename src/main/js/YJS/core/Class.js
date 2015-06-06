@@ -40,17 +40,17 @@ $superRegEx = YJS.__.supports.fnToString ? /(\.\$super\s*\()|(\.\$super\.(apply|
  * descriptor.
  * 
  * @param {Object} obj The object to add the member (property/function) to.
- * @param {String} memberName The name of the member to set.
+ * @param {string} memberName The name of the member to set.
  * @param {Object} dataOrAccessorDesc The member descriptor. May be a data-descriptor or an accessor-descriptor. See
  *   [Object.defineProperty](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/defineProperty)
  *   for details.
- * @param {Boolean} [dataOrAccessorDesc.c=false] The `configurable` flag of the descriptor.
- * @param {Boolean} [dataOrAccessorDesc.e=false] The `enumerable` flag of the descriptor.
+ * @param {boolean} [dataOrAccessorDesc.c=false] The `configurable` flag of the descriptor.
+ * @param {boolean} [dataOrAccessorDesc.e=false] The `enumerable` flag of the descriptor.
  * @param {Function} [dataOrAccessorDesc.g=undefined] The `get` property of the descriptor.
  * @param {Function} [dataOrAccessorDesc.s=undefined] The `set` property of the descriptor.
  * @param {Mixed} [dataOrAccessorDesc.v=undefined] The value of the member. It may be any value -- be it a function,
  *   a primitive, etc.
- * @param {Boolean} [dataOrAccessorDesc.w=false] The `writable` flag of the descriptor.
+ * @param {boolean} [dataOrAccessorDesc.w=false] The `writable` flag of the descriptor.
  */
 /* @scopeless */
 Object.defineProperty(YJS_core_Class, '__setMember', {
@@ -79,12 +79,12 @@ Object.defineProperty(YJS_core_Class, '__setMember', {
  * Sets a function with the specified name on the specified object.
  * 
  * @param {Object} obj The object to add the member (property/function) to.
- * @param {String} fnName The name of the member to set.
+ * @param {string} fnName The name of the member to set.
  * @param {Function} fn The function to set.
  * @param {Object} fnDesc The function descriptor.
- * @param {Boolean} [fnDesc.c=false] The `configurable` flag of the descriptor.
- * @param {Boolean} [fnDesc.e=false] The `enumerable` flag of the descriptor.
- * @param {Boolean} [fnDesc.w=false] The `writable` flag of the descriptor.
+ * @param {boolean} [fnDesc.c=false] The `configurable` flag of the descriptor.
+ * @param {boolean} [fnDesc.e=false] The `enumerable` flag of the descriptor.
+ * @param {boolean} [fnDesc.w=false] The `writable` flag of the descriptor.
  */
 /* @scopeless */
 YJS_core_Class.__setMember(YJS_core_Class, '__setFn', {
@@ -136,7 +136,7 @@ YJS_core_Class.__setMember(YJS_core_Class, 'setFinalPubFn', { e: true, v: setFin
  * `Object.defineProperty(obj, 'FOO', { enumerable: true, value: value })`;
  * 
  * @param {Object} obj The object to add the constant to.
- * @param {String} constName The name of the constant to set. Must not contain lowercase letters.
+ * @param {string} constName The name of the constant to set. Must not contain lowercase letters.
  * @param {Mixed} [value=undefined] The value of the constant. It may be any value except a function -- be it a
  *   primitive, an object, etc. Keep in mind, however, that objects are by default mutable until they are
  *   {@link Object#freeze frozen} or {@link Object#seal sealed} (assuming browser support). Its properties could be
@@ -181,7 +181,7 @@ YJS_core_Class.setFinalPubFn(YJS_core_Class, 'setConst', function (obj, constNam
  * 
  * @param {Object} obj The object to add the private function to. This may be and usually should be a prototype object
  *   so all instances of the object have this function.
- * @param {String} fnName The name of the function to set. Must begin with double underscores.
+ * @param {string} fnName The name of the function to set. Must begin with double underscores.
  * @param {Function} fn The private function.
  */
 /* @scopeless */
@@ -219,7 +219,7 @@ YJS_core_Class.setFinalPubFn(YJS_core_Class, 'setPrivFn', function (obj, fnName,
  * 
  * @param {Object} obj The object to add the protected function to. This may be and usually should be a prototype object
  *   so all instances of the object have this function.
- * @param {String} fnName The name of the function to set. Must begin with a single underscore.
+ * @param {string} fnName The name of the function to set. Must begin with a single underscore.
  * @param {Function} fn The protected function.
  */
 /* @scopeless */
@@ -257,7 +257,7 @@ YJS_core_Class.setFinalPubFn(YJS_core_Class, 'setProtFn', function (obj, fnName,
  * 
  * @param {Object} obj The object to add the public function to. This may be and usually should be a prototype object
  *   so all instances of the object have this function.
- * @param {String} fnName The name of the function to set. Must not begin with any underscores.
+ * @param {string} fnName The name of the function to set. Must not begin with any underscores.
  * @param {Function} fn The public function.
  */
 /* @scopeless */
@@ -281,11 +281,11 @@ YJS_core_Class.setFinalPubFn(YJS_core_Class, 'setPubFn', function (obj, fnName, 
  * Creates a new constructor function with the specified name. The constructor will call a function named
  * `_initialize` if it exists.
  * 
- * @param {String} simpleName The name of the constructor. Must not be `null`.
+ * @param {string} simpleName The name of the constructor. Must not be `null`.
  * 
  * @return {Function} the new constructor function.
  * @return {true} return.$isClazz A flag indicating that this function represents a constructor for a class.
- * @return {String} return.$simpleName The name of the constructor. May prove useful for debugging.
+ * @return {string} return.$simpleName The name of the constructor. May prove useful for debugging.
  */
 /* @scopeless */
 YJS_core_Class.setFinalPubFn(YJS_core_Class, 'createCtor', function (simpleName) {

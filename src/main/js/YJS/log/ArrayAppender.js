@@ -27,7 +27,7 @@ var NS = YJS.ns(nsPath),
  * Creates a new array appender.
  * 
  * @param {Object} cfg
- * @param {Number} [cfg.maxEntries=5000]
+ * @param {number} [cfg.maxEntries=5000]
  */
 NS.ArrayAppender = YJS_log_ArrayAppender = function (cfg) {
     cfg = cfg || {};

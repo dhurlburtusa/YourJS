@@ -48,7 +48,7 @@ NS.Utils = YJS_Utils = {
  * 
  * @param {?Mixed} value The value to determine the type of.
  * 
- * @return {String} The type of the specified value.
+ * @return {string} The type of the specified value.
  */
 YJS_Utils.typeOf = function (value) {
     var typeOf, typeToString;

@@ -26,9 +26,9 @@ var NS = YJS.ns(nsPath);
  * 
  * @param {Object} [cfgs]
  * @param {Mixed[]} [cfgs.data=[]] The data to merge with the template and/or to append to the end of the message.
- * @param {Number} [cfgs.level=YJS.log.Level.DEBUG] The level at which to log the message. See YJS.log.Level for
+ * @param {number} [cfgs.level=YJS.log.Level.DEBUG] The level at which to log the message. See YJS.log.Level for
  *   pre-defined log-level values. Other levels beside the pre-defined are allowed too.
- * @param {String} [cfgs.template=""] The message template with optional placeholders (aka substitution strings) that
+ * @param {string} [cfgs.template=""] The message template with optional placeholders (aka substitution strings) that
  *   is used to help form the log message.
  */
 NS.Entry = function (cfgs) {
@@ -49,13 +49,13 @@ NS.Entry = function (cfgs) {
     
     /**
      * @readonly
-     * @property {Number}
+     * @property {number}
      * The level the message is to be logged at.
      */
     SELF.level = level;
     /**
      * @readonly
-     * @property {String}
+     * @property {string}
      * The message template with optional placeholders that is to be logged.
      */
     SELF.template = template;

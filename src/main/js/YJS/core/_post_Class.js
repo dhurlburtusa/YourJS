@@ -97,7 +97,7 @@ YJS_core_Class.setFinalPubFn(YJS, 'notAgainFn', function notAgainFn() { throw ne
  *     var App_example = YJS.ns('App.example');
  *     App_example.Bar = ...;
  * 
- * @param {String} namespaces A dot (`'.'`) delimited set of namespaces to be created if necessary.
+ * @param {string} namespaces A dot (`'.'`) delimited set of namespaces to be created if necessary.
  * 
  * @return {Object} A reference to the last namespace in the dot delimited set of namespaces.
  */

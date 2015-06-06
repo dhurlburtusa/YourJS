@@ -17,32 +17,32 @@ var NS = YJS.ns(nsPath);
 
 NS.Level = {
     /**
-     * @property {Number}
+     * @property {number}
      * The `debug` log-level.
      */
     DEBUG: 0,
     /**
-     * @property {Number}
+     * @property {number}
      * The `info` log-level.
      */
     INFO: 2000,
     /**
-     * @property {Number}
+     * @property {number}
      * The `log` log-level.
      */
     LOG: 4000,
     /**
-     * @property {Number}
+     * @property {number}
      * The `warn` log-level.
      */
     WARN: 6000,
     /**
-     * @property {Number}
+     * @property {number}
      * The `error` log-level.
      */
     ERROR: 8000,
     /**
-     * @property {Number}
+     * @property {number}
      * The `fatal` log-level.
      */
     FATAL: 10000

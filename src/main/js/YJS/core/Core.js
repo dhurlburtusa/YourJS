@@ -35,7 +35,7 @@ YJS_core_Class = YJS.core.Class;
  *     (YJSNs === MyLibrary); // true
  *     (typeof YJS === 'undefined'); // false
  * 
- * @param {String} newTopNs The new namespace to use. Must not be the empty string. Must not contain dots.
+ * @param {string} newTopNs The new namespace to use. Must not be the empty string. Must not contain dots.
  */
 YJS_core_Class.setFinalPubFn(YJS_core_Core, 'aliasNs', function (newTopNs) {
     return this.__changeNs__(newTopNs);
@@ -52,7 +52,7 @@ YJS_core_Class.setFinalPubFn(YJS_core_Core, 'aliasNs', function (newTopNs) {
  *     (YJSNs === MyLibrary); // true
  *     (typeof YJS === 'undefined'); // true
  * 
- * @param {String} newTopNs The new namespace to use. Must not be the empty string. Must not contain dots.
+ * @param {string} newTopNs The new namespace to use. Must not be the empty string. Must not contain dots.
  */
 YJS_core_Class.setFinalPubFn(YJS_core_Core, 'changeNs', function (newTopNs) {
     return this.__changeNs__(newTopNs, true);
@@ -74,7 +74,7 @@ YJS_core_Class.setFinalPubFn(YJS_core_Core, 'changeNs', function (newTopNs) {
  *     (typeof YJS === 'undefined'); // false
  *     (YJS === MyLibrary); // true
  * 
- * @param {String} newTopNs The new namespace to use. Must not be the empty string. Must not contain dots.
+ * @param {string} newTopNs The new namespace to use. Must not be the empty string. Must not contain dots.
  */
 YJS_core_Class.setFinalPubFn(YJS_core_Core, 'restoreOriginalNs', function () {
     GBL.YJS = YJS;

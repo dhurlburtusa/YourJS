@@ -37,7 +37,7 @@ NS.Number = YJS_Number = {
  * 
  * @param {Mixed} value The value to determine if it be `NaN`.
  * 
- * @return {Boolean} `true` if value be `NaN`, `false` otherwise.
+ * @return {boolean} `true` if value be `NaN`, `false` otherwise.
  */
 YJS_Number.itBeNaN = function (value) {
     /* NOTE: This method was not named isNaN so it is not confused with the global isNaN function which returns true

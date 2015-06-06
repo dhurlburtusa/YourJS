@@ -6,7 +6,7 @@
 /**
  * @singleton
  * @class YJS.String
- * A set of String related methods.
+ * A set of string related methods.
  */
 (function (GBL, YJS, nsPath) {
 
@@ -38,10 +38,10 @@ NS.String = YJS_String = {
  * * %i converts the replacement value to an integer before replacing.
  * * %s converts the replacement value to a string before replacing.
  * 
- * @param {String} pattern The string pattern/template with the printf style placeholders.
+ * @param {string} pattern The string pattern/template with the printf style placeholders.
  * @param {Mixed} [varargs] The replacement values.
  * 
- * @return {String} a string with the placeholders replaced with the specified replacement values.
+ * @return {string} a string with the placeholders replaced with the specified replacement values.
  */
 YJS_String.printf = function (pattern, varargs) {
     var args, i, iLen, out;

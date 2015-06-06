@@ -76,9 +76,9 @@ YJS_Array.copy = function (arrayLikeObj) {
  * 
  * @param {?Array} array The array to check.
  * @param {Object} value The value to find the index of.
- * @param {Number} [from] The index at which to begin the search.
+ * @param {number} [from] The index at which to begin the search.
  * 
- * @return {Number} The index of value in the array if found, otherwise `-1`.
+ * @return {number} The index of value in the array if found, otherwise `-1`.
  */
 YJS_Array.indexOf = function (array, value, from) {
    var YJS_Number = YJS.Number,

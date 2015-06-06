@@ -50,7 +50,7 @@ var NS = YJS.ns(nsPath),
  * YJS.log.Factory#get is used.
  * 
  * @param {Object} [cfgs]
- * @param {String} [cfgs.name=""] The name of the log. A dot (.) may be used to separate the name parts. Name parts
+ * @param {string} [cfgs.name=""] The name of the log. A dot (.) may be used to separate the name parts. Name parts
  *   must not contain whitespace and must have a length greater than zero with one exception. The name itself may be
  *   the empty string.
  * @throws TypeError
@@ -81,7 +81,7 @@ NS.Log = YJS_log_Log = function (cfgs) {
     
     /**
      * @readonly
-     * @property {String}
+     * @property {string}
      * The name of this log.
      */
     this.name = name;
@@ -133,7 +133,7 @@ YJS_log_Log_prototype = YJS_log_Log.prototype;
  *     YJS.LOG.debug('%s was %i. Expected %i.', 'Foo', 10, 12);
  *     YJS.LOG.debug('%s was %i.', 'Foo', 10, ' Expected 12.');
  * 
- * @param {String} template The message template with optional placeholders (aka substitution strings) that is used to
+ * @param {string} template The message template with optional placeholders (aka substitution strings) that is used to
  *   help form the log message.
  * @param {Mixed...} data The data to merge with the template and/or to append to the end of the message.
  */
@@ -150,7 +150,7 @@ YJS_log_Log_prototype.debug = function (args) {
  *     YJS.LOG.fatal('%s was %i. Expected %i. %s!!', 'Foo', 10, 12, 'Aborting');
  *     YJS.LOG.fatal('%s was %i.', 'Foo', 10, ' Expected 12.', ' Aborting!!');
  * 
- * @param {String} template The message template with optional placeholders (aka substitution strings) that is used to
+ * @param {string} template The message template with optional placeholders (aka substitution strings) that is used to
  *   help form the log message.
  * @param {Mixed...} data The data to merge with the template and/or to append to the end of the message.
  */
@@ -167,7 +167,7 @@ YJS_log_Log_prototype.fatal = function (args) {
  *     YJS.LOG.error('%s was %i. Expected %i. Shutting down %s.', 'Foo', 10, 12, 'Foo');
  *     YJS.LOG.error('%s was %i.', 'Foo', 10, ' Expected 12.', ' Shutting down Foo.');
  * 
- * @param {String} template The message template with optional placeholders (aka substitution strings) that is used to
+ * @param {string} template The message template with optional placeholders (aka substitution strings) that is used to
  *   help form the log message.
  * @param {Mixed...} data The data to merge with the template and/or to append to the end of the message.
  */
@@ -184,7 +184,7 @@ YJS_log_Log_prototype.error = function (args) {
  *     YJS.LOG.info('BTW, %s was %i. Expected %i.', 'Foo', 10, 12);
  *     YJS.LOG.info('BTW, %s was %i.', 'Foo', 10, ' Expected 12.');
  * 
- * @param {String} template The message template with optional placeholders (aka substitution strings) that is used to
+ * @param {string} template The message template with optional placeholders (aka substitution strings) that is used to
  *   help form the log message.
  * @param {Mixed...} data The data to merge with the template and/or to append to the end of the message.
  */
@@ -201,7 +201,7 @@ YJS_log_Log_prototype.info = function (args) {
  *     YJS.LOG.log('Not again. %s was %i. Expected %i.', 'Foo', 10, 12);
  *     YJS.LOG.log('Not again. %s was %i.', 'Foo', 10, ' Expected 12.');
  * 
- * @param {String} template The message template with optional placeholders (aka substitution strings) that is used to
+ * @param {string} template The message template with optional placeholders (aka substitution strings) that is used to
  *   help form the log message.
  * @param {Mixed...} data The data to merge with the template and/or to append to the end of the message.
  */
@@ -220,9 +220,9 @@ YJS_log_Log_prototype.log = function (args) {
  *     ...
  *     LOG.logAt(logLevel, "You may or may not see this.");
  * 
- * @param {Number} logLevel The level at which to log the message. See YJS.log.Level for pre-defined log-level values.
+ * @param {number} logLevel The level at which to log the message. See YJS.log.Level for pre-defined log-level values.
  *   Other levels beside the pre-defined are allowed too.
- * @param {String} template The message template with optional placeholders (aka substitution strings) that is used to
+ * @param {string} template The message template with optional placeholders (aka substitution strings) that is used to
  *   help form the log message.
  * @param {Mixed...} data The data to merge with the template and/or to append to the end of the message.
  */
@@ -242,7 +242,7 @@ YJS_log_Log_prototype.logAt = function (args) {
  *     YJS.LOG.warn('Warning! %s was %i. Expected %i.', 'Foo', 10, 12);
  *     YJS.LOG.warn('Warning! %s was %i.', 'Foo', 10, ' Expected 12.');
  * 
- * @param {String} template The message template with optional placeholders (aka substitution strings) that is used to
+ * @param {string} template The message template with optional placeholders (aka substitution strings) that is used to
  *   help form the log message.
  * @param {Mixed...} data The data to merge with the template and/or to append to the end of the message.
  */

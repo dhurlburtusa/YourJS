@@ -35,11 +35,11 @@ NS.Object = YJS_Object = {
  * See the Jasmine Specs for more example uses.
  * 
  * @param {Object} object The object to set the value on.
- * @param {String} path The path to the value. A path is a special selector that should lead to a unique point in the
+ * @param {string} path The path to the value. A path is a special selector that should lead to a unique point in the
  *   object. Currently, only dot notation is understood. E.g., `'top.next.last'`.
  * @param {Mixed} value The value to set.
  * @param {Object} [options] The options to use.
- * @param {Boolean} [options.force=false] Flag indicating whether to force the creation of missing objects along the
+ * @param {boolean} [options.force=false] Flag indicating whether to force the creation of missing objects along the
  *   path.
  */
 YJS_Object.put = function (object, path, value, options) {
