@@ -25,6 +25,18 @@ YJSHelper.expectToHaveConst$isNamespace = function (ns) {
     expect(ns.$isNamespace).toBe(true);
 };
 
+YJSHelper.expectToHavePropertiesOfAClass = function (Clazz, $simpleName, $name, $superclazz) {
+    expect(Clazz).toBeDefined();
+    expect(Clazz.hasOwnProperty('$isClazz')).toBe(true);
+    expect(Clazz.$isClazz).toBe(true);
+    expect(Clazz.hasOwnProperty('$simpleName')).toBe(true);
+    expect(Clazz.$simpleName).toBe($simpleName);
+    expect(Clazz.hasOwnProperty('$name')).toBe(true);
+    expect(Clazz.$name).toBe($name);
+    expect(Clazz.hasOwnProperty('$superclazz')).toBe(true);
+    expect(Clazz.$superclazz).toBe($superclazz);
+};
+
 YJSHelper.setupLoggingArrayAppender = function (YJS) {
     var arrayAppender, cb, config, rootLogger, YJSHelper;
 

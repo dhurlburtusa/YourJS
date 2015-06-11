@@ -29,15 +29,7 @@ describe("YJS.core.ClassManager", function () {
 
             YJSHelper.expectToHaveConst$isNamespace(Test);
             YJSHelper.expectToHaveConst$isNamespace(Test.test);
-            expect(Test.test.Car).toBeDefined();
-            expect(Test.test.Car.hasOwnProperty('$isClazz')).toBe(true);
-            expect(Test.test.Car.$isClazz).toBe(true);
-            expect(Test.test.Car.hasOwnProperty('$simpleName')).toBe(true);
-            expect(Test.test.Car.$simpleName).toBe('Car');
-            expect(Test.test.Car.hasOwnProperty('$name')).toBe(true);
-            expect(Test.test.Car.$name).toBe('Test.test.Car');
-            expect(Test.test.Car.hasOwnProperty('$superclazz')).toBe(true);
-            expect(Test.test.Car.$superclazz).toBe(YJS.core.Base);
+            YJSHelper.expectToHavePropertiesOfAClass(Test.test.Car, 'Car', 'Test.test.Car', YJS.core.Base);
 
             car = new Test.test.Car({
                 model: 'Ford'
@@ -83,15 +75,7 @@ describe("YJS.core.ClassManager", function () {
 
             YJSHelper.expectToHaveConst$isNamespace(Test);
             YJSHelper.expectToHaveConst$isNamespace(Test.test);
-            expect(Test.test.Car).toBeDefined();
-            expect(Test.test.Car.hasOwnProperty('$isClazz')).toBe(true);
-            expect(Test.test.Car.$isClazz).toBe(true);
-            expect(Test.test.Car.hasOwnProperty('$simpleName')).toBe(true);
-            expect(Test.test.Car.$simpleName).toBe('Car');
-            expect(Test.test.Car.hasOwnProperty('$name')).toBe(true);
-            expect(Test.test.Car.$name).toBe('Test.test.Car');
-            expect(Test.test.Car.hasOwnProperty('$superclazz')).toBe(true);
-            expect(Test.test.Car.$superclazz).toBe(YJS.core.Base);
+            YJSHelper.expectToHavePropertiesOfAClass(Test.test.Car, 'Car', 'Test.test.Car', YJS.core.Base);
 
             car = new Test.test.Car({
                 model: 'Ford'
@@ -138,9 +122,7 @@ describe("YJS.core.ClassManager", function () {
 
             YJSHelper.expectToHaveConst$isNamespace(Test);
             YJSHelper.expectToHaveConst$isNamespace(Test.test);
-            expect(Test.test.Car).toBeDefined();
-            expect(Test.test.Car.$isClazz).toBe(true);
-            expect(Test.test.Car.$superclazz).toBe(YJS.core.Base);
+            YJSHelper.expectToHavePropertiesOfAClass(Test.test.Car, 'Car', 'Test.test.Car', YJS.core.Base);
             expect(Test.test.Car.hasOwnProperty('destroy')).toBe(true);
             expect(typeof Test.test.Car.destroy).toBe('function');
 
@@ -175,7 +157,7 @@ describe("YJS.core.ClassManager", function () {
 
             YJSHelper.expectToHaveConst$isNamespace(Test);
             YJSHelper.expectToHaveConst$isNamespace(Test.test);
-            expect(Test.test.Math).toBeDefined();
+            YJSHelper.expectToHavePropertiesOfAClass(Test.test.Math, 'Math', 'Test.test.Math', YJS.core.Base);
             expect(Test.test.Math.add).toBeDefined();
             expect(typeof Test.test.Math.add).toBe('function');
             expect(Test.test.Math.add(1, 2)).toBe(3);          
@@ -208,11 +190,7 @@ describe("YJS.core.ClassManager", function () {
 
             YJSHelper.expectToHaveConst$isNamespace(Test);
             YJSHelper.expectToHaveConst$isNamespace(Test.test);
-            expect(Test.test.Vehicle).toBeDefined();
-            expect(Test.test.Vehicle.$isClazz).toBe(true);
-            expect(Test.test.Vehicle.$simpleName).toBe('Vehicle');
-            expect(Test.test.Vehicle.$name).toBe('Test.test.Vehicle');
-            expect(Test.test.Vehicle.$superclazz).toBe(YJS.core.Base);
+            YJSHelper.expectToHavePropertiesOfAClass(Test.test.Vehicle, 'Vehicle', 'Test.test.Vehicle', YJS.core.Base);
 
             vehicle = new Test.test.Vehicle({
                 make: 'Acme'
@@ -237,9 +215,7 @@ describe("YJS.core.ClassManager", function () {
 
             YJSHelper.expectToHaveConst$isNamespace(Test);
             YJSHelper.expectToHaveConst$isNamespace(Test.test);
-            expect(Test.test.Car).toBeDefined();
-            expect(Test.test.Car.$isClazz).toBe(true);
-            expect(Test.test.Car.$superclazz).toBe(Test.test.Vehicle);
+            YJSHelper.expectToHavePropertiesOfAClass(Test.test.Car, 'Car', 'Test.test.Car', Test.test.Vehicle);
 
             car = new Test.test.Car({
                 make: 'Ford'
@@ -278,9 +254,7 @@ describe("YJS.core.ClassManager", function () {
 
             YJSHelper.expectToHaveConst$isNamespace(Test);
             YJSHelper.expectToHaveConst$isNamespace(Test.test);
-            expect(Test.test.HotRod).toBeDefined();
-            expect(Test.test.HotRod.$isClazz).toBe(true);
-            expect(Test.test.HotRod.$superclazz).toBe(Test.test.Car);
+            YJSHelper.expectToHavePropertiesOfAClass(Test.test.HotRod, 'HotRod', 'Test.test.HotRod', Test.test.Car);
 
             hotRod = new Test.test.HotRod({
                 make: 'Ford',
@@ -337,15 +311,7 @@ describe("YJS.core.ClassManager", function () {
             });
             YJSHelper.expectToHaveConst$isNamespace(Test);
             YJSHelper.expectToHaveConst$isNamespace(Test.test);
-            expect(Test.test.Car).toBeDefined();
-            expect(Test.test.Car.hasOwnProperty('$isClazz')).toBe(true);
-            expect(Test.test.Car.$isClazz).toBe(true);
-            expect(Test.test.Car.hasOwnProperty('$simpleName')).toBe(true);
-            expect(Test.test.Car.$simpleName).toBe('Car');
-            expect(Test.test.Car.hasOwnProperty('$name')).toBe(true);
-            expect(Test.test.Car.$name).toBe('Test.test.Car');
-            expect(Test.test.Car.hasOwnProperty('$superclazz')).toBe(true);
-            expect(Test.test.Car.$superclazz).toBe(Object);
+            YJSHelper.expectToHavePropertiesOfAClass(Test.test.Car, 'Car', 'Test.test.Car', Object);
             expect(Test.test.Car.TYPE).toBe('car');
 
             car = new Test.test.Car();
