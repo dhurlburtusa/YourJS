@@ -13,6 +13,17 @@ describe("YJS.core.Base", function () {
             expect(YJS.core.Base.$isClazz).toBe(true);
         });
 
+        it("should be constant", function () {
+            expect(function () {
+                YJS.core.Base.$isClazz = false;
+            }).toThrow();
+            expect(YJS.core.Base.$isClazz).toBe(true);
+            expect(function () {
+                delete YJS.core.Base.$isClazz;
+            }).toThrow();
+            expect(YJS.core.Base.$isClazz).toBe(true);
+        });
+
     });
 
     describe(".$simpleName", function () {

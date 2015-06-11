@@ -8,6 +8,12 @@
 var YJS_core_Class = YJS.core.Class;
 
 // ==========================================================================
+YJS_core_Class.setConst(YJS, '$isNamespace', true);
+
+// ==========================================================================
+YJS_core_Class.setConst(YJS.core, '$isNamespace', true);
+
+// ==========================================================================
 /**
  * @member YJS
  * @readonly
@@ -92,9 +98,13 @@ YJS_core_Class.setFinalPubFn(YJS, 'notAgainFn', function notAgainFn() { throw ne
  * Creates new namespaces when necessary.
  * 
  *     var Foo = YJS.ns('Foo');
+ *     console.log(Foo.$isNamespace); // true
  *     YJS.ns('Bar');
+ *     console.log(Bar.$isNamespace); // true
  *     Bar.someMethod = function (...) { ... };
  *     var App_example = YJS.ns('App.example');
+ *     console.log(App_example.$isNamespace); // true
+ *     console.log(App.example.$isNamespace); // true
  *     App_example.Bar = ...;
  * 
  * @param {string} namespaces A dot (`'.'`) delimited set of namespaces to be created if necessary.
@@ -102,17 +112,24 @@ YJS_core_Class.setFinalPubFn(YJS, 'notAgainFn', function notAgainFn() { throw ne
  * @return {Object} A reference to the last namespace in the dot delimited set of namespaces.
  */
 YJS_core_Class.setFinalPubFn(YJS, 'ns', function (namespaces) {
-    var cntx, i, iLen, namespace;
+    var cntx, i, iLen, namespace, nss;
 
+    nss = [];
     namespaces = namespaces.split('.');
     cntx = GBL;
     for (i = 0, iLen = namespaces.length; i < iLen; ++i) {
         namespace = namespaces[i];
         if (namespace) {
-            if (!(namespace in cntx)) {
+            nss.push(namespace);
+            if (!cntx[namespace] || typeof cntx[namespace] != 'object') {
                 cntx[namespace] = {};
             }
             cntx = cntx[namespace];
+            try {
+                YJS.core.Class.setConst(cntx, '$isNamespace', true);
+            } catch (e) {
+                YJS.$LOG.warn("Unable to set the `$isNamespace` constant to `true` for the `%s` namespace.", nss.join('.'));
+            }
         }
     }
     return cntx;

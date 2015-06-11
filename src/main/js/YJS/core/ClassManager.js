@@ -58,37 +58,6 @@ YJS_core_Class.setPrivFn(YJS_core_ClassManager, '__extend', function (superclazz
 });
 
 // ==========================================================================
-/*
- * @private
- * @method __makeNamespaces
- * Makes the necessary namespaces.
- * 
- *     __makeNamespaces(['Foo', 'bar']); // Makes the `Foo` namespaces if necessary. Then makes the `bar` namespace within the `Foo` namespace. Returns a reference to the `bar` namespace.
- * 
- * @param {string[]} namespaces The namespaces to make in hierarchical order.
- * 
- * @return {Object} A reference to the parent/last namespace.
- */
-YJS_core_Class.setPrivFn(YJS_core_ClassManager, '__makeNamespaces', function (namespaces) {
-    var i, len, namespace, parentNamespace;
-
-    parentNamespace = YJS.GBL;
-
-    len = namespaces.length;
-
-    if (len > 0) {
-        for (i = 0; i < len; ++i) {
-            namespace = namespaces[i];
-            if (!parentNamespace[namespace]) {
-                parentNamespace[namespace] = {};
-            }
-            parentNamespace = parentNamespace[namespace];
-        }
-    }
-    return parentNamespace;
-});
-
-// ==========================================================================
 YJS_core_Class.setPrivFn(YJS_core_ClassManager, '__copy', function (input, recurse) {
     var SELF = YJS.core.ClassManager,
         out = {},
@@ -231,8 +200,8 @@ YJS_core_Class.setPubFn(YJS_core_ClassManager, 'define', function (fqClassName, 
 
     namespaces = fqClassName.split('.');
     clazzSimpleName = namespaces.pop();
-    // NOTE: YJS.ns doesn't work here.
-    parentNamespace = SELF.__makeNamespaces(namespaces);
+    namespaces = namespaces.join('.');
+    parentNamespace = YJS.ns(namespaces);
 
     if (typeof clazzDef == 'function') {
         clazzDef = clazzDef();

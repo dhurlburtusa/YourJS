@@ -29,6 +29,8 @@ var YJS = GBL[topNs], buildMode;
  */
 if (!YJS) { GBL[topNs] = YJS = {}; }
 
+// NOTE: YJS.core.$isNamespace is set later in _post_Class.js.
+
 // @if !DEBUG
 buildMode = 'prod';
 // @endif

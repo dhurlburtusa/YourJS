@@ -27,6 +27,8 @@ describe("YJS.core.ClassManager", function () {
                 }
             });
 
+            YJSHelper.expectToHaveConst$isNamespace(Test);
+            YJSHelper.expectToHaveConst$isNamespace(Test.test);
             expect(Test.test.Car).toBeDefined();
             expect(Test.test.Car.hasOwnProperty('$isClazz')).toBe(true);
             expect(Test.test.Car.$isClazz).toBe(true);
@@ -79,6 +81,8 @@ describe("YJS.core.ClassManager", function () {
                 }
             });
 
+            YJSHelper.expectToHaveConst$isNamespace(Test);
+            YJSHelper.expectToHaveConst$isNamespace(Test.test);
             expect(Test.test.Car).toBeDefined();
             expect(Test.test.Car.hasOwnProperty('$isClazz')).toBe(true);
             expect(Test.test.Car.$isClazz).toBe(true);
@@ -132,6 +136,8 @@ describe("YJS.core.ClassManager", function () {
                 Clazz.prototype.extra = 'xtra';
             });
 
+            YJSHelper.expectToHaveConst$isNamespace(Test);
+            YJSHelper.expectToHaveConst$isNamespace(Test.test);
             expect(Test.test.Car).toBeDefined();
             expect(Test.test.Car.$isClazz).toBe(true);
             expect(Test.test.Car.$superclazz).toBe(YJS.core.Base);
@@ -167,6 +173,8 @@ describe("YJS.core.ClassManager", function () {
                 });
             });
 
+            YJSHelper.expectToHaveConst$isNamespace(Test);
+            YJSHelper.expectToHaveConst$isNamespace(Test.test);
             expect(Test.test.Math).toBeDefined();
             expect(Test.test.Math.add).toBeDefined();
             expect(typeof Test.test.Math.add).toBe('function');
@@ -198,6 +206,8 @@ describe("YJS.core.ClassManager", function () {
                 }
             });
 
+            YJSHelper.expectToHaveConst$isNamespace(Test);
+            YJSHelper.expectToHaveConst$isNamespace(Test.test);
             expect(Test.test.Vehicle).toBeDefined();
             expect(Test.test.Vehicle.$isClazz).toBe(true);
             expect(Test.test.Vehicle.$simpleName).toBe('Vehicle');
@@ -225,6 +235,8 @@ describe("YJS.core.ClassManager", function () {
                 }
             });
 
+            YJSHelper.expectToHaveConst$isNamespace(Test);
+            YJSHelper.expectToHaveConst$isNamespace(Test.test);
             expect(Test.test.Car).toBeDefined();
             expect(Test.test.Car.$isClazz).toBe(true);
             expect(Test.test.Car.$superclazz).toBe(Test.test.Vehicle);
@@ -264,6 +276,8 @@ describe("YJS.core.ClassManager", function () {
             };
             YJS.core.ClassManager.define('Test.test.HotRod', clazzDef);
 
+            YJSHelper.expectToHaveConst$isNamespace(Test);
+            YJSHelper.expectToHaveConst$isNamespace(Test.test);
             expect(Test.test.HotRod).toBeDefined();
             expect(Test.test.HotRod.$isClazz).toBe(true);
             expect(Test.test.HotRod.$superclazz).toBe(Test.test.Car);
@@ -321,6 +335,8 @@ describe("YJS.core.ClassManager", function () {
                     return 'driving';
                 }
             });
+            YJSHelper.expectToHaveConst$isNamespace(Test);
+            YJSHelper.expectToHaveConst$isNamespace(Test.test);
             expect(Test.test.Car).toBeDefined();
             expect(Test.test.Car.hasOwnProperty('$isClazz')).toBe(true);
             expect(Test.test.Car.$isClazz).toBe(true);

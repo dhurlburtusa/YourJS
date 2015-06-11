@@ -12,7 +12,10 @@
 // @endif
 
 if (!YJS.hasOwnProperty('core')) {
-    Object.defineProperty(YJS, 'core', { enumerable: true, value: {} });
+    // NOTE: YJS.ns doesn't exist at this point.
+    // NOTE: YJS.core is essential to the framework. Here it is designed not to be configurable or writable.
+    Object.defineProperty(YJS, 'core', { configurable: false, enumerable: true, value: {}, writable: false });
+    // NOTE: YJS.core.$isNamespace is set later in _post_Class.js.
 }
 
 })(this, YJS);
