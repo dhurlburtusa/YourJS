@@ -10,6 +10,7 @@ var YJS_core_Class = YJS.core.Class,
 YJS_core_Class.setConst(YJS.Array, '$LOG', YJS_log_Factory.get('YJS.Array'));
 YJS_core_Class.setConst(YJS.Boolean, '$LOG', YJS_log_Factory.get('YJS.Boolean'));
 YJS_core_Class.setConst(YJS.Number, '$LOG', YJS_log_Factory.get('YJS.Number'));
+YJS_core_Class.setConst(YJS.Object, '$LOG', YJS_log_Factory.get('YJS.Object'));
 YJS_core_Class.setConst(YJS.String, '$LOG', YJS_log_Factory.get('YJS.String'));
 YJS_core_Class.setConst(YJS.Utils, '$LOG', YJS_log_Factory.get('YJS.Utils'));
 

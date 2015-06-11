@@ -138,4 +138,6 @@ YJS.__.tmp.LOG = {
     }
 };
 
+YJS.$LOG = YJS.__.tmp.LOG;
+
 })(this, 'YJS');
