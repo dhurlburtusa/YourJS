@@ -16,7 +16,7 @@ var NS = YJS.ns(nsPath),
   YJS_core_Base;
 
 NS.Base = YJS_core_Base = YJS_core_Class.createCtor('Base');
-
+YJS_core_Class.setConst(YJS_core_Base, '$name', 'YJS.core.Base');
 YJS_core_Class.extend(Object, YJS_core_Base);
 
 /**

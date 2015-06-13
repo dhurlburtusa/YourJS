@@ -26,6 +26,14 @@ describe("YJS.core.Base", function () {
 
     });
 
+    describe(".$name", function () {
+
+        it("should be equal to `'YJS.core.Base'`", function () {
+            expect(YJS.core.Base.$name).toBe('YJS.core.Base');
+        });
+
+    });
+
     describe(".$simpleName", function () {
 
         it("should be equal to `'Base'`", function () {
