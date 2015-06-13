@@ -189,8 +189,35 @@ YJS_core_Class.setPrivFn(YJS_core_ClassManager, '__removeReserved', function (cl
  *         }
  *     );
  * 
- * @param {string} fqClassName The fully-qualified classname include namespace and package(s).
- * @param {Object} clazzDef The class definition.
+ * @param {string} fqClassName The fully-qualified classname including any namespace(s). The classname or any
+ *   namespaces must not contain any dots) (`'.'`).
+ * @param {Object} clazzDef The class definition. Only non-inheritable properties are considered. All of which, except
+ *   the special properties documented below, will become members of the class's prototype. These are usually functions
+ *   that will become instance methods. If they are not functions, then they will act like default values for instance
+ *   properties. Actual instance properties added during construction or the lifetime of the instance will hide the
+ *   default value. 
+ *   
+ *   NOTE: How properties are treated depends on their name and whether they match a particular convention. All
+ *   non-function properties named only containing capital letters, `$`, and `_` will be declared as constants. The
+ *   visibility (public, protected, or private) of function properties is determined by the number of `_` at the
+ *   beginning of the name. If it starts with zero, then it will be declared as a public function. If it starts with
+ *   a single `_`, then it will be declared as a protected function. If it starts with double `_`s, then it will be
+ *   declared as a private function. Public and protected functions are enumerable. Private functions are not
+ *   enumerable.
+ *   NOTE: '$clazz', '$superclazz', and 'constructor' are forbidden (even inside `$clazzDef.$members)
+ *   and will be ignored if declared on the class definition. They will exist on the class's prototype after the class
+ *   is defined.
+ * @param {string} [clazzDef.$extend='YJS.core.Base'] The fully-qualified name of the class to extend.
+ * @param {Object} [clazzDef.$statics] A object of which its non-inheritable properties will become the static members
+ *   (constants, properties, functions) of the class. That is, these members will be added to the class itself. NOTE:
+ *   '$isClazz', '$name', '$simpleName', and '$superclazz' are forbidden static members and will be ignored if
+ *   declared.
+ * @param {Object} [clazzDef.$members] An alternative way to declaring members for the class's prototype. This way also
+ *   allows members to be declared that have names matching the special properties (`$extend`, `$members`, `$requires`,
+ *   `$statics`, `$uses`) of the class definition.
+ * @param {string[]} [clazzDef.$requires] An array of fully-qualified classnames that are needed to define the class.
+ * @param {string[]} [clazzDef.$uses] An array of fully-qualified classnames that are needed when an instance of the class
+ *   is created or may be needed during the life of an instance.
  * @param {Function} [onClassDefined] An optional callback to be called after defining the class. Useful for making
  *   additional modifications to the class.
  */
@@ -226,7 +253,7 @@ YJS_core_Class.setPubFn(YJS_core_ClassManager, 'define', function (fqClassName, 
         YJS_core_Class.addStatics(Clazz, clazzDef.$statics);
     }
 
-    // TODO: Do something with the $mixins, $members, and $singleton clazzDef properties.
+    // TODO: Do something with the $mixins and $singleton clazzDef properties. Be sure to add documentation for them too.
 
     members = clazzDef.$members;
 

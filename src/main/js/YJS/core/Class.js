@@ -126,10 +126,13 @@ YJS_core_Class.__setMember(YJS_core_Class, 'setFinalPubFn', { e: true, v: setFin
  *     Foo = {};
  *     ...
  *     YJS.core.Class.setConst(Foo, 'BAR', 'bar');
+ *     YJS.core.Class.setConst(Foo.prototype, 'CORGE', 'corge');
  *     console.log(Foo.BAR); // 'bar'
  *     Foo.BAR = 'qux'; // Throws error in strict mode.
  *     console.log(Foo.BAR); // 'bar'
  *     delete Foo.BAR; // Throws error in strict mode.
+ *     var foo = new Foo();
+ *     console.log(foo.CORGE); // 'corge'
  * 
  * ## Implementation Note
  * `YJS.core.Class.setConst(obj, 'FOO', value)` is short for
@@ -468,14 +471,16 @@ YJS_core_Class.setFinalPubFn(YJS_core_Class, 'addStatics', function (Clazz, memb
  * Makes a class extend a superclass.
  * 
  *     var BaseClass = function () { ... };
- *     BaseClass.prototype.foo = function () { return 'foo'; };
- *     BaseClass.prototype.bar = "Bar";
+ *     YJS.core.Class.addMembers(BaseClass, {
+ *         bar: 'bar',
+ *         foo: function () { return 'foo'; }
+ *     });
  *     var DerivedClass = function () { ... };
  *     YJS.core.Class.extend(BaseClass, DerivedClass);
  *     var obj = new DerivedClass();
  *     console.log(obj.foo()); // "foo";
  *     console.log(obj.bar); // "Bar";
- *     obj.constructor; // Reference to the class that defined obj.
+ *     obj.constructor; // Reference to the class that defined obj, DerivedClass.
  *     obj.$clazz; // Reference to the class that defined obj, DerivedClass.
  *     obj.$superclazz; // Shortcut reference to the superclass, BaseClass.
  *     obj.constructor.$superclazz; // Reference to the superclass, BaseClass.
@@ -483,10 +488,11 @@ YJS_core_Class.setFinalPubFn(YJS_core_Class, 'addStatics', function (Clazz, memb
  *     DerivedClass.$isClazz; // true
  *     DerivedClass.$superclazz; // Reference to the superclass, BaseClass.
  * 
- * NOTE: The Class's prototype property will be an instance of the specified superclass after calling this method.
+ * NOTE: The Class's `prototype` property will be an instance of the specified superclass after calling this method.
+ * That is, any properties on the class's `prototype` property before a call to this function will be lost.
  * 
  * @param {Function} SuperClazz The constructor function of the superclass.
- * @param {Function} Clazz The constructor function of class extending the superclass.
+ * @param {Function} Clazz The constructor function of the class extending the superclass.
  */
 YJS_core_Class.setFinalPubFn(YJS_core_Class, 'extend', function (SuperClazz, Clazz) {
     var setConst = YJS.core.Class.setConst,

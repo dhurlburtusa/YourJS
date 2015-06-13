@@ -107,7 +107,8 @@ YJS_core_Class.setFinalPubFn(YJS, 'notAgainFn', function notAgainFn() { throw ne
  *     console.log(App.example.$isNamespace); // true
  *     App_example.Bar = ...;
  * 
- * @param {string} namespaces A dot (`'.'`) delimited set of namespaces to be created if necessary.
+ * @param {string} namespaces A dot (`'.'`) delimited set of namespaces to be created when necessary. The individual
+ * namespaces themselves must not contain any dots.
  * 
  * @return {Object} A reference to the last namespace in the dot delimited set of namespaces.
  */
