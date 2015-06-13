@@ -33,6 +33,16 @@ NS.ClassManager = YJS_core_ClassManager = {
 
 // ==========================================================================
 (function () {
+    /*
+     * These are forbidden because they are expected by the internal API.
+     */
+    var FORBIDDEN_STATIC_DECLARATION_PARAMS = ['$isClazz', '$name', '$simpleName', '$superclazz'];
+    Object.freeze(FORBIDDEN_STATIC_DECLARATION_PARAMS);
+    YJS_core_Class.setConst(YJS_core_ClassManager, 'FORBIDDEN_STATIC_DECLARATION_PARAMS', FORBIDDEN_STATIC_DECLARATION_PARAMS);
+})();
+
+// ==========================================================================
+(function () {
     var RESERVED_DECLARATION_PARAMS = ['$extend', '$members', '$mixins', '$requires', '$singleton', '$statics', '$uses'];
     Object.freeze(RESERVED_DECLARATION_PARAMS);
     YJS_core_Class.setConst(YJS_core_ClassManager, 'RESERVED_DECLARATION_PARAMS', RESERVED_DECLARATION_PARAMS);
@@ -98,6 +108,24 @@ YJS_core_Class.setPrivFn(YJS_core_ClassManager, '__removeForbidden', function (c
 // @if DEBUG
         if (clazzDef.hasOwnProperty(declParam)) {
             SELF.$LOG.warn(declParam + ' is forbidden in a class-definition and will be ignored.');
+        }
+// @endif
+        delete clazzDef[declParam];
+    }
+    
+});
+
+// ==========================================================================
+YJS_core_Class.setPrivFn(YJS_core_ClassManager, '__removeForbiddenStatic', function (clazzDef) {
+    var SELF = YJS.core.ClassManager,
+        FORBIDDEN_STATIC_DECLARATION_PARAMS = SELF.FORBIDDEN_STATIC_DECLARATION_PARAMS,
+        declParam, i, iLen;
+    
+    for (i = 0, iLen = FORBIDDEN_STATIC_DECLARATION_PARAMS.length; i < iLen; ++i) {
+        declParam = FORBIDDEN_STATIC_DECLARATION_PARAMS[i];
+// @if DEBUG
+        if (clazzDef.hasOwnProperty(declParam)) {
+            SELF.$LOG.warn(declParam + ' is forbidden in $statics of the class-definition and will be ignored.');
         }
 // @endif
         delete clazzDef[declParam];
@@ -250,12 +278,13 @@ YJS_core_Class.setPubFn(YJS_core_ClassManager, 'define', function (fqClassName, 
     SELF.__extend(superClazzName, Clazz);
 
     if (clazzDef.hasOwnProperty('$statics')) {
+        SELF.__removeForbiddenStatic(clazzDef.$statics);
         YJS_core_Class.addStatics(Clazz, clazzDef.$statics);
     }
 
     // TODO: Do something with the $mixins and $singleton clazzDef properties. Be sure to add documentation for them too.
 
-    members = clazzDef.$members;
+    members = clazzDef.hasOwnProperty('$members') ? clazzDef.$members : null;
 
     SELF.__removeReserved(clazzDef);
     SELF.__removeForbidden(clazzDef);
