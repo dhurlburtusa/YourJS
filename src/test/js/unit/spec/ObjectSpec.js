@@ -100,6 +100,80 @@ describe("Object", function () {
 
     });
 
+if (typeof Object.assign == 'function') {
+    describe(".assign", function () {
+
+        it("should assign enumerable, own properties from sources to target", function () {
+            var out, source1, source2, target;
+            
+            target = {};
+            source1 = {};
+            source2 = {};
+            out = Object.assign(target, source1, source2);
+            expect(out).toBe(target);
+            expect(out).not.toBe(source1);
+            expect(out).not.toBe(source2);
+            expect(out).not.toBe({});
+            expect(out).toEqual({});
+
+            target = { fe: 'fe', fum: 'fum' };
+            source1 = { fi: 'fi' };
+            source2 = { fo: 'fo' };
+            out = Object.assign(target, source1, source2);
+            expect(out).toBe(target);
+            expect(out).not.toBe(source1);
+            expect(out).not.toBe(source2);
+            expect(out).not.toBe({ fe: 'fe', fi: 'fi', fo: 'fo', fum: 'fum' });
+            expect(out).toEqual({ fe: 'fe', fi: 'fi', fo: 'fo', fum: 'fum' });
+
+            // Last source property wins.
+            target = { fe: 'fe_t', fum: 'fum_t' };
+            source1 = { fe: 'fe_s1', fi: 'fi_s1' };
+            source2 = { fe: 'fe_s2', fo: 'fo_s2' };
+            out = Object.assign(target, source1, source2);
+            expect(out).toBe(target);
+            expect(out).not.toBe(source1);
+            expect(out).not.toBe(source2);
+            expect(out).not.toBe({ fe: 'fe_s2', fi: 'fi_s1', fo: 'fo_s2', fum: 'fum_t' });
+            expect(out).toEqual({ fe: 'fe_s2', fi: 'fi_s1', fo: 'fo_s2', fum: 'fum_t' });
+
+            target = {};
+            Object.defineProperty(target, 'fe', { enumerable: true, value: 'fe_t', writable: true });
+            Object.defineProperty(target, 'fi', { value: 'fi_t', writable: true });
+            Object.defineProperty(target, 'fo', { enumerable: true, value: 'fo_t', writable: true });
+            Object.defineProperty(target, 'fum', { value: 'fum_t', writable: true });
+            source1 = { fe: 'fe_s1', fo: 'fo_s1', fi: 'fi_s1' };
+            source2 = { fe: 'fe_s2', fum: 'fum_s2' };
+            expect(target).toEqual({ fe: 'fe_t', fo: 'fo_t' });
+            expect(target.fi).toBe('fi_t');
+            expect(target.fum).toBe('fum_t');
+            out = Object.assign(target, source1, source2);
+            expect(out).toBe(target);
+            expect(out).not.toBe(source1);
+            expect(out).not.toBe(source2);
+            expect(out).not.toBe({ fe: 'fe_s2', fo: 'fo_s1' });
+            expect(out).toEqual({ fe: 'fe_s2', fo: 'fo_s1' });
+            expect(out.fi).toBe('fi_s1');
+            expect(out.fum).toBe('fum_s2');
+
+            target = { fe: 'fe_t', fi: 'fi_t', fo: 'fo_t', fum: 'fum_t' };
+            source1 = { fe: 'fe_s1', fi: 'fi_s1' };
+            Object.defineProperty(source1, 'fo', { value: 'fo_s1' });
+            source2 = { fe: 'fe_s2', fum: 'fum_s2' };
+            expect(target).toEqual({ fe: 'fe_t', fi: 'fi_t', fo: 'fo_t', fum: 'fum_t' });
+            expect(source1).toEqual({ fe: 'fe_s1', fi: 'fi_s1' });
+            expect(source1.fo).toBe('fo_s1');
+            out = Object.assign(target, source1, source2);
+            expect(out).toBe(target);
+            expect(out).not.toBe(source1);
+            expect(out).not.toBe(source2);
+            expect(out).not.toBe({ fe: 'fe_s2', fo: 'fo_s1' });
+            expect(out).toEqual({ fe: 'fe_s2', fi: 'fi_s1', fo: 'fo_t', fum: 'fum_s2' });
+        });
+
+    });
+}
+
     describe(".isPrototyeOf", function () {
 
         it("should correctly test for an object in another object's prototype chain", function () {
