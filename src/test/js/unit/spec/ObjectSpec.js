@@ -17,6 +17,7 @@ describe("In strict mode", function () {
                     obj = {};
 
                     expect('foo' in obj).toBe(false);
+                    expect(obj.hasOwnProperty('foo')).toBe(false);
                     Object.defineProperty(obj, 'foo', {}); // Default descriptor
 
                     // Expect foo to now exist
@@ -47,10 +48,192 @@ describe("In strict mode", function () {
                     }
                     expect(obj.foo).toBeUndefined();
                 });
+                
+                it("that is not enumerable", function () {
+                    expect(YJSHelper.isEnumerable(obj, 'foo')).toBe(false);
+                });
 
             });
 
         });
+
+if (typeof Object.assign == 'function') {
+        describe(".assign", function () {
+
+            it("should assign enumerable, own properties from sources to target", function () {
+                var out, source1, source2, target;
+
+                target = {};
+                source1 = {};
+                source2 = {};
+                out = Object.assign(target, source1, source2);
+                expect(out).toBe(target);
+                expect(out).not.toBe(source1);
+                expect(out).not.toBe(source2);
+                expect(out).not.toBe({});
+                expect(out).toEqual({});
+
+                target = { fe: 'fe', fum: 'fum' };
+                source1 = { fi: 'fi' };
+                source2 = { fo: 'fo' };
+                out = Object.assign(target, source1, source2);
+                expect(out).toBe(target);
+                expect(out).not.toBe(source1);
+                expect(out).not.toBe(source2);
+                expect(out).not.toBe({ fe: 'fe', fi: 'fi', fo: 'fo', fum: 'fum' });
+                expect(out).toEqual({ fe: 'fe', fi: 'fi', fo: 'fo', fum: 'fum' });
+
+                // Last source property wins.
+                target = { fe: 'fe_t', fum: 'fum_t' };
+                source1 = { fe: 'fe_s1', fi: 'fi_s1' };
+                source2 = { fe: 'fe_s2', fo: 'fo_s2' };
+                out = Object.assign(target, source1, source2);
+                expect(out).toBe(target);
+                expect(out).not.toBe(source1);
+                expect(out).not.toBe(source2);
+                expect(out).not.toBe({ fe: 'fe_s2', fi: 'fi_s1', fo: 'fo_s2', fum: 'fum_t' });
+                expect(out).toEqual({ fe: 'fe_s2', fi: 'fi_s1', fo: 'fo_s2', fum: 'fum_t' });
+
+                target = {};
+                Object.defineProperty(target, 'fe', { enumerable: true, value: 'fe_t', writable: true });
+                Object.defineProperty(target, 'fi', { value: 'fi_t', writable: true });
+                Object.defineProperty(target, 'fo', { enumerable: true, value: 'fo_t', writable: true });
+                Object.defineProperty(target, 'fum', { value: 'fum_t', writable: true });
+                source1 = { fe: 'fe_s1', fo: 'fo_s1', fi: 'fi_s1' };
+                source2 = { fe: 'fe_s2', fum: 'fum_s2' };
+                expect(target).toEqual({ fe: 'fe_t', fo: 'fo_t' });
+                expect(target.fi).toBe('fi_t');
+                expect(target.fum).toBe('fum_t');
+                out = Object.assign(target, source1, source2);
+                expect(out).toBe(target);
+                expect(out).not.toBe(source1);
+                expect(out).not.toBe(source2);
+                expect(out).not.toBe({ fe: 'fe_s2', fo: 'fo_s1' });
+                expect(out).toEqual({ fe: 'fe_s2', fo: 'fo_s1' });
+                expect(out.fi).toBe('fi_s1');
+                expect(out.fum).toBe('fum_s2');
+
+                target = { fe: 'fe_t', fi: 'fi_t', fo: 'fo_t', fum: 'fum_t' };
+                source1 = { fe: 'fe_s1', fi: 'fi_s1' };
+                Object.defineProperty(source1, 'fo', { value: 'fo_s1' });
+                source2 = { fe: 'fe_s2', fum: 'fum_s2' };
+                expect(target).toEqual({ fe: 'fe_t', fi: 'fi_t', fo: 'fo_t', fum: 'fum_t' });
+                expect(source1).toEqual({ fe: 'fe_s1', fi: 'fi_s1' });
+                expect(source1.fo).toBe('fo_s1');
+                out = Object.assign(target, source1, source2);
+                expect(out).toBe(target);
+                expect(out).not.toBe(source1);
+                expect(out).not.toBe(source2);
+                expect(out).not.toBe({ fe: 'fe_s2', fo: 'fo_s1' });
+                expect(out).toEqual({ fe: 'fe_s2', fi: 'fi_s1', fo: 'fo_t', fum: 'fum_s2' });
+
+                var Target = function (cfg) {
+                    cfg = cfg || {};
+                    Object.defineProperty(this, '_', { value: {} });
+                    this.fe = cfg.fe;
+                    this.fi = cfg.fi;
+                    this.fo = cfg.fo;
+                    this.fum = cfg.fum;
+                };
+                Object.defineProperty(Target.prototype, 'fe', {
+                    enumerable: true,
+                    get: function () { return this._.fe; },
+                    set: function (fe) { this._.fe = fe + '_t'; }
+                });
+                Object.defineProperty(Target.prototype, 'fi', {
+                    enumerable: true,
+                    get: function () { return this._.fi; },
+                    set: function (fi) { this._.fi = fi + '_t'; }
+                });
+                Object.defineProperty(Target.prototype, 'fo', {
+                    enumerable: true,
+                    get: function () { return this._.fo; },
+                    set: function (fo) { this._.fo = fo + '_t'; }
+                });
+                Object.defineProperty(Target.prototype, 'fum', {
+                    enumerable: true,
+                    get: function () { return this._.fum; },
+                    set: function (fum) { this._.fum = fum + '_t'; }
+                });
+
+                var Source = function (cfg) {
+                    cfg = cfg || {};
+                    Object.defineProperty(this, '_', { value: { id: cfg.id } });
+                    // NOTE: The following may look like a property on `this` is created when fe, fi, fo, or fum from the cfg
+                    // is truthy, however, what is really happening is that, `this.fe` for example, is a call on the `fe` method
+                    // of the prototype in the context/scope of `this`.
+                    cfg.fe ? this.fe = cfg.fe : null;
+                    cfg.fi ? this.fi = cfg.fi : null;
+                    cfg.fo ? this.fo = cfg.fo : null;
+                    cfg.fum ? this.fum = cfg.fum : null;
+                };
+                Object.defineProperty(Source.prototype, 'fe', {
+                    enumerable: true,
+                    get: function () { return this._.fe; },
+                    set: function (fe) { this._.fe = typeof fe == 'undefined' ? undefined : fe + '_s' + this._.id; }
+                });
+                Object.defineProperty(Source.prototype, 'fi', {
+                    enumerable: true,
+                    get: function () { return this._.fi; },
+                    set: function (fi) { this._.fi = typeof fi == 'undefined' ? undefined : fi + '_s' + this._.id; }
+                });
+                Object.defineProperty(Source.prototype, 'fo', {
+                    enumerable: true,
+                    get: function () { return this._.fo; },
+                    set: function (fo) { this._.fo = typeof fo == 'undefined' ? undefined : fo + '_s' + this._.id; }
+                });
+                Object.defineProperty(Source.prototype, 'fum', {
+                    enumerable: true,
+                    get: function () { return this._.fum; },
+                    set: function (fum) { this._.fum = typeof fum == 'undefined' ? undefined : fum + '_s' + this._.id; }
+                });
+
+                // NOTE: fe, fi, fo, and fum are not own properties on the source1 instance. They enumerable by inheritance
+                // from the prototype.
+                source1 = new Source({ id: 1, fe: 'fe', fi: 'fi' });
+                expect(YJSHelper.isEnumerable(source1, 'fe')).toBe(true);
+                expect(source1.hasOwnProperty('fe')).toBe(false);
+                expect(source1.fe).toBe('fe_s1');
+                expect(source1._.fe).toBe('fe_s1');
+                expect(YJSHelper.isEnumerable(source1, 'fi')).toBe(true);
+                expect(source1.hasOwnProperty('fi')).toBe(false);
+                expect(source1.fi).toBe('fi_s1');
+                expect(source1._.fi).toBe('fi_s1');
+                expect(YJSHelper.isEnumerable(source1, 'fo')).toBe(true);
+                expect(source1.hasOwnProperty('fo')).toBe(false);
+                expect(source1.fo).toBeUndefined();
+                expect(source1._.fo).toBeUndefined();
+                expect(YJSHelper.isEnumerable(source1, 'fum')).toBe(true);
+                expect(source1.hasOwnProperty('fum')).toBe(false);
+                expect(source1.fum).toBeUndefined();
+                expect(source1._.fum).toBeUndefined();
+
+                source2 = { fe: 'fe_s2', fum: 'fum_s2' };
+                expect(source2.fe).toBe('fe_s2');
+                expect(source2.fi).toBeUndefined();
+                expect(source2.fo).toBeUndefined();
+                expect(source2.fum).toBe('fum_s2');
+
+                target = new Target({ fe: 'fe', fi: 'fi', fo: 'fo', fum: 'fum' });
+                expect(target.fe).toBe('fe_t');
+                expect(target.fi).toBe('fi_t');
+                expect(target.fo).toBe('fo_t');
+                expect(target.fum).toBe('fum_t');
+                
+                // NOTE: Because `source1` has no own properties (all are inherited), it does not contribute to the final
+                // property values of `target` and thus `out`.
+                out = Object.assign(target, source1, source2);
+                expect(out).toBe(target);
+                expect(out).not.toBe(source1);
+                expect(out).not.toBe(source2);
+                expect(out.fe).toBe('fe_s2_t');
+                expect(out.fi).toBe('fi_t');
+                expect(out.fo).toBe('fo_t');
+                expect(out.fum).toBe('fum_s2_t');
+            });
+
+        });
+} // eo if (typeof Object.assign == 'function')
 
     });
 
@@ -99,80 +282,6 @@ describe("Object", function () {
         });
 
     });
-
-if (typeof Object.assign == 'function') {
-    describe(".assign", function () {
-
-        it("should assign enumerable, own properties from sources to target", function () {
-            var out, source1, source2, target;
-            
-            target = {};
-            source1 = {};
-            source2 = {};
-            out = Object.assign(target, source1, source2);
-            expect(out).toBe(target);
-            expect(out).not.toBe(source1);
-            expect(out).not.toBe(source2);
-            expect(out).not.toBe({});
-            expect(out).toEqual({});
-
-            target = { fe: 'fe', fum: 'fum' };
-            source1 = { fi: 'fi' };
-            source2 = { fo: 'fo' };
-            out = Object.assign(target, source1, source2);
-            expect(out).toBe(target);
-            expect(out).not.toBe(source1);
-            expect(out).not.toBe(source2);
-            expect(out).not.toBe({ fe: 'fe', fi: 'fi', fo: 'fo', fum: 'fum' });
-            expect(out).toEqual({ fe: 'fe', fi: 'fi', fo: 'fo', fum: 'fum' });
-
-            // Last source property wins.
-            target = { fe: 'fe_t', fum: 'fum_t' };
-            source1 = { fe: 'fe_s1', fi: 'fi_s1' };
-            source2 = { fe: 'fe_s2', fo: 'fo_s2' };
-            out = Object.assign(target, source1, source2);
-            expect(out).toBe(target);
-            expect(out).not.toBe(source1);
-            expect(out).not.toBe(source2);
-            expect(out).not.toBe({ fe: 'fe_s2', fi: 'fi_s1', fo: 'fo_s2', fum: 'fum_t' });
-            expect(out).toEqual({ fe: 'fe_s2', fi: 'fi_s1', fo: 'fo_s2', fum: 'fum_t' });
-
-            target = {};
-            Object.defineProperty(target, 'fe', { enumerable: true, value: 'fe_t', writable: true });
-            Object.defineProperty(target, 'fi', { value: 'fi_t', writable: true });
-            Object.defineProperty(target, 'fo', { enumerable: true, value: 'fo_t', writable: true });
-            Object.defineProperty(target, 'fum', { value: 'fum_t', writable: true });
-            source1 = { fe: 'fe_s1', fo: 'fo_s1', fi: 'fi_s1' };
-            source2 = { fe: 'fe_s2', fum: 'fum_s2' };
-            expect(target).toEqual({ fe: 'fe_t', fo: 'fo_t' });
-            expect(target.fi).toBe('fi_t');
-            expect(target.fum).toBe('fum_t');
-            out = Object.assign(target, source1, source2);
-            expect(out).toBe(target);
-            expect(out).not.toBe(source1);
-            expect(out).not.toBe(source2);
-            expect(out).not.toBe({ fe: 'fe_s2', fo: 'fo_s1' });
-            expect(out).toEqual({ fe: 'fe_s2', fo: 'fo_s1' });
-            expect(out.fi).toBe('fi_s1');
-            expect(out.fum).toBe('fum_s2');
-
-            target = { fe: 'fe_t', fi: 'fi_t', fo: 'fo_t', fum: 'fum_t' };
-            source1 = { fe: 'fe_s1', fi: 'fi_s1' };
-            Object.defineProperty(source1, 'fo', { value: 'fo_s1' });
-            source2 = { fe: 'fe_s2', fum: 'fum_s2' };
-            expect(target).toEqual({ fe: 'fe_t', fi: 'fi_t', fo: 'fo_t', fum: 'fum_t' });
-            expect(source1).toEqual({ fe: 'fe_s1', fi: 'fi_s1' });
-            expect(source1.fo).toBe('fo_s1');
-            out = Object.assign(target, source1, source2);
-            expect(out).toBe(target);
-            expect(out).not.toBe(source1);
-            expect(out).not.toBe(source2);
-            expect(out).not.toBe({ fe: 'fe_s2', fo: 'fo_s1' });
-            expect(out).toEqual({ fe: 'fe_s2', fi: 'fi_s1', fo: 'fo_t', fum: 'fum_s2' });
-        });
-
-    });
-}
 
     describe(".isPrototyeOf", function () {
 
@@ -375,7 +484,7 @@ if (typeof Object.assign == 'function') {
                 for (key in obj) {
                     if (key == 'foo') { isEnumerable = true; break; }
                 }
-              expect(isEnumerable).toBe(false);
+                expect(isEnumerable).toBe(false);
             });
 
             it("that is not writable", function () {
