@@ -25,6 +25,53 @@ NS.String = YJS_String = {
 
 // ==========================================================================
 /**
+ * Converts a value to a string. If `null` or `undefined` is passed in, then `null` or `undefined` is returned as
+ * opposed to returning the strings `'null'` or `'undefined'`. This was done so that `null` doesn't get changed to
+ * `'null'` and `undefined` doesn't get changed to `'undefined'` which may not be what you want when merging nullable
+ * data with a template.
+ * 
+ * If you want to guarantee that a string is always returned, then call this function like so:
+ * 
+ *     // NOTE: false, '', and 0 as input will return default string.
+ *     YJS.String.convert(input || "Some default value. May be empty.");
+ *     // OR
+ *     // NOTE: false, '', and 0 as input will return 'false', default string, or '0' respectively.
+ *     YJS.String.convert(input) || "Some default value. May be empty.";
+ * 
+ * If you want `null` to become `'null'` and `'undefined'` to become `'undefined'`, then call this function like so:
+ * 
+ *     YJS.String.convert('' + input); // NOTE: Different than '' + input alone since input will get trimmed.
+ * 
+ * See the Jasmine Specs for example uses.
+ * 
+ * @param {?Mixed} input The value to convert to a string.
+ * @param {Object} [options] The options to use when doing the conversion.
+ * @param {boolean} [options.trim=true] `true` to trim the string after conversion.
+ * 
+ * @return {String|null|undefined} The input converted to a string.
+ */
+// @scopeless
+YJS_String.convert = function (input, options) {
+    var output, trim;
+
+    options = options || {};
+    trim = options.trim === true ? true : false;
+
+    if (typeof input == 'undefined' || input === null) {
+        output = input;
+    } else {
+        output = '' + input;
+    }
+
+    if (trim) {
+        output = YJS.String.trim(output);
+    }
+
+    return output;
+};
+
+// ==========================================================================
+/**
  * A utility function that behaves similar to the C programming language's printf function.
  * 
  *     YJS.String.printf('Hello World!'); // "Hello World!"

@@ -10,6 +10,96 @@
  */
 describe("YJS.String", function () {
 
+    describe("#convert", function () {
+
+        it("called with `NaN` should return 'NaN'", function () {
+            var value = YJS.String.convert(NaN);
+            expect(value).toBe('NaN');
+        });
+
+        it("called with `Number.NaN` should return 'NaN'", function () {
+            var value = YJS.String.convert(Number.NaN);
+            expect(value).toBe('NaN');
+        });
+
+        it("called with `Number.NEGATIVE_INFINITY` should return '-Infinity'", function () {
+            var value = YJS.String.convert(Number.NEGATIVE_INFINITY);
+            expect(value).toBe('-Infinity');
+        });
+
+        it("called with `Number.POSITIVE_INFINITY` should return 'Infinity'", function () {
+            var value = YJS.String.convert(Number.POSITIVE_INFINITY);
+            expect(value).toBe('Infinity');
+        });
+
+        it("called with `undefined` should return `undefined`", function () {
+            var value = YJS.String.convert(undefined);
+            expect(value).toBe(undefined);
+        });
+
+        it("called with `null` should return `null`", function () {
+            var value = YJS.String.convert(null);
+            expect(value).toBeNull();
+        });
+
+        it("called with `false` should return 'false'", function () {
+            var value = YJS.String.convert(false);
+            expect(value).toBe('false');
+        });
+
+        it("called with `true` should return 'true'", function () {
+            var value = YJS.String.convert(true);
+            expect(value).toBe('true');
+        });
+
+        it("called with `0` should return '0'", function () {
+            var value = YJS.String.convert(0);
+            expect(value).toBe('0');
+        });
+
+        it("called with `1` should return '1'", function () {
+            var value = YJS.String.convert(1);
+            expect(value).toBe('1');
+        });
+
+        it("called with empty string should return empty string", function () {
+            var value = YJS.String.convert('');
+            expect(value).toEqual('');
+        });
+
+        it("called with untrimmed string and trim option should return trimmed string", function () {
+            var value = YJS.String.convert('  foo  \n', { trim: true });
+            expect(value).toEqual('foo');
+        });
+
+        it("called with `null || ''` should return empty string", function () {
+            var value = YJS.String.convert(null || '');
+            expect(value).toBe('');
+
+            value = YJS.String.convert(null || 'default');
+            expect(value).toBe('default');
+        });
+
+        it("called with `undefined || ''` should return empty string", function () {
+            var value = YJS.String.convert(undefined || '');
+            expect(value).toBe('');
+
+            value = YJS.String.convert(undefined || 'default');
+            expect(value).toBe('default');
+        });
+
+        it("called with `'' + null` should return 'null'", function () {
+            var value = YJS.String.convert('' + null);
+            expect(value).toBe('null');
+        });
+
+        it("called with `'' + undefined` should return 'undefined'", function () {
+            var value = YJS.String.convert('' + undefined);
+            expect(value).toBe('undefined');
+        });
+
+    });
+
     describe(".printf", function () {
 
         describe("called with no arguments or undefined arguments", function () {
