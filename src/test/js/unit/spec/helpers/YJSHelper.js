@@ -11,6 +11,14 @@ var YJSHelper;
 
 GBL.YJSHelper = YJSHelper = {};
 
+YJSHelper.isEnumerable = function (obj, name) {
+    var isEnumerable = false, key;
+    for (key in obj) {
+        if (key == name) { isEnumerable = true; break; }
+    }
+    return isEnumerable;
+};
+
 YJSHelper.expectToHaveConst$isNamespace = function (ns) {
     expect(ns).toBeDefined();
     expect(ns.hasOwnProperty('$isNamespace')).toBe(true);
