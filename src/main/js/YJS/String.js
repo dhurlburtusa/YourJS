@@ -7,6 +7,8 @@
  * @singleton
  * @class YJS.String
  * A set of string related methods.
+ * 
+ * @uses YJS.Utils
  */
 (function (GBL, YJS, nsPath) {
 
@@ -79,6 +81,40 @@ YJS_String.printf = function (pattern, varargs) {
     
     return out;
 };
+
+// ==========================================================================
+/**
+ * Trims leading and trailing whitespace from specified string.
+ * 
+ * NOTE: Non-string input just falls through. It is not converted to a string before trimming.
+ * 
+ *     var str = YJS.String.trim("  \t$654,321\t\r\n  ");
+ *     console.log(str); // '$654,321'
+ * 
+ * See the Jasmine Specs for more example uses.
+ * 
+ * NOTE: This function behaves like `Ext.String.trim` but does not barf if `input` is not a string.
+ * 
+ * @param {?String} input The string to trim.
+ * 
+ * @return {String|Mixed} The trimmed string or the non-string input.
+ */
+// @scopeless
+YJS_String.trim = function (input) {
+    if (YJS.Utils.typeOf(input) == 'string') {
+        input = input.replace(/(^\s*)|(\s*$)/g, "");
+    }
+    return input;
+};
+
+/**
+ * @member YJS
+ * @method trim
+ * Shorthand for {@link YJS.String#trim}.
+ */
+if (!YJS.trim) {
+    YJS.trim = YJS.String.trim;
+}
 
 })(this, YJS, 'YJS');
 

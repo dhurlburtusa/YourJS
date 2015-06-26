@@ -60,6 +60,73 @@ describe("YJS.String", function () {
 
     });
 
+    describe("#trim", function () {
+
+        it("called with undefined should return undefined", function () {
+            var value = YJS.String.trim(undefined);
+            expect(value).not.toBeDefined();
+        });
+
+        it("called with null should return null", function () {
+            var value = YJS.String.trim(null);
+            expect(value).toBeNull();
+        });
+
+        it("called with empty string should return empty string", function () {
+            var value = YJS.String.trim('');
+            expect(value).toEqual('');
+        });
+
+        it("called with false should return false", function () {
+            var value = YJS.String.trim(false);
+            expect(value).toBe(false);
+        });
+
+        it("called with true should return true", function () {
+            var value = YJS.String.trim(true);
+            expect(value).toBe(true);
+        });
+
+        it("called with all whitespace string should return empty string", function () {
+            var value;
+
+            value = YJS.String.trim(' ');
+            expect(value).toEqual('');
+
+            value = YJS.String.trim('  ');
+            expect(value).toEqual('');
+
+            value = YJS.String.trim('\n');
+            expect(value).toEqual('');
+
+            value = YJS.String.trim('\t');
+            expect(value).toEqual('');
+
+            value = YJS.String.trim('\t\n');
+            expect(value).toEqual('');
+        });
+
+        it("called with some whitespace string should return trimmed string", function () {
+            var value;
+
+            value = YJS.String.trim(' foo bar');
+            expect(value).toEqual('foo bar');
+
+            value = YJS.String.trim(' foo bar ');
+            expect(value).toEqual('foo bar');
+
+            value = YJS.String.trim('foo bar\n');
+            expect(value).toEqual('foo bar');
+
+            value = YJS.String.trim('foo bar\t');
+            expect(value).toEqual('foo bar');
+
+            value = YJS.String.trim('\tfoo bar\n');
+            expect(value).toEqual('foo bar');
+        });
+
+    });
+
 });
 
 })(this);
