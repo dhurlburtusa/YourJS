@@ -17,6 +17,13 @@ describe("YJS.Math", function () {
         });
 
         it("called with various values should return expected value", function () {
+            expect(YJS.Math.round(-2.6)).toBe(-3);
+            expect(YJS.Math.round(-2.5)).toBe(-2);
+            expect(YJS.Math.round(-1.2)).toBe(-1);
+            expect(YJS.Math.round(1.2)).toBe(1);
+            expect(YJS.Math.round(2.5)).toBe(3);
+            expect(YJS.Math.round(2.6)).toBe(3);
+
             expect(YJS.Math.round(0, 1)).toBe(0);
             expect(YJS.Math.round(0, 0)).toBe(0);
             expect(YJS.Math.round(0, -1)).toBe(0);
