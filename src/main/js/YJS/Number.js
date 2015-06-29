@@ -8,7 +8,7 @@
  * @class YJS.Number
  * A set of number related methods.
  */
-(function (YJS, nsPath) {
+(function (GBL, YJS, nsPath) {
 
 // @if STRICT
 "use strict";
@@ -19,6 +19,54 @@ var NS = YJS.ns(nsPath),
 
 NS.Number = YJS_Number = {
     $LOG: YJS.__.tmp.LOG
+};
+
+// ==========================================================================
+/**
+ * Attempts to convert a number like value to a JavaScript number. `undefined`, `null`, `Number.NEGATIVE_INFINITY`,
+ * `Number.POSITIVE_INFINITY`, and `NaN` return the default value (`null`).
+ * 
+ *     YJS.Number.convert("2"); // 2
+ *     YJS.Number.convert(2.6); // 2.6
+ *     YJS.Number.convert(1.2); // 1.2
+ *     YJS.Number.convert(1); // 1
+ *     YJS.Number.convert(-1); // -1
+ *     YJS.Number.convert(-2.6); // -2.6
+ * 
+ * See the Jasmine Specs for example uses.
+ * 
+ * @param {Mixed} input The number like value to be converted to a JavaScript number. This may also be an object with
+ *   a custom `valueOf` method that returns a number or parsible string.
+ * @param {Object} [options] The options to use when doing the conversion.
+ * @param {Mixed} [options.def=null] The default value to return if unable to convert.
+ * 
+ * @return {number} The input converted to a number (float or integer) or the default value if unable to convert.
+ */
+YJS_Number.convert = function (input, options) {
+    var defValue, output;
+
+    options = options || {};
+    defValue = options.hasOwnProperty('def') ? options.def : null;
+    output = defValue;
+    if (input) {
+        if (typeof input === 'number') {
+            if (input === GBL.Number.NEGATIVE_INFINITY || input === GBL.Number.POSITIVE_INFINITY) {
+                // Keep output set to default value.
+            } else {
+                output = input;
+            }
+        } else {
+            input = '' + input; // causes input.valueOf to be called.
+            output = GBL.parseFloat(input);
+            if (GBL.isNaN(output)) {
+                output = defValue;
+            }
+        }
+    } else if (input === 0) {
+        output = 0;
+    }
+
+    return output;
 };
 
 // ==========================================================================
@@ -46,12 +94,12 @@ YJS_Number.itBeNaN = function (value) {
      */
     var itBeNaN = false;
 
-    if (typeof value === 'number' && isNaN(value)) {
+    if (typeof value === 'number' && GBL.isNaN(value)) {
         itBeNaN = true;
     }
     return itBeNaN;
 };
 
-})(YJS, 'YJS');
+})(this, YJS, 'YJS');
 
 // ##################################################################################################################
