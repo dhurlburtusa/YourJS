@@ -10,6 +10,59 @@
  */
 describe("YJS.Object", function () {
 
+    describe(".assignIf", function () {
+
+        it("called with `undefined` target should return `undefined`", function () {
+            var out;
+            
+            out = YJS.Object.assignIf(undefined);
+            expect(out).toBeUndefined();
+            
+            out = YJS.Object.assignIf(undefined, {}, { foo: 'foo' });
+            expect(out).toBeUndefined();
+        });
+
+        it("called with `null` target should return `null`", function () {
+            var out;
+            
+            out = YJS.Object.assignIf(null);
+            expect(out).toBe(null);
+            
+            out = YJS.Object.assignIf(null, {}, { foo: 'foo' });
+            expect(out).toBe(null);
+        });
+
+        it("called with `{}` target should acquire own, enumerable source properties and return modified target", function () {
+            var out, target;
+            
+            target = {};
+            out = YJS.Object.assignIf(target);
+            expect(out).toBe(target);
+            expect(out).toEqual({});
+            
+            target = {};
+            out = YJS.Object.assignIf(target, { foo: 'foo1', bar: 'bar1' }, null, { bar: 'bar2', corge: 'corge2', qux: 'qux2' }, undefined, { corge: undefined });
+            expect(out).toBe(target);
+            expect(out).toEqual({ foo: 'foo1', bar: 'bar2', qux: 'qux2', corge: undefined });
+            
+            target = {};
+            out = YJS.Object.assignIf(target, ['zero', 'one']);
+            expect(out).toBe(target);
+            expect(out).toEqual({ 0: 'zero', 1: 'one' });
+            expect(out).toEqual({ '0': 'zero', '1': 'one' });
+        });
+
+        it("called with some target containing own, enumerable properties should acquire own, enumerable source properties that target doesn't already have and return modified target", function () {
+            var out, target;
+            
+            target = { foo: 'foot', bar: 'bart' };
+            out = YJS.Object.assignIf(target, { foo: 'foo1', bar: 'bar1', qux: 'qux1' }, { bar: 'bar2', qux: 'qux2' });
+            expect(out).toBe(target);
+            expect(out).toEqual({ foo: 'foot', bar: 'bart', qux: 'qux2' });
+        });
+
+    });
+
     describe(".put", function () {
 
         it("called with undefined object should do nothing and not error", function () {

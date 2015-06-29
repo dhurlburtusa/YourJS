@@ -23,6 +23,63 @@ NS.Object = YJS_Object = {
 
 // ==========================================================================
 /**
+ * Copies all the enumerable, own properties of each source object to the specified target object if the target does
+ * not already has its own property. When different sources have a property with the same name, then the latter
+ * source's property wins.
+ * 
+ *     var car, source1, source2, target;
+ *     target = { id: 1, model: 'Mustang' };
+ *     source1 = { fast: false, model: '' };
+ *     source2 = { fast: true, make: 'Ford' };
+ *     car = YJS.Object.applyIf(target, source1, source2);
+ *     console.log(car); // { id: 1, fast: true, make: 'Ford', model: 'mustang' }
+ * 
+ * Sources may be arrays.
+ * 
+ *     var out, target;
+ *     target = { id: 1, model: 'Mustang' };
+ *     out = YJS.Object.applyIf(target, ['first', 'second']);
+ *     console.log(out); // { 0: 'first', 1: 'second', id: 1, model: 'Mustang' }
+ * 
+ * See Jasmine specs for more examples.
+ * 
+ * Modeled after `Object#assign`.
+ * 
+ * @param {Object} target The target of the properties.
+ * @param {Object...|Array...} source The source(s) of the properties. When the source(s) is an array, then the array
+ *   indexes act like keys while the corresponding array item acts like the value.
+ * 
+ * @return {Object} `target` modified with the source(s) properties.
+ */
+YJS_Object.assignIf = function (target, source, varargs) {
+    var key, s, sources;
+
+    sources = Array.prototype.slice.call(arguments, 1); // Copy arguments ignoring the target arg.
+
+    // Deliberately not using YJS.Utils#typeOf. If we did, then the following condition would look something like
+    // YJS.Utils.typeOf(target) == 'object' || YJS.Utils.typeOf(target) == 'array'. Since the following has the same
+    // or less complexity but also doesn't couple YJS.Utils#typeOf to this function, it was decided not to use
+    // YJS.Utils#typeOf.
+    if (typeof target == 'object' && target !== null) {
+        for (s = sources.length; s >= 0; s--) {
+            source = sources[s];
+            if (typeof source == 'object' && source !== null) {
+                for (key in source) {
+                    if (source.hasOwnProperty(key)) {
+                        if (!target.hasOwnProperty(key)) {
+                            target[key] = source[key];
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    return target;
+};
+
+// ==========================================================================
+/**
  * Sets the value on an object at the specified path.
  * 
  *     var object = { other: 'not affected', top: 'will be changed' };
