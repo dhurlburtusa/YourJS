@@ -5,6 +5,7 @@
 
 // @include ../../main/js/YJS/Array.js
 // @include ../../main/js/YJS/Boolean.js
+// @include ../../main/js/YJS/Math.js
 // @include ../../main/js/YJS/Number.js
 // @include ../../main/js/YJS/Object.js
 // @include ../../main/js/YJS/String.js
