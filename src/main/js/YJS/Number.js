@@ -38,9 +38,11 @@ NS.Number = YJS_Number = {
  * @param {Mixed} input The number like value to be converted to a JavaScript number. This may also be an object with
  *   a custom `valueOf` method that returns a number or parsible string.
  * @param {Object} [options] The options to use when doing the conversion.
- * @param {Mixed} [options.def=null] The default value to return if unable to convert.
+ * @param {Mixed} [options.def=null] The default value to return if unable to convert. This is allowed to be of any
+ *   data type.
  * 
- * @return {number} The input converted to a number (float or integer) or the default value if unable to convert.
+ * @return {number|Mixed} The input converted to a number (float or integer) or the default value if unable to
+ *   convert. Note: a value of type number is not always returned when the default value is returned.
  */
 YJS_Number.convert = function (input, options) {
     var defValue, output;
