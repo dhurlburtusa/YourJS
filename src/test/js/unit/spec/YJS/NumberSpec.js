@@ -25,8 +25,8 @@ describe("YJS.Number", function () {
             toValue = YJS.Number.convert(undefined, { def: 0 });
             expect(toValue).toBe(0);
 
-            toValue = YJS.Number.convert(undefined, { def: 123456 });
-            expect(toValue).toBe(123456);
+            toValue = YJS.Number.convert(undefined, { def: 123456.7 });
+            expect(toValue).toBe(123456.7);
 
             toValue = YJS.Number.convert(undefined, { def: "" });
             expect(toValue).toBe("");
@@ -54,8 +54,8 @@ describe("YJS.Number", function () {
             toValue = YJS.Number.convert(null, { def: 0 });
             expect(toValue).toBe(0);
 
-            toValue = YJS.Number.convert(null, { def: 123456 });
-            expect(toValue).toBe(123456);
+            toValue = YJS.Number.convert(null, { def: 123456.7 });
+            expect(toValue).toBe(123456.7);
 
             toValue = YJS.Number.convert(null, { def: "" });
             expect(toValue).toBe("");
@@ -83,8 +83,8 @@ describe("YJS.Number", function () {
             toValue = YJS.Number.convert(NaN, { def: 0 });
             expect(toValue).toBe(0);
 
-            toValue = YJS.Number.convert(NaN, { def: 123456 });
-            expect(toValue).toBe(123456);
+            toValue = YJS.Number.convert(NaN, { def: 123456.7 });
+            expect(toValue).toBe(123456.7);
 
             toValue = YJS.Number.convert(NaN, { def: "" });
             expect(toValue).toBe("");
@@ -144,8 +144,8 @@ describe("YJS.Number", function () {
             toValue = YJS.Number.convert(Number.NEGATIVE_INFINITY, { def: 0 });
             expect(toValue).toBe(0);
 
-            toValue = YJS.Number.convert(Number.NEGATIVE_INFINITY, { def: 123456 });
-            expect(toValue).toBe(123456);
+            toValue = YJS.Number.convert(Number.NEGATIVE_INFINITY, { def: 123456.7 });
+            expect(toValue).toBe(123456.7);
 
             toValue = YJS.Number.convert(Number.NEGATIVE_INFINITY, { def: "" });
             expect(toValue).toBe("");
@@ -173,8 +173,8 @@ describe("YJS.Number", function () {
             toValue = YJS.Number.convert(Number.POSITIVE_INFINITY, { def: 0 });
             expect(toValue).toBe(0);
 
-            toValue = YJS.Number.convert(Number.POSITIVE_INFINITY, { def: 123456 });
-            expect(toValue).toBe(123456);
+            toValue = YJS.Number.convert(Number.POSITIVE_INFINITY, { def: 123456.7 });
+            expect(toValue).toBe(123456.7);
 
             toValue = YJS.Number.convert(Number.POSITIVE_INFINITY, { def: "" });
             expect(toValue).toBe("");
@@ -200,6 +200,7 @@ describe("YJS.Number", function () {
 
             toValue = YJS.Number.convert(-2.6);
             expect(toValue).toBe(-2.6);
+
             toValue = YJS.Number.convert(-1);
             expect(toValue).toBe(-1);
 
@@ -237,6 +238,9 @@ describe("YJS.Number", function () {
         it("called with parsible string value should return number", function () {
             var toValue;
 
+            toValue = YJS.Number.convert("-2.6");
+            expect(toValue).toBe(-2.6);
+
             toValue = YJS.Number.convert("-2");
             expect(toValue).toBe(-2);
             expect(toValue).toBe(-2.0);
@@ -244,9 +248,6 @@ describe("YJS.Number", function () {
             toValue = YJS.Number.convert("2");
             expect(toValue).toBe(2);
             expect(toValue).toBe(2.0);
-
-            toValue = YJS.Number.convert("-2.6");
-            expect(toValue).toBe(-2.6);
 
             toValue = YJS.Number.convert("2.6");
             expect(toValue).toBe(2.6);
@@ -265,8 +266,8 @@ describe("YJS.Number", function () {
             toValue = YJS.Number.convert("foo", { def: 0 });
             expect(toValue).toBe(0);
 
-            toValue = YJS.Number.convert("foo", { def: 123456 });
-            expect(toValue).toBe(123456);
+            toValue = YJS.Number.convert("foo", { def: 123456.7 });
+            expect(toValue).toBe(123456.7);
 
             toValue = YJS.Number.convert("foo", { def: "" });
             expect(toValue).toBe("");
