@@ -10,7 +10,7 @@
  */
 describe("YJS.String", function () {
 
-    describe("#convert", function () {
+    describe(".convert", function () {
 
         it("called with `NaN` should return 'NaN'", function () {
             var value = YJS.String.convert(NaN);
@@ -96,6 +96,98 @@ describe("YJS.String", function () {
         it("called with `'' + undefined` should return 'undefined'", function () {
             var value = YJS.String.convert('' + undefined);
             expect(value).toBe('undefined');
+        });
+
+    });
+
+    describe(".merge", function () {
+
+        it("called with undefined should return undefined", function () {
+            var value = YJS.String.merge(undefined);
+            expect(value).not.toBeDefined();
+        });
+
+        it("called with null should return null", function () {
+            var value = YJS.String.merge(null);
+            expect(value).toBeNull();
+        });
+
+        it("called with empty string should return empty string", function () {
+            var value = YJS.String.merge('');
+            expect(value).toEqual('');
+        });
+
+        it("called with false should return false", function () {
+            var value = YJS.String.merge(false);
+            expect(value).toBe(false);
+        });
+
+        it("called with true should return true", function () {
+            var value = YJS.String.merge(true);
+            expect(value).toBe(true);
+        });
+
+        it("called with 0 should return 0", function () {
+            var value = YJS.String.merge(0);
+            expect(value).toBe(0);
+        });
+
+        it("called with 1 should return 1", function () {
+            var value = YJS.String.merge(1);
+            expect(value).toBe(1);
+        });
+
+        it("called with new Date should return new Date", function () {
+            var value = YJS.String.merge(new Date(), ["does", "not", "matter"]);
+            expect(typeof value).toBe("object");
+            expect(value.constructor).toBe(Date);
+        });
+
+        it("called with template should return merged string", function () {
+            var value = YJS.String.merge("{0}, {1}!", ["Hello", "World"]);
+            expect(value).toEqual("Hello, World!");
+        });
+
+        it("called with template containing negative placeholders should return merged string without negative placeholders being replaced", function () {
+            var value;
+
+            value = YJS.String.merge("{0}, {-1}!", ["Hello", "World"]);
+            expect(value).toEqual("Hello, {-1}!");
+        });
+
+        it("called with template containing sparse placeholders should return merged string", function () {
+            // That is, extraneous data is okay.
+            var value = YJS.String.merge("{0}, {3}!", ["Hello", "Goodbye", "My", "World"]);
+            expect(value).toEqual("Hello, World!");
+        });
+
+        it("called with template containing extraneous placeholders should return merged string with extraneous placeholders replaced by undefined", function () {
+            var value = YJS.String.merge("{0}, {1}! {2} {3} {4}", ["Hello", "World", "Good", "Morning"]);
+            expect(value).toEqual("Hello, World! Good Morning undefined");
+        });
+
+        it("called with template containing extraneous placeholders and undef option should return merged string with extraneous placeholders replaced by undef value", function () {
+            var value = YJS.String.merge("{0}, {1}! {2} {3} {5}! {4}", ["Hello", "World", "Good", "Morning", undefined], { undef: "Vietnam" });
+            expect(value).toEqual("Hello, World! Good Morning Vietnam! undefined");
+        });
+
+        it("called with template containing unordered placeholders should return merged string", function () {
+            // That is, order of placeholders does not matter.
+            var value = YJS.String.merge("{1}, {0}!", ["World", "Hello"]);
+            expect(value).toEqual("Hello, World!");
+        });
+
+        it("called with template and various data types should return merged string", function () {
+            var value;
+
+            value = YJS.String.merge("{1} for the {0}, {2} for the {3}...", ["money", 1, 2, "show"]);
+            expect(value).toEqual("1 for the money, 2 for the show...");
+
+            value = YJS.String.merge("Is it {0} that {0} == {1} is {2}?", [true, false, undefined]);
+            expect(value).toEqual("Is it true that true == false is undefined?");
+
+            value = YJS.String.merge("Is {1} the same as {0}?", [undefined, null]);
+            expect(value).toEqual("Is null the same as undefined?");
         });
 
     });

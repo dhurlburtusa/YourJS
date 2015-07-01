@@ -72,6 +72,46 @@ YJS_String.convert = function (input, options) {
 
 // ==========================================================================
 /**
+ * Merges data with a simple position-based template.
+ * 
+ * NOTE: Non-string template just falls through. It is not converted to a string before merging.
+ * 
+ *     YJS.String.merge("{1}, {0}!", ["World", "Hello"]); // "Hello, World!"
+ *     YJS.String.merge("{0} {1} {2}", ["First", "Middle"], { undef: "No Last" }); // "First Middle No Last"
+ *     YJS.String.merge(new Date(), ["World", "Hello"]); // Returns the new Date instance since the template is not a string.
+ * 
+ * See the Jasmine Specs for more example uses.
+ * 
+ * @param {?string|Mixed} template The simple position-based template. Placeholders are of the form `{n}` where `n` is
+ *   an integer greater than or equal to zero.
+ * @param {Mixed[]} data The position-based data to be merged with the template.
+ * @param {Object} [options] The options to use when parsing.
+ * @param {Mixed} [options.undef] The value to use when a placeholder points outside of the data. NOTE: This is not
+ *   used when an item in the data array is `undefined` but when a placeholder refers to an index outside of the data
+ *   array.
+ * 
+ * @return {string|Mixed} The merged string or the non-string value.
+ */
+YJS_String.merge = function (template, data, options) {
+    var undef;
+
+    if (typeof template === 'string') {
+        data = YJS.Array.wrap(data);
+        options = options || {};
+        undef = options.hasOwnProperty('undef') ? options.undef : undefined;
+        template = template.replace(/\{(\d+)\}/g, function (match /* "{idx}" */, idx) {
+            // In some browsers, if undefined is returned back to the `replace` method, it appears it is converted to
+            // an empty string. So we convert everything to a string before returning it back to the `replace`
+            // function.
+            var value = '' + (idx < data.length ? data[idx] : undef);
+            return value;
+        });
+    }
+    return template;
+};
+
+// ==========================================================================
+/**
  * A utility function that behaves similar to the C programming language's printf function.
  * 
  *     YJS.String.printf('Hello World!'); // "Hello World!"
