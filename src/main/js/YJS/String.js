@@ -82,15 +82,52 @@ YJS_String.convert = function (input, options) {
  * 
  * See the Jasmine Specs for more example uses.
  * 
- * @param {?String} input The string to escape.
+ * @param {?string} input The string to escape.
  * 
- * @return {String|Mixed} The escaped string or the non-string input.
+ * @return {string|Mixed} The escaped string or the non-string input.
  */
 YJS_String.escape = function (input) {
     if (typeof input === 'string') {
         input = input.replace(/('|\\)/g, "\\$1");
     }
     return input;
+};
+
+// ==========================================================================
+/**
+ * Left pads a string with a padding character to a specific length.
+ * 
+ * NOTE: Non-string input just falls through. It is not converted to a string before padding.
+ * 
+ *     var str = YJS.String.leftPad("$654,321", 10, ' ');
+ *     console.log(str); // '  $654,321'
+ * 
+ * See the Jasmine Specs for more example uses.
+ * 
+ * @param {?string} input The string to pad.
+ * @param {number} length The length of the string to pad to. The returned value may have a longer length if the input
+ *   already had a longer length. That is, any characters beyond `length` is not truncated.
+ * @param {string} padding The character to pad with. Must be a single character.
+ * 
+ * @return {string|Mixed} The padded string or the non-string input.
+ */
+YJS_String.leftPad = function (input, length, padding) {
+    var i, iLen, inputLen, output;
+
+    output = input;
+    if (typeof input === 'string') {
+        inputLen = input.length;
+        output = [];
+        if (typeof padding === 'string' && padding.length === 1 && length > 0) {
+            for (i = 0, iLen = GBL.Math.max(length - inputLen, 0); i < iLen; ++i) {
+                output.push(padding);
+            }
+        }
+        output.push(input);
+        output = output.join('');
+    }
+
+    return output;
 };
 
 // ==========================================================================

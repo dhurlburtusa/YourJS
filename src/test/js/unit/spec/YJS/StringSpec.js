@@ -166,6 +166,67 @@ describe("YJS.String", function () {
         });
     });
 
+    describe(".leftPad", function () {
+
+        it("called with `undefined` input should return `undefined`", function () {
+            var output = YJS.String.leftPad(undefined);
+            expect(output).not.toBeDefined();
+        });
+
+        it("called with `null` input should return `null`", function () {
+            var output = YJS.String.leftPad(null);
+            expect(output).toBeNull();
+        });
+
+        it("called with `false` input should return `false`", function () {
+            var output = YJS.String.leftPad(false);
+            expect(output).toBe(false);
+        });
+
+        it("called with `true` input should return `true`", function () {
+            var output = YJS.String.leftPad(true);
+            expect(output).toBe(true);
+        });
+
+        it("called with `0` input should return `0`", function () {
+            var output = YJS.String.leftPad(0);
+            expect(output).toBe(0);
+        });
+
+        it("called with `1` input should return `1`", function () {
+            var output = YJS.String.leftPad(1);
+            expect(output).toBe(1);
+        });
+
+        it("called with short input should return padded input", function () {
+            var output = YJS.String.leftPad("foo", 10, "b");
+            expect(output).toBe("bbbbbbbfoo");
+
+            output = YJS.String.leftPad("foo", 10, " ");
+            expect(output).toBe("       foo");
+        });
+
+        it("called with extremely short input should return padded input", function () {
+            var output = YJS.String.leftPad("foo", 100, "b");
+            expect(output).toBe("bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbfoo");
+        });
+
+        it("called with blank padder should return input", function () {
+            var output = YJS.String.leftPad("foo", 10, "");
+            expect(output).toBe("foo");
+        });
+
+        it("called with multi-character padder should return input", function () {
+            var output = YJS.String.leftPad("foo", 10, "bar");
+            expect(output).toBe("foo");
+        });
+
+        it("called with short length should return input unchanged", function () {
+            var output = YJS.String.leftPad("foobar", 5, " ");
+            expect(output).toBe("foobar");
+        });
+    });
+
     describe(".merge", function () {
 
         it("called with `undefined` should return `undefined`", function () {
