@@ -9,5 +9,6 @@
 // @include ../../main/js/YJS/Math.js
 // @include ../../main/js/YJS/Number.js
 // @include ../../main/js/YJS/Object.js
+// @include ../../main/js/YJS/RegExp.js
 // @include ../../main/js/YJS/String.js
 // @include ../../main/js/YJS/Utils.js
