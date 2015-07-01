@@ -72,6 +72,29 @@ YJS_String.convert = function (input, options) {
 
 // ==========================================================================
 /**
+ * Escapes `'` (single-quote) and `\` (backslash) from the specified string. This is useful to make a string properly
+ * escaped for use in JavaScript string literals.
+ * 
+ * NOTE: Non-string input just falls through. It is not converted to a string before escaping.
+ * 
+ *     var str = YJS.String.escape("my string that may contain ' and \\.");
+ *     var code = YJS.String.merge("var str = '{0}';", str);
+ * 
+ * See the Jasmine Specs for more example uses.
+ * 
+ * @param {?String} input The string to escape.
+ * 
+ * @return {String|Mixed} The escaped string or the non-string input.
+ */
+YJS_String.escape = function (input) {
+    if (typeof input === 'string') {
+        input = input.replace(/('|\\)/g, "\\$1");
+    }
+    return input;
+};
+
+// ==========================================================================
+/**
  * Merges data with a simple position-based template.
  * 
  * NOTE: Non-string template just falls through. It is not converted to a string before merging.

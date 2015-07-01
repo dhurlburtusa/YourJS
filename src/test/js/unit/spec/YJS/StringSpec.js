@@ -100,14 +100,80 @@ describe("YJS.String", function () {
 
     });
 
+    describe(".escape", function () {
+
+        it("called with `undefined` should return `undefined`", function () {
+            var value = YJS.String.escape(undefined);
+            expect(value).not.toBeDefined();
+        });
+
+        it("called with `null` should return `null`", function () {
+            var value = YJS.String.escape(null);
+            expect(value).toBeNull();
+        });
+
+        it("called with empty string should return empty string", function () {
+            var value = YJS.String.escape('');
+            expect(value).toEqual('');
+        });
+
+        it("called with `false` should return `false`", function () {
+            var value = YJS.String.escape(false);
+            expect(value).toBe(false);
+        });
+
+        it("called with `true` should return `true`", function () {
+            var value = YJS.String.escape(true);
+            expect(value).toBe(true);
+        });
+
+        it("called with string containing backslashes should return string with backslashes escaped", function () {
+            var value;
+
+            value = YJS.String.escape("\\");
+            expect(value).toEqual("\\\\");
+
+            value = YJS.String.escape('\\');
+            expect(value).toEqual("\\\\");
+
+            value = YJS.String.escape("format C:\\Windows\\");
+            expect(value).toEqual("format C:\\\\Windows\\\\");
+
+            value = YJS.String.escape('format C:\\Windows\\');
+            expect(value).toEqual("format C:\\\\Windows\\\\");
+        });
+
+        it("called with string containing single-quotes should return string with single-quotes escaped", function () {
+            var value;
+
+            value = YJS.String.escape("'");
+            expect(value).toEqual("\\'");
+
+            value = YJS.String.escape("\'");
+            expect(value).toEqual("\\'");
+
+            value = YJS.String.escape('\'');
+            expect(value).toEqual("\\'");
+
+            value = YJS.String.escape("'help'!");
+            expect(value).toEqual("\\'help\\'!");
+
+            value = YJS.String.escape("\'help\'!");
+            expect(value).toEqual("\\'help\\'!");
+
+            value = YJS.String.escape('\'help\'!');
+            expect(value).toEqual("\\'help\\'!");
+        });
+    });
+
     describe(".merge", function () {
 
-        it("called with undefined should return undefined", function () {
+        it("called with `undefined` should return `undefined`", function () {
             var value = YJS.String.merge(undefined);
             expect(value).not.toBeDefined();
         });
 
-        it("called with null should return null", function () {
+        it("called with `null` should return `null`", function () {
             var value = YJS.String.merge(null);
             expect(value).toBeNull();
         });
@@ -117,27 +183,27 @@ describe("YJS.String", function () {
             expect(value).toEqual('');
         });
 
-        it("called with false should return false", function () {
+        it("called with `false` should return `false`", function () {
             var value = YJS.String.merge(false);
             expect(value).toBe(false);
         });
 
-        it("called with true should return true", function () {
+        it("called with `true` should return `true`", function () {
             var value = YJS.String.merge(true);
             expect(value).toBe(true);
         });
 
-        it("called with 0 should return 0", function () {
+        it("called with `0` should return `0`", function () {
             var value = YJS.String.merge(0);
             expect(value).toBe(0);
         });
 
-        it("called with 1 should return 1", function () {
+        it("called with `1` should return `1`", function () {
             var value = YJS.String.merge(1);
             expect(value).toBe(1);
         });
 
-        it("called with new Date should return new Date", function () {
+        it("called with `new Date` should return `new Date`", function () {
             var value = YJS.String.merge(new Date(), ["does", "not", "matter"]);
             expect(typeof value).toBe("object");
             expect(value.constructor).toBe(Date);
@@ -161,7 +227,7 @@ describe("YJS.String", function () {
             expect(value).toEqual("Hello, World!");
         });
 
-        it("called with template containing extraneous placeholders should return merged string with extraneous placeholders replaced by undefined", function () {
+        it("called with template containing extraneous placeholders should return merged string with extraneous placeholders replaced by `undefined`", function () {
             var value = YJS.String.merge("{0}, {1}! {2} {3} {4}", ["Hello", "World", "Good", "Morning"]);
             expect(value).toEqual("Hello, World! Good Morning undefined");
         });
