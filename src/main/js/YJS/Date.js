@@ -65,6 +65,20 @@ YJS_Date.clone = function (date) {
     return date;
 };
 
+// ==========================================================================
+/**
+ * Returns a date representing the current date and time at the time of the method call.
+ * 
+ *     YJS.Date.now(); // e.g., 2010-09-08 07:06:54
+ * 
+ * NOTE: This method returns a date object unlike the native `Date.now` method which returns a number.
+ * 
+ * @return {Date} The current date and time.
+ */
+YJS_Date.now = function () {
+    return new Date();
+};
+
 })(YJS, 'YJS');
 
 // ##################################################################################################################

@@ -9,6 +9,19 @@
  * @uses YJS.Date
  */
 describe("YJS.Date", function () {
+    var expectToBeNow;
+
+    beforeEach(function () {
+        expectToBeNow = function (date) {
+            var now = new Date();
+            expect(date.getFullYear()).toBeCloseTo(now.getFullYear(), 1);
+            expect(date.getMonth()).toBeCloseTo(now.getMonth(), 1);
+            expect(date.getDate()).toBeCloseTo(now.getDate(), 1);
+            expect(date.getHours()).toBeCloseTo(now.getHours(), 1);
+            expect(date.getMinutes()).toBeCloseTo(now.getMinutes(), 1);
+            expect(date.getSeconds()).toBeCloseTo(now.getSeconds(), 1);
+        };
+    });
 
     describe(".clearTime", function () {
 
@@ -105,6 +118,17 @@ describe("YJS.Date", function () {
             expect(clone.getMinutes()).toEqual(45);
             expect(clone.getSeconds()).toEqual(23);
             expect(clone.getMilliseconds()).toEqual(729);
+        });
+
+    });
+
+    describe(".now", function () {
+
+        it("should return a number representing the current time", function () {
+            var now = YJS.Date.now();
+            expect(now instanceof Object).toBe(true);
+            expect(now instanceof Date).toBe(true);
+            expectToBeNow(now);
         });
 
     });
