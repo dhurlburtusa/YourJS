@@ -79,6 +79,19 @@ YJS_Date.now = function () {
     return new Date();
 };
 
+// ==========================================================================
+/**
+ * Returns a date representing the current date at the time of the method call.
+ * 
+ *     YJS.Date.now(); // e.g., 2010-09-08 00:00:00
+ * 
+ * @return {Date} The current date with no time information.
+ */
+YJS_Date.today = function () {
+    var today = YJS.Date.clearTime(new Date());
+    return today;
+};
+
 })(YJS, 'YJS');
 
 // ##################################################################################################################

@@ -9,7 +9,7 @@
  * @uses YJS.Date
  */
 describe("YJS.Date", function () {
-    var expectToBeNow;
+    var expectToBeNow, expectToBeToday;
 
     beforeEach(function () {
         expectToBeNow = function (date) {
@@ -20,6 +20,16 @@ describe("YJS.Date", function () {
             expect(date.getHours()).toBeCloseTo(now.getHours(), 1);
             expect(date.getMinutes()).toBeCloseTo(now.getMinutes(), 1);
             expect(date.getSeconds()).toBeCloseTo(now.getSeconds(), 1);
+        };
+        expectToBeToday = function (date) {
+            var today = new Date();
+            expect(date.getFullYear()).toBeCloseTo(today.getFullYear(), 1);
+            expect(date.getMonth()).toBeCloseTo(today.getMonth(), 1);
+            expect(date.getDate()).toBeCloseTo(today.getDate(), 1);
+            expect(date.getHours()).toBe(0);
+            expect(date.getMinutes()).toBe(0);
+            expect(date.getSeconds()).toBe(0);
+            expect(date.getMilliseconds()).toBe(0);
         };
     });
 
@@ -129,6 +139,17 @@ describe("YJS.Date", function () {
             expect(now instanceof Object).toBe(true);
             expect(now instanceof Date).toBe(true);
             expectToBeNow(now);
+        });
+
+    });
+
+    describe(".today", function () {
+
+        it("should return a new date representing the current date and time", function () {
+            var today = YJS.Date.today();
+            expect(today instanceof Object).toBe(true);
+            expect(today instanceof Date).toBe(true);
+            expectToBeToday(today);
         });
 
     });
