@@ -132,6 +132,85 @@ describe("YJS.Date", function () {
 
     });
 
+    describe(".isLeapYear", function () {
+
+        it("called with anything but a Date instance should return `undefined`", function () {
+            var answer;
+
+            answer = YJS.Date.isLeapYear(undefined);
+            expect(answer).not.toBeDefined();
+
+            answer = YJS.Date.isLeapYear(null);
+            expect(answer).not.toBeDefined();
+
+            answer = YJS.Date.isLeapYear(true);
+            expect(answer).not.toBeDefined();
+
+            answer = YJS.Date.isLeapYear(false);
+            expect(answer).not.toBeDefined();
+
+            answer = YJS.Date.isLeapYear(0);
+            expect(answer).not.toBeDefined();
+
+            answer = YJS.Date.isLeapYear(1);
+            expect(answer).not.toBeDefined();
+
+            answer = YJS.Date.isLeapYear("");
+            expect(answer).not.toBeDefined();
+
+            answer = YJS.Date.isLeapYear("foo");
+            expect(answer).not.toBeDefined();
+        });
+
+        it("called with leap year date should return `true`", function () {
+            var answer;
+
+            answer = YJS.Date.isLeapYear(new Date(2400, 0));
+            expect(answer).toBe(true);
+
+            answer = YJS.Date.isLeapYear(new Date(2008, 0));
+            expect(answer).toBe(true);
+
+            answer = YJS.Date.isLeapYear(new Date(2004, 0));
+            expect(answer).toBe(true);
+
+            answer = YJS.Date.isLeapYear(new Date(2000, 0));
+            expect(answer).toBe(true);
+
+            answer = YJS.Date.isLeapYear(new Date(1996, 0));
+            expect(answer).toBe(true);
+
+            answer = YJS.Date.isLeapYear(new Date(800, 0));
+            expect(answer).toBe(true);
+        });
+
+        it("called with non-leap year date should return `false`", function () {
+            var answer;
+
+            answer = YJS.Date.isLeapYear(new Date(2300, 0));
+            expect(answer).toBe(false);
+
+            answer = YJS.Date.isLeapYear(new Date(2200, 0));
+            expect(answer).toBe(false);
+
+            answer = YJS.Date.isLeapYear(new Date(2100, 0));
+            expect(answer).toBe(false);
+
+            answer = YJS.Date.isLeapYear(new Date(2001, 0));
+            expect(answer).toBe(false);
+
+            answer = YJS.Date.isLeapYear(new Date(2002, 0));
+            expect(answer).toBe(false);
+
+            answer = YJS.Date.isLeapYear(new Date(2003, 0));
+            expect(answer).toBe(false);
+
+            answer = YJS.Date.isLeapYear(new Date(2005, 0));
+            expect(answer).toBe(false);
+        });
+
+    });
+
     describe(".now", function () {
 
         it("should return a number representing the current time", function () {

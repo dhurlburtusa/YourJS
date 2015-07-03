@@ -67,6 +67,31 @@ YJS_Date.clone = function (date) {
 
 // ==========================================================================
 /**
+ * Determines if the specified date falls within a leap year. If `date` is a `Date` instance, then `true` or `false`
+ * is returned. Otherwise `undefined` is returned. Either way, a falsy value is returned if date is not determined to
+ * be a leap year.
+ * 
+ *     YJS.Date.isLeapYear(true); // undefined
+ *     YJS.Date.isLeapYear(new Date(2000, 0)); // true
+ *     YJS.Date.isLeapYear(new Date(2200, 0)); // false
+ * 
+ * @param {?Date} date The date to check.
+ * 
+ * @return {boolean|undefined} `true`, `false`, or `undefined` depending on whether date falls within leap year.
+ */
+YJS_Date.isLeapYear = function (date) {
+    var answer, year;
+
+    if (date instanceof Date) {
+        year = date.getFullYear();
+        answer = !!((year & 3) === 0 && (year % 100 || (year % 400 === 0 && year)));
+    }
+
+    return answer;
+};
+
+// ==========================================================================
+/**
  * Returns a date representing the current date and time at the time of the method call.
  * 
  *     YJS.Date.now(); // e.g., 2010-09-08 07:06:54
