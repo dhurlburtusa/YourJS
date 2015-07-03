@@ -10,6 +10,50 @@
  */
 describe("YJS.Date", function () {
 
+    describe(".clearTime", function () {
+
+        it("should clear the time", function () {
+            var date, dt, y, m, d, h, i;
+
+            date = new Date(2000, 4, 1, 13, 14, 7);
+            YJS.Date.clearTime(date);
+            expect(date.getFullYear()).toBe(2000);
+            expect(date.getMonth()).toBe(4);
+            expect(date.getDate()).toBe(1);
+            expect(date.getHours()).toBe(0);
+            expect(date.getMinutes()).toBe(0);
+            expect(date.getSeconds()).toBe(0);
+            expect(date.getMilliseconds()).toBe(0);
+        });
+
+//        it("SHOULD", function () {
+//            var date, dt, y, m, d, h, i;
+//            // The following creates a date for every hour from the beginning of 2007 to the end of 2009. In between this date range
+//            // exists a leap-year and several day-light savings changes. It takes about 10 seconds to run (hence why it is commented
+//            // out) and none of these dates seems to necessitate DST corrections in clearTime. Therefore, no DST correction is in the
+//            // code.
+//            for (y = 2007; y < 2010; ++y) {
+//                for (m = 0; m < 12; ++m) {
+//                    for (d = 1; d < 32; ++d) {
+//                        if (YJS.Date.isValid(y, m, d)) {
+//                            for (h = 0; h < 24; ++h) {
+//                                date = YJS.Date.clearTime(new Date(y, m, d, h, 2, 3));
+//                                expect(date.getFullYear()).toBe(y);
+//                                expect(date.getMonth()).toBe(m);
+//                                expect(date.getDate()).toBe(d);
+//                                expect(date.getHours()).toBe(0);
+//                                expect(date.getMinutes()).toBe(0);
+//                                expect(date.getSeconds()).toBe(0);
+//                                expect(date.getMilliseconds()).toBe(0);
+//                            }
+//                        }
+//                    }
+//                }
+//            }
+//        });
+
+    });
+
     describe(".clone", function () {
 
         it("called with `undefined` should return `undefined`", function () {
