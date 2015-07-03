@@ -132,6 +132,103 @@ describe("YJS.Date", function () {
 
     });
 
+    describe(".getDaysInMonth", function () {
+
+        it("called with anything but a Date instance should return undefined", function () {
+            var daysInMonth;
+
+            daysInMonth = YJS.Date.getDaysInMonth(undefined);
+            expect(daysInMonth).not.toBeDefined();
+
+            daysInMonth = YJS.Date.getDaysInMonth(null);
+            expect(daysInMonth).not.toBeDefined();
+
+            daysInMonth = YJS.Date.getDaysInMonth(true);
+            expect(daysInMonth).not.toBeDefined();
+
+            daysInMonth = YJS.Date.getDaysInMonth(false);
+            expect(daysInMonth).not.toBeDefined();
+
+            daysInMonth = YJS.Date.getDaysInMonth(0);
+            expect(daysInMonth).not.toBeDefined();
+
+            daysInMonth = YJS.Date.getDaysInMonth(1);
+            expect(daysInMonth).not.toBeDefined();
+
+            daysInMonth = YJS.Date.getDaysInMonth("");
+            expect(daysInMonth).not.toBeDefined();
+
+            daysInMonth = YJS.Date.getDaysInMonth("foo");
+            expect(daysInMonth).not.toBeDefined();
+        });
+
+        it("called with January should return 31", function () {
+            var daysInMonth = YJS.Date.getDaysInMonth(new Date(2000, 0));
+            expect(daysInMonth).toBe(31);
+        });
+
+        it("called with February on a leap year should return 29", function () {
+            var daysInMonth = YJS.Date.getDaysInMonth(new Date(2000, 1));
+            expect(daysInMonth).toBe(29);
+        });
+
+        it("called with February on a non-leap year should return 29", function () {
+            var daysInMonth = YJS.Date.getDaysInMonth(new Date(2001, 1));
+            expect(daysInMonth).toBe(28);
+        });
+
+        it("called with March should return 31", function () {
+            var daysInMonth = YJS.Date.getDaysInMonth(new Date(2000, 2));
+            expect(daysInMonth).toBe(31);
+        });
+
+        it("called with April should return 30", function () {
+            var daysInMonth = YJS.Date.getDaysInMonth(new Date(2000, 3));
+            expect(daysInMonth).toBe(30);
+        });
+
+        it("called with May should return 31", function () {
+            var daysInMonth = YJS.Date.getDaysInMonth(new Date(2000, 4));
+            expect(daysInMonth).toBe(31);
+        });
+
+        it("called with June should return 30", function () {
+            var daysInMonth = YJS.Date.getDaysInMonth(new Date(2000, 5));
+            expect(daysInMonth).toBe(30);
+        });
+
+        it("called with July should return 31", function () {
+            var daysInMonth = YJS.Date.getDaysInMonth(new Date(2000, 6));
+            expect(daysInMonth).toBe(31);
+        });
+
+        it("called with August should return 31", function () {
+            var daysInMonth = YJS.Date.getDaysInMonth(new Date(2000, 7));
+            expect(daysInMonth).toBe(31);
+        });
+
+        it("called with September should return 30", function () {
+            var daysInMonth = YJS.Date.getDaysInMonth(new Date(2000, 8));
+            expect(daysInMonth).toBe(30);
+        });
+
+        it("called with October should return 31", function () {
+            var daysInMonth = YJS.Date.getDaysInMonth(new Date(2000, 9));
+            expect(daysInMonth).toBe(31);
+        });
+
+        it("called with November should return 30", function () {
+            var daysInMonth = YJS.Date.getDaysInMonth(new Date(2000, 10));
+            expect(daysInMonth).toBe(30);
+        });
+
+        it("called with December should return 31", function () {
+            var daysInMonth = YJS.Date.getDaysInMonth(new Date(2000, 11));
+            expect(daysInMonth).toBe(31);
+        });
+
+    });
+
     describe(".isLeapYear", function () {
 
         it("called with anything but a Date instance should return `undefined`", function () {

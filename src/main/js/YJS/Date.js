@@ -67,6 +67,30 @@ YJS_Date.clone = function (date) {
 
 // ==========================================================================
 /**
+ * Get the number of days in the specified month, adjusted for leap year.
+ * 
+ * @param {?Date} date The date to examine.
+ * 
+ * @return {number|undefined} The number of days in the month.
+ */
+YJS_Date.getDaysInMonth = (function () {
+    // Make a closure for efficiency. That is, don't redefine following array each time function is called.
+    var daysInMonth = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+
+    return function (date) {
+        var days, month;
+
+        if (date instanceof Date) {
+            month = date.getMonth();
+
+            days = (month === 1 && YJS.Date.isLeapYear(date) ? 29 : daysInMonth[month]);
+        }
+        return days;
+    };
+})();
+
+// ==========================================================================
+/**
  * Determines if the specified date falls within a leap year. If `date` is a `Date` instance, then `true` or `false`
  * is returned. Otherwise `undefined` is returned. Either way, a falsy value is returned if date is not determined to
  * be a leap year.
