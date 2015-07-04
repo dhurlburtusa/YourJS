@@ -91,6 +91,25 @@ YJS_Date.getDaysInMonth = (function () {
 
 // ==========================================================================
 /**
+ * Get the date of the first day of the month in which the specified date resides.
+ * 
+ * NOTE: Any time information the specified date may have had will be cleared out.
+ * 
+ * @param {?Date} date The date to examine.
+ * 
+ * @return {Date|undefined} A new date reset to the beginning of the month.
+ */
+YJS_Date.getFirstDateOfMonth = function (date) {
+    var firstDateOfMonth;
+
+    if (date instanceof Date) {
+        firstDateOfMonth = new Date(date.getFullYear(), date.getMonth(), 1);
+    }
+    return firstDateOfMonth;
+};
+
+// ==========================================================================
+/**
  * Determines if the specified date falls within a leap year. If `date` is a `Date` instance, then `true` or `false`
  * is returned. Otherwise `undefined` is returned. Either way, a falsy value is returned if date is not determined to
  * be a leap year.
