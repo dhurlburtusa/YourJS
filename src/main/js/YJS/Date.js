@@ -110,6 +110,25 @@ YJS_Date.getFirstDateOfMonth = function (date) {
 
 // ==========================================================================
 /**
+ * Get the date of the last day of the month in which the specified date resides.
+ * 
+ * NOTE: Any time information the specified date may have had will be cleared out.
+ * 
+ * @param {?Date} date The date to examine.
+ * 
+ * @return {Date|undefined} A new date reset to the end of the month.
+ */
+YJS_Date.getLastDateOfMonth = function (date) {
+    var lastDateOfMonth;
+
+    if (date instanceof Date) {
+        lastDateOfMonth = new Date(date.getFullYear(), date.getMonth(), YJS.Date.getDaysInMonth(date));
+    }
+    return lastDateOfMonth;
+};
+
+// ==========================================================================
+/**
  * Determines if the specified date falls within a leap year. If `date` is a `Date` instance, then `true` or `false`
  * is returned. Otherwise `undefined` is returned. Either way, a falsy value is returned if date is not determined to
  * be a leap year.

@@ -295,6 +295,72 @@ describe("YJS.Date", function () {
 
     });
 
+    describe(".getLastDateOfMonth", function () {
+
+        it("called with anything but a Date instance should return `undefined`", function () {
+            var daysInMonth;
+
+            daysInMonth = YJS.Date.getLastDateOfMonth(undefined);
+            expect(daysInMonth).not.toBeDefined();
+
+            daysInMonth = YJS.Date.getLastDateOfMonth(null);
+            expect(daysInMonth).not.toBeDefined();
+
+            daysInMonth = YJS.Date.getLastDateOfMonth(true);
+            expect(daysInMonth).not.toBeDefined();
+
+            daysInMonth = YJS.Date.getLastDateOfMonth(false);
+            expect(daysInMonth).not.toBeDefined();
+
+            daysInMonth = YJS.Date.getLastDateOfMonth(0);
+            expect(daysInMonth).not.toBeDefined();
+
+            daysInMonth = YJS.Date.getLastDateOfMonth(1);
+            expect(daysInMonth).not.toBeDefined();
+
+            daysInMonth = YJS.Date.getLastDateOfMonth("");
+            expect(daysInMonth).not.toBeDefined();
+
+            daysInMonth = YJS.Date.getLastDateOfMonth("foo");
+            expect(daysInMonth).not.toBeDefined();
+        });
+
+        it("called with January 1st, 2000 should return January 31st, 2000 with no time info", function () {
+            var date = YJS.Date.getLastDateOfMonth(new Date(2000, 0, 1, 15, 45));
+            expect(date.getFullYear()).toBe(2000);
+            expect(date.getMonth()).toBe(0);
+            expect(date.getDate()).toBe(31);
+            expect(date.getHours()).toBe(0);
+            expect(date.getMinutes()).toBe(0);
+            expect(date.getSeconds()).toBe(0);
+            expect(date.getMilliseconds()).toBe(0);
+        });
+
+        it("called with February 29th, 2000 should return February 29st, 2000 with no time info", function () {
+            var date = YJS.Date.getLastDateOfMonth(new Date(2000, 1, 29));
+            expect(date.getFullYear()).toBe(2000);
+            expect(date.getMonth()).toBe(1);
+            expect(date.getDate()).toBe(29);
+            expect(date.getHours()).toBe(0);
+            expect(date.getMinutes()).toBe(0);
+            expect(date.getSeconds()).toBe(0);
+            expect(date.getMilliseconds()).toBe(0);
+        });
+
+        it("called with February 31st, 2000 should return March 31st, 2000 with no time info", function () {
+            // JavaScript rolls over 2000-02-31 to 2000-03-02.
+            var date = YJS.Date.getLastDateOfMonth(new Date(2000, 1, 31));
+            expect(date.getFullYear()).toBe(2000);
+            expect(date.getMonth()).toBe(2);
+            expect(date.getDate()).toBe(31);
+            expect(date.getHours()).toBe(0);
+            expect(date.getMinutes()).toBe(0);
+            expect(date.getSeconds()).toBe(0);
+            expect(date.getMilliseconds()).toBe(0);
+        });
+
+    });
+
     describe(".isLeapYear", function () {
 
         it("called with anything but a Date instance should return `undefined`", function () {
