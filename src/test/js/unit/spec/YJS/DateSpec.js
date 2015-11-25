@@ -5,6 +5,270 @@
 'use strict';
 // @endif
 
+/*
+
+     2a ST                                   1a ST
+       |                                       |
+       v                                       v
+ +-----------------------------------------------------+
+       |                                       |
+       +---------------------------------------+
+       ^                                       ^
+       |                                       |
+     3a DT                                   2a DT
+
+
+
+2016-03-13T02:00:00 to 2016-11-06T02:00:00  (UTC-09:00) Alaska                                
+                                            (UTC-08:00) Pacific Time (US & Canada)
+                                            (UTC-07:00) Mountain Time (US & Canada)
+                                            (UTC-06:00) Central Time (US & Canada)
+                                            (UTC-05:00) Eastern Time (US & Canada)
+                                            (UTC-05:00) Indiana (East)
+                                            (UTC-04:00) Atlantic Time (Canada)
+                                            (UTC-03:30) Newfoundland
+
+2016-03-21T00:00:00 to 2016-09-21T00:00:00  (UTC+03:30) Tehran
+
+2016-03-25T02:00:00 to 2016-10-30T02:00:00  (UTC+02:00) Jerusalem
+
+2016-03-26T02:00:00 to 2016-10-01T00:00:00  (UTC+08:00) Ulaanbaatar
+
+2016-03-26T22:00:00 to 2016-10-29T23:00:00  (UTC-03:00) Greenland
+
+2016-03-27T00:00:00 to 2016-10-30T00:00:00  (UTC+02:00) Beirut
+
+2016-03-27T00:00:00 to 2016-10-30T01:00:00  (UTC-01:00) Azores
+
+2016-03-27T01:00:00 to 2016-10-30T02:00:00  (UTC) Dublin, Edinburgh, Lisbon, London
+
+2016-03-27T02:00:00 to 2016-10-30T03:00:00  (UTC+02:00) E. Europe
+
+2016-03-27T03:00:00 to 2016-10-30T04:00:00  (UTC+02:00) Athens, Bucharest
+                                            (UTC+02:00) Helsinki, Kyiv, Riga, Sofia, Tallinn, Vilnius
+                                            (UTC+02:00) Istanbul
+
+2016-03-27T04:00:00 to 2016-10-30T05:00:00  (UTC+04:00) Baku
+
+2016-03-27T02:00:00 to 2016-10-30T03:00:00  (UTC) Casablanca
+                                            (UTC+01:00) Amsterdam, Berlin, Bern, Rome, Stockholm, Vienna
+                                            (UTC+01:00) Belgrade, Bratislava, Budapest, Ljubljana, Prague
+                                            (UTC+01:00) Brussels, Copenhagen, Madrid, Paris
+                                            (UTC+01:00) Sarajevo, Skopje, Warsaw, Zagreb
+
+2016-04-01T00:00:00 to 2016-10-28T00:00:00  (UTC+02:00) Damascus
+
+2016-04-01T00:00:00 to 2016-10-28T01:00:00  (UTC+02:00) Amman
+
+2016-04-03T02:00:00 to 2016-10-30T02:00:00  (UTC-08:00) Baja California
+                                            (UTC-07:00) Chihuahua, La Paz, Mazatlan
+                                            (UTC-06:00) Guadalajara, Mexico City, Monterrey
+
+2016-09-04T02:00:00 to 2016-04-03T02:00:00  (UTC+01:00) Windhoek
+
+2016-09-25T00:00:00 to 2016-04-03T01:00:00  (UTC+13:00) Samoa
+
+2016-09-25T02:00:00 to 2016-04-03T03:00:00  (UTC+12:00) Auckland, Wellington
+
+2016-10-02T00:00:00 to 2016-03-27T00:00:00  (UTC-04:00) Asuncion
+
+2016-10-02T02:00:00 to 2016-04-03T03:00:00  (UTC+09:30) Adelaide
+
+2016-10-02T02:00:00 to 2016-04-03T03:00:00  (UTC+10:00) Canberra, Melbourne, Sydney
+                                            (UTC+10:00) Hobart
+
+2016-10-16T00:00:00 to 2016-02-21T00:00:00  (UTC-04:00) Cuiaba
+
+2016-10-16T00:00:00 to 2016-02-21T00:00:00  (UTC-03:00) Brasilia
+
+2016-10-23T00:00:00 to 2016-01-17T03:00:00  (UTC+12:00) Fiji
+
+================================================================================
+================================================================================
+================================================================================
+================================================================================
+================================================================================
+================================================================================
+
+
+DST Begins:
+
+2016-03-13T02:00:00 for (UTC-09:00) Alaska
+2016-03-13T02:00:00 for (UTC-08:00) Pacific Time (US & Canada)
+2016-03-13T02:00:00 for (UTC-07:00) Mountain Time (US & Canada)
+2016-03-13T02:00:00 for (UTC-06:00) Central Time (US & Canada)
+2016-03-13T02:00:00 for (UTC-05:00) Eastern Time (US & Canada)
+2016-03-13T02:00:00 for (UTC-05:00) Indiana (East)
+2016-03-13T02:00:00 for (UTC-04:00) Atlantic Time (Canada)
+2016-03-13T02:00:00 for (UTC-03:30) Newfoundland
+
+2016-03-21T00:00:00 for (UTC+03:30) Tehran
+
+2016-03-25T02:00:00 for (UTC+02:00) Jerusalem
+
+2016-03-26T02:00:00 for (UTC+08:00) Ulaanbaatar
+
+2016-03-26T22:00:00 for (UTC-03:00) Greenland
+
+2016-03-27T00:00:00 for (UTC-01:00) Azores
+2016-03-27T00:00:00 for (UTC+02:00) Beirut
+
+2016-03-27T01:00:00 for (UTC) Dublin, Edinburgh, Lisbon, London
+
+2016-03-27T02:00:00 for (UTC+02:00) E. Europe
+
+2016-03-27T03:00:00 for (UTC+02:00) Athens, Bucharest
+2016-03-27T03:00:00 for (UTC+02:00) Helsinki, Kyiv, Riga, Sofia, Tallinn, Vilnius
+2016-03-27T03:00:00 for (UTC+02:00) Istanbul
+
+2016-03-27T04:00:00 for (UTC+04:00) Baku
+
+2016-03-27T02:00:00 for (UTC) Casablanca
+2016-03-27T02:00:00 for (UTC+01:00) Amsterdam, Berlin, Bern, Rome, Stockhome, Vienna
+2016-03-27T02:00:00 for (UTC+01:00) Belgrade, Bratislava, Budapest, Ljubljana, Prague
+2016-03-27T02:00:00 for (UTC+01:00) Brussels, Copenhagen, Madrid, Paris
+2016-03-27T02:00:00 for (UTC+01:00) Sarajevo, Skopje, Warsaw, Zagreb
+
+2016-04-01T00:00:00 for (UTC+02:00) Amman
+2016-04-01T00:00:00 for (UTC+02:00) Damascus
+
+2016-04-03T02:00:00 for (UTC-08:00) Baja California
+2016-04-03T02:00:00 for (UTC-07:00) Chihuahua, La Paz, Mazatlan
+2016-04-03T02:00:00 for (UTC-06:00) Guadalajara, Mexico City, Monterrey
+
+
+
+2016-09-04T02:00:00 for (UTC+01:00) Windhoek
+
+2016-09-25T00:00:00 for (UTC+13:00) Samoa
+
+2016-09-25T02:00:00 for (UTC+12:00) Auckland, Wellington
+
+2016-10-02T00:00:00 for (UTC-04:00) Asuncion
+
+2016-10-02T02:00:00 for (UTC+09:30) Adelaide
+2016-10-02T02:00:00 for (UTC+10:00) Canberra, Melbourne, Sydney
+2016-10-02T02:00:00 for (UTC+10:00) Hobart
+
+2016-10-16T00:00:00 for (UTC-04:00) Cuiaba
+2016-10-16T00:00:00 for (UTC-03:00) Brasilia
+
+2016-10-23T00:00:00 for (UTC+12:00) Fiji
+
+DST Ends:
+
+2016-01-17T03:00:00 for (UTC+12:00) Fiji
+
+2016-02-21T00:00:00 for (UTC-04:00) Cuiaba
+2016-02-21T00:00:00 for (UTC-03:00) Brasilia
+
+2016-03-27T00:00:00 for (UTC-04:00) Asuncion
+
+2016-04-03T01:00:00 for (UTC+13:00) Samoa
+
+2016-04-03T02:00:00 for (UTC+01:00) Windhoek
+
+2016-04-03T03:00:00 for (UTC+09:30) Adelaide
+2016-04-03T03:00:00 for (UTC+10:00) Canberra, Melbourne, Sydney
+2016-04-03T03:00:00 for (UTC+10:00) Hobart
+2016-04-03T03:00:00 for (UTC+12:00) Auckland, Wellington
+
+
+
+2016-09-21T00:00:00 for (UTC+03:30) Tehran
+
+2016-10-01T00:00:00 for (UTC+08:00) Ulaanbaatar
+
+2016-10-28T00:00:00 for (UTC+02:00) Damascus
+
+2016-10-28T01:00:00 for (UTC+02:00) Amman
+
+2016-10-29T23:00:00 for (UTC-03:00) Greenland
+
+2016-10-30T00:00:00 for (UTC+02:00) Beirut
+
+2016-10-30T01:00:00 for (UTC-01:00) Azores
+
+2016-10-30T02:00:00 for (UTC-08:00) Baja California
+2016-10-30T02:00:00 for (UTC-07:00) Chihuahua, La Paz, Mazatlan
+2016-10-30T02:00:00 for (UTC-06:00) Guadalajara, Mexico City, Monterrey
+2016-10-30T02:00:00 for (UTC) Dublin, Edinburgh, Lisbon, London
+2016-10-30T02:00:00 for (UTC+02:00) Jerusalem
+
+2016-10-30T03:00:00 for (UTC) Casablanca
+2016-10-30T03:00:00 for (UTC+01:00) Amsterdam, Berlin, Bern, Rome, Stockholm, Vienna
+2016-10-30T03:00:00 for (UTC+01:00) Belgrade, Bratislava, Budapest, Ljubljana, Prague
+2016-10-30T03:00:00 for (UTC+01:00) Brussels, Copenhagen, Madrid, Paris
+2016-10-30T03:00:00 for (UTC+01:00) Sarajevo, Skopje, Warsaw, Zagreb
+2016-10-30T03:00:00 for (UTC+02:00) E. Europe
+
+2016-10-30T04:00:00 for (UTC+02:00) Athens, Bucharest
+2016-10-30T04:00:00 for (UTC+02:00) Helsinki, Kyiv, Riga, Sofia, Tallinn, Vilnius
+2016-10-30T04:00:00 for (UTC+02:00) Istanbul
+
+2016-10-30T05:00:00 for (UTC+04:00) Baku
+
+2016-11-06T02:00:00 for (UTC-09:00) Alaska
+2016-11-06T02:00:00 for (UTC-08:00) Pacific Time (US & Canada)
+2016-11-06T02:00:00 for (UTC-07:00) Mountain Time (US & Canada)
+2016-11-06T02:00:00 for (UTC-06:00) Central Time (US & Canada)
+2016-11-06T02:00:00 for (UTC-05:00) Eastern Time (US & Canada)
+2016-11-06T02:00:00 for (UTC-05:00) Indiana (East)
+2016-11-06T02:00:00 for (UTC-04:00) Atlantic Time (Canada)
+2016-11-06T02:00:00 for (UTC-03:30) Newfoundland
+
+*/
+
+var extractTimezone, guessTimezoneCode,
+    TIMEZONE_TO_TIMEZONE_CODE_LUT,
+    TIMEZONE_CODE_TO_TIMEZONE_LUT;
+
+TIMEZONE_TO_TIMEZONE_CODE_LUT = {
+    "mountain daylight time": "MDT",
+    "mountain standard time": "MST"
+};
+
+TIMEZONE_CODE_TO_TIMEZONE_LUT = {
+    "MDT": "mountain daylight time",
+    "MST": "Mountain Standard Time"
+};
+
+extractTimezone = function (date) {
+    var timezone = null,
+        i, iLen, matches, pattern, patterns, time;
+    
+    if (date instanceof Date) {
+        patterns = [
+            /\d{1,2}:\d{1,2}:\d{1,2}\s+GMT[+-]\d{3,4}\s+\((.+)\)/, // Chrome, FireFox
+            /\d{1,2}:\d{1,2}:\d{1,2}\s+(.+)/ // IE
+        ];
+        time = date.toTimeString();
+        for (i = 0, iLen = patterns.length; i < iLen; ++i) {
+            pattern = patterns[i];
+            matches = time.match(pattern);
+            if (matches && matches.length === 2) {
+                timezone = matches[1];
+                break;
+            }
+        }
+        if (TIMEZONE_CODE_TO_TIMEZONE_LUT.hasOwnProperty(timezone)) {
+            timezone = TIMEZONE_CODE_TO_TIMEZONE_LUT[timezone];
+        }
+    }
+    return timezone;
+};
+
+guessTimezoneCode = function (date) {
+    var timezone, tzCode;
+    
+    timezone = extractTimezone(date);
+    if (timezone) {
+        timezone = timezone.toLowerCase();
+    }
+    tzCode = TIMEZONE_TO_TIMEZONE_CODE_LUT[timezone] || null;
+    return tzCode;
+};
+
 /**
  * @uses YJS.Date
  */
@@ -31,6 +295,692 @@ describe("YJS.Date", function () {
             expect(date.getSeconds()).toBe(0);
             expect(date.getMilliseconds()).toBe(0);
         };
+    });
+
+    describe(".add", function () {
+
+        it("called with anything but a Date instance should return passed value", function () {
+            var date;
+
+            date = YJS.Date.add(undefined);
+            expect(date).not.toBeDefined();
+
+            date = YJS.Date.add(null);
+            expect(date).toBeNull();
+
+            date = YJS.Date.add(true);
+            expect(date).toBe(true);
+
+            date = YJS.Date.add(false);
+            expect(date).toBe(false);
+
+            date = YJS.Date.add(0);
+            expect(date).toBe(0);
+
+            date = YJS.Date.add(1);
+            expect(date).toBe(1);
+
+            date = YJS.Date.add("");
+            expect(date).toBe("");
+
+            date = YJS.Date.add("foo");
+            expect(date).toBe("foo");
+        });
+
+        it("should add/subtract years", function () {
+            var date;
+
+            date = YJS.Date.add(new Date(1976, 2, 12, 3), YJS.Date.YEAR, 0);
+            expect(date.getFullYear()).toBe(1976);
+            expect(date.getMonth()).toBe(2);
+            expect(date.getDate()).toBe(12);
+            expect(date.getHours()).toBe(3);
+            expect(date.getMinutes()).toBe(0);
+            expect(date.getSeconds()).toBe(0);
+            expect(date.getMilliseconds()).toBe(0);
+
+            date = YJS.Date.add(new Date(1976, 2, 12, 3), YJS.Date.YEAR, 1);
+            expect(date.getFullYear()).toBe(1977);
+            expect(date.getMonth()).toBe(2);
+            expect(date.getDate()).toBe(12);
+            expect(date.getHours()).toBe(3);
+            expect(date.getMinutes()).toBe(0);
+            expect(date.getSeconds()).toBe(0);
+            expect(date.getMilliseconds()).toBe(0);
+
+            date = YJS.Date.add(new Date(1976, 2, 12, 3), YJS.Date.YEAR, 30);
+            expect(date.getFullYear()).toBe(2006);
+            expect(date.getMonth()).toBe(2);
+            expect(date.getDate()).toBe(12);
+            expect(date.getHours()).toBe(3);
+            expect(date.getMinutes()).toBe(0);
+            expect(date.getSeconds()).toBe(0);
+            expect(date.getMilliseconds()).toBe(0);
+
+            date = YJS.Date.add(new Date(1976, 2, 12, 3), YJS.Date.YEAR, -30);
+            expect(date.getFullYear()).toBe(1946);
+            expect(date.getMonth()).toBe(2);
+            expect(date.getDate()).toBe(12);
+            expect(date.getHours()).toBe(3);
+            expect(date.getMinutes()).toBe(0);
+            expect(date.getSeconds()).toBe(0);
+            expect(date.getMilliseconds()).toBe(0);
+
+            date = YJS.Date.add(new Date(1976, 1, 2), YJS.Date.YEAR, 1);
+            expect(date.getFullYear()).toBe(1977);
+            expect(date.getMonth()).toBe(1);
+            expect(date.getDate()).toBe(2);
+            expect(date.getHours()).toBe(0);
+            expect(date.getMinutes()).toBe(0);
+            expect(date.getSeconds()).toBe(0);
+            expect(date.getMilliseconds()).toBe(0);
+
+            date = YJS.Date.add(new Date(1976, 1, 2), YJS.Date.YEAR, 2);
+            expect(date.getFullYear()).toBe(1978);
+            expect(date.getMonth()).toBe(1);
+            expect(date.getDate()).toBe(2);
+            expect(date.getHours()).toBe(0);
+            expect(date.getMinutes()).toBe(0);
+            expect(date.getSeconds()).toBe(0);
+            expect(date.getMilliseconds()).toBe(0);
+
+            date = YJS.Date.add(new Date(1976, 1, 2), YJS.Date.YEAR, 3);
+            expect(date.getFullYear()).toBe(1979);
+            expect(date.getMonth()).toBe(1);
+            expect(date.getDate()).toBe(2);
+            expect(date.getHours()).toBe(0);
+            expect(date.getMinutes()).toBe(0);
+            expect(date.getSeconds()).toBe(0);
+            expect(date.getMilliseconds()).toBe(0);
+
+            date = YJS.Date.add(new Date(1976, 1, 2), YJS.Date.YEAR, 4);
+            expect(date.getFullYear()).toBe(1980);
+            expect(date.getMonth()).toBe(1);
+            expect(date.getDate()).toBe(2);
+            expect(date.getHours()).toBe(0);
+            expect(date.getMinutes()).toBe(0);
+            expect(date.getSeconds()).toBe(0);
+            expect(date.getMilliseconds()).toBe(0);
+        });
+
+        it("should add/subtract months", function () {
+            var date;
+
+            date = YJS.Date.add(new Date(2000, 0, 1), YJS.Date.MONTH, 0);
+            expect(date.getFullYear()).toBe(2000);
+            expect(date.getMonth()).toBe(0);
+            expect(date.getDate()).toBe(1);
+            expect(date.getHours()).toBe(0);
+            expect(date.getMinutes()).toBe(0);
+            expect(date.getSeconds()).toBe(0);
+            expect(date.getMilliseconds()).toBe(0);
+
+            date = YJS.Date.add(new Date(2000, 0, 1), YJS.Date.MONTH, 15);
+            expect(date.getFullYear()).toBe(2001); // Year rolls over.
+            expect(date.getMonth()).toBe(3);
+            expect(date.getDate()).toBe(1);
+            expect(date.getHours()).toBe(0);
+            expect(date.getMinutes()).toBe(0);
+            expect(date.getSeconds()).toBe(0);
+            expect(date.getMilliseconds()).toBe(0);
+
+            date = YJS.Date.add(new Date(2000, 0, 1), YJS.Date.MONTH, -15);
+            expect(date.getFullYear()).toBe(1998); // Year rolls under.
+            expect(date.getMonth()).toBe(9);
+            expect(date.getDate()).toBe(1);
+            expect(date.getHours()).toBe(0);
+            expect(date.getMinutes()).toBe(0);
+            expect(date.getSeconds()).toBe(0);
+            expect(date.getMilliseconds()).toBe(0);
+        });
+
+        it("should add/substract months and adjust days as necessary", function () {
+            var date;
+
+            date = YJS.Date.add(new Date(1976, 0, 31), YJS.Date.MONTH, 1);
+            expect(date.getFullYear()).toBe(1976);
+            expect(date.getMonth()).toBe(1);
+            expect(date.getDate()).toBe(29); // February in 1976 only has 29 days -- not 31.
+            expect(date.getHours()).toBe(0);
+            expect(date.getMinutes()).toBe(0);
+            expect(date.getSeconds()).toBe(0);
+            expect(date.getMilliseconds()).toBe(0);
+
+            date = YJS.Date.add(new Date(1976, 2, 29), YJS.Date.MONTH, -13);
+            expect(date.getFullYear()).toBe(1975);
+            expect(date.getMonth()).toBe(1);
+            expect(date.getDate()).toBe(28); // February in 1975 only has 28 days -- not 29.
+            expect(date.getHours()).toBe(0);
+            expect(date.getMinutes()).toBe(0);
+            expect(date.getSeconds()).toBe(0);
+            expect(date.getMilliseconds()).toBe(0);
+
+            date = YJS.Date.add(new Date(1976, 0, 28), YJS.Date.MONTH, 25);
+            expect(date.getFullYear()).toBe(1978);
+            expect(date.getMonth()).toBe(1);
+            expect(date.getDate()).toBe(28); // February in 1978 only has 28 days -- not 31.
+            expect(date.getHours()).toBe(0);
+            expect(date.getMinutes()).toBe(0);
+            expect(date.getSeconds()).toBe(0);
+            expect(date.getMilliseconds()).toBe(0);
+
+            date = YJS.Date.add(new Date(1976, 0, 29), YJS.Date.MONTH, 25);
+            expect(date.getFullYear()).toBe(1978);
+            expect(date.getMonth()).toBe(1);
+            expect(date.getDate()).toBe(28); // February in 1978 only has 28 days -- not 31.
+            expect(date.getHours()).toBe(0);
+            expect(date.getMinutes()).toBe(0);
+            expect(date.getSeconds()).toBe(0);
+            expect(date.getMilliseconds()).toBe(0);
+
+            date = YJS.Date.add(new Date(1976, 0, 30), YJS.Date.MONTH, 25);
+            expect(date.getFullYear()).toBe(1978);
+            expect(date.getMonth()).toBe(1);
+            expect(date.getDate()).toBe(28); // February in 1978 only has 28 days -- not 31.
+            expect(date.getHours()).toBe(0);
+            expect(date.getMinutes()).toBe(0);
+            expect(date.getSeconds()).toBe(0);
+            expect(date.getMilliseconds()).toBe(0);
+
+            date = YJS.Date.add(new Date(1976, 0, 31), YJS.Date.MONTH, 25);
+            expect(date.getFullYear()).toBe(1978);
+            expect(date.getMonth()).toBe(1);
+            expect(date.getDate()).toBe(28); // February in 1978 only has 28 days -- not 31.
+            expect(date.getHours()).toBe(0);
+            expect(date.getMinutes()).toBe(0);
+            expect(date.getSeconds()).toBe(0);
+            expect(date.getMilliseconds()).toBe(0);
+        });
+
+        it("should add/subtract days", function () {
+            var date;
+
+            date = YJS.Date.add(new Date(2000, 0, 1), YJS.Date.DAY, 0);
+            expect(date.getFullYear()).toBe(2000);
+            expect(date.getMonth()).toBe(0);
+            expect(date.getDate()).toBe(1);
+            expect(date.getHours()).toBe(0);
+            expect(date.getMinutes()).toBe(0);
+            expect(date.getSeconds()).toBe(0);
+            expect(date.getMilliseconds()).toBe(0);
+
+            date = YJS.Date.add(new Date(2000, 0, 1), YJS.Date.DAY, 15);
+            expect(date.getFullYear()).toBe(2000);
+            expect(date.getMonth()).toBe(0);
+            expect(date.getDate()).toBe(16);
+            expect(date.getHours()).toBe(0);
+            expect(date.getMinutes()).toBe(0);
+            expect(date.getSeconds()).toBe(0);
+            expect(date.getMilliseconds()).toBe(0);
+
+            date = YJS.Date.add(new Date(2000, 0, 1), YJS.Date.DAY, -15);
+            expect(date.getFullYear()).toBe(1999); // Year rolls under.
+            expect(date.getMonth()).toBe(11);
+            expect(date.getDate()).toBe(17);
+            expect(date.getHours()).toBe(0);
+            expect(date.getMinutes()).toBe(0);
+            expect(date.getSeconds()).toBe(0);
+            expect(date.getMilliseconds()).toBe(0);
+
+            // Add 365 days on leap year before leap day should be 1 day shy of 1 year out.
+            date = YJS.Date.add(new Date(2000, 0, 1), YJS.Date.DAY, 365);
+            expect(date.getFullYear()).toBe(2000);
+            expect(date.getMonth()).toBe(11);
+            expect(date.getDate()).toBe(31);
+            expect(date.getHours()).toBe(0);
+            expect(date.getMinutes()).toBe(0);
+            expect(date.getSeconds()).toBe(0);
+            expect(date.getMilliseconds()).toBe(0);
+
+            // Add 366 days on leap year before leap day should be 1 year out.
+            date = YJS.Date.add(new Date(2000, 0, 1), YJS.Date.DAY, 366);
+            expect(date.getFullYear()).toBe(2001);
+            expect(date.getMonth()).toBe(0);
+            expect(date.getDate()).toBe(1);
+            expect(date.getHours()).toBe(0);
+            expect(date.getMinutes()).toBe(0);
+            expect(date.getSeconds()).toBe(0);
+            expect(date.getMilliseconds()).toBe(0);
+
+            // Add 365 days on leap year after leap day should be 1 year out.
+            date = YJS.Date.add(new Date(2000, 2, 12), YJS.Date.DAY, 365);
+            expect(date.getFullYear()).toBe(2001);
+            expect(date.getMonth()).toBe(2);
+            expect(date.getDate()).toBe(12);
+            expect(date.getHours()).toBe(0);
+            expect(date.getMinutes()).toBe(0);
+            expect(date.getSeconds()).toBe(0);
+            expect(date.getMilliseconds()).toBe(0);
+
+            // Add 365 days on year before leap year before 'leap day' should be 1 year out.
+            date = YJS.Date.add(new Date(1999, 0, 1), YJS.Date.DAY, 365);
+            expect(date.getFullYear()).toBe(2000);
+            expect(date.getMonth()).toBe(0);
+            expect(date.getDate()).toBe(1);
+            expect(date.getHours()).toBe(0);
+            expect(date.getMinutes()).toBe(0);
+            expect(date.getSeconds()).toBe(0);
+            expect(date.getMilliseconds()).toBe(0);
+
+            // Add 365 days on year before leap year after 'leap day' should be 1 day shy of 1 year out.
+            date = YJS.Date.add(new Date(1999, 2, 12), YJS.Date.DAY, 365);
+            expect(date.getFullYear()).toBe(2000);
+            expect(date.getMonth()).toBe(2);
+            expect(date.getDate()).toBe(11); // 1 day shy.
+            expect(date.getHours()).toBe(0);
+            expect(date.getMinutes()).toBe(0);
+            expect(date.getSeconds()).toBe(0);
+            expect(date.getMilliseconds()).toBe(0);
+
+            // Subtract 365 days on leap year before leap day should be 1 year back.
+            date = YJS.Date.add(new Date(2000, 0, 1), YJS.Date.DAY, -365);
+            expect(date.getFullYear()).toBe(1999);
+            expect(date.getMonth()).toBe(0);
+            expect(date.getDate()).toBe(1);
+            expect(date.getHours()).toBe(0);
+            expect(date.getMinutes()).toBe(0);
+            expect(date.getSeconds()).toBe(0);
+            expect(date.getMilliseconds()).toBe(0);
+
+            // Subtract 365 days on leap year after leap day should be 1 day shy of 1 year back.
+            date = YJS.Date.add(new Date(2000, 3, 12), YJS.Date.DAY, -365);
+            expect(date.getFullYear()).toBe(1999);
+            expect(date.getMonth()).toBe(3);
+            expect(date.getDate()).toBe(13); // 1 day shy.
+            expect(date.getHours()).toBe(0);
+            expect(date.getMinutes()).toBe(0);
+            expect(date.getSeconds()).toBe(0);
+            expect(date.getMilliseconds()).toBe(0);
+        });
+
+        it("should add/subtract hours", function () {
+            var date;
+
+            date = YJS.Date.add(new Date(2000, 0, 1), YJS.Date.HOURS, 0);
+            expect(date.getFullYear()).toBe(2000);
+            expect(date.getMonth()).toBe(0);
+            expect(date.getDate()).toBe(1);
+            expect(date.getHours()).toBe(0);
+            expect(date.getMinutes()).toBe(0);
+            expect(date.getSeconds()).toBe(0);
+            expect(date.getMilliseconds()).toBe(0);
+
+            date = YJS.Date.add(new Date(2000, 0, 1), YJS.Date.HOURS, 15);
+            expect(date.getFullYear()).toBe(2000);
+            expect(date.getMonth()).toBe(0);
+            expect(date.getDate()).toBe(1);
+            expect(date.getHours()).toBe(15);
+            expect(date.getMinutes()).toBe(0);
+            expect(date.getSeconds()).toBe(0);
+            expect(date.getMilliseconds()).toBe(0);
+
+            // Add 24 hours should be 1 day out.
+            date = YJS.Date.add(new Date(2000, 0, 1), YJS.Date.HOURS, 24);
+            expect(date.getFullYear()).toBe(2000);
+            expect(date.getMonth()).toBe(0);
+            expect(date.getDate()).toBe(2);
+            expect(date.getHours()).toBe(0);
+            expect(date.getMinutes()).toBe(0);
+            expect(date.getSeconds()).toBe(0);
+            expect(date.getMilliseconds()).toBe(0);
+
+            // Add 24 hours to Feb 28th during leap year should be Feb 29th.
+            date = YJS.Date.add(new Date(2000, 1, 28, 13), YJS.Date.HOURS, 24);
+            expect(date.getFullYear()).toBe(2000);
+            expect(date.getMonth()).toBe(1);
+            expect(date.getDate()).toBe(29);
+            expect(date.getHours()).toBe(13);
+            expect(date.getMinutes()).toBe(0);
+            expect(date.getSeconds()).toBe(0);
+            expect(date.getMilliseconds()).toBe(0);
+
+            // Add 24 hours to Feb 28th during non-leap year should be March 1st.
+            date = YJS.Date.add(new Date(2001, 1, 28, 13), YJS.Date.HOURS, 24);
+            expect(date.getFullYear()).toBe(2001);
+            expect(date.getMonth()).toBe(2); // Month rolls over.
+            expect(date.getDate()).toBe(1);
+            expect(date.getHours()).toBe(13);
+            expect(date.getMinutes()).toBe(0);
+            expect(date.getSeconds()).toBe(0);
+            expect(date.getMilliseconds()).toBe(0);
+
+            // Add 24 hours to Feb 29th during leap year should be March 1st.
+            date = YJS.Date.add(new Date(2000, 1, 29, 13), YJS.Date.HOURS, 24);
+            expect(date.getFullYear()).toBe(2000);
+            expect(date.getMonth()).toBe(2); // Month rolls over.
+            expect(date.getDate()).toBe(1);
+            expect(date.getHours()).toBe(13);
+            expect(date.getMinutes()).toBe(0);
+            expect(date.getSeconds()).toBe(0);
+            expect(date.getMilliseconds()).toBe(0);
+
+            // Add 24 * 365 hours on leap year before leap day should be 1 day shy of 1 year out.
+            date = YJS.Date.add(new Date(2000, 0, 1), YJS.Date.HOURS, 24 * 365);
+            expect(date.getFullYear()).toBe(2000);
+            expect(date.getMonth()).toBe(11);
+            expect(date.getDate()).toBe(31);
+            expect(date.getHours()).toBe(0);
+            expect(date.getMinutes()).toBe(0);
+            expect(date.getSeconds()).toBe(0);
+            expect(date.getMilliseconds()).toBe(0);
+
+            // Add 24 * 366 hours on leap year before leap day should be 1 year out.
+            date = YJS.Date.add(new Date(2000, 0, 1), YJS.Date.HOURS, 24 * 366);
+            expect(date.getFullYear()).toBe(2001);
+            expect(date.getMonth()).toBe(0);
+            expect(date.getDate()).toBe(1);
+            expect(date.getHours()).toBe(0);
+            expect(date.getMinutes()).toBe(0);
+            expect(date.getSeconds()).toBe(0);
+            expect(date.getMilliseconds()).toBe(0);
+
+            date = YJS.Date.add(new Date(2000, 0, 1), YJS.Date.HOURS, -15);
+            expect(date.getFullYear()).toBe(1999); // Year rolls under.
+            expect(date.getMonth()).toBe(11);
+            expect(date.getDate()).toBe(31);
+            expect(date.getHours()).toBe(9);
+            expect(date.getMinutes()).toBe(0);
+            expect(date.getSeconds()).toBe(0);
+            expect(date.getMilliseconds()).toBe(0);
+        });
+
+        it("should add/subtract minutes", function () {
+            var date;
+
+            date = YJS.Date.add(new Date(2000, 0, 1), YJS.Date.MINUTES, 0);
+            expect(date.getFullYear()).toBe(2000);
+            expect(date.getMonth()).toBe(0);
+            expect(date.getDate()).toBe(1);
+            expect(date.getHours()).toBe(0);
+            expect(date.getMinutes()).toBe(0);
+            expect(date.getSeconds()).toBe(0);
+            expect(date.getMilliseconds()).toBe(0);
+
+            date = YJS.Date.add(new Date(2000, 0, 1), YJS.Date.MINUTES, 59);
+            expect(date.getFullYear()).toBe(2000);
+            expect(date.getMonth()).toBe(0);
+            expect(date.getDate()).toBe(1);
+            expect(date.getHours()).toBe(0);
+            expect(date.getMinutes()).toBe(59);
+            expect(date.getSeconds()).toBe(0);
+            expect(date.getMilliseconds()).toBe(0);
+
+            date = YJS.Date.add(new Date(2000, 0, 1), YJS.Date.MINUTES, 60);
+            expect(date.getFullYear()).toBe(2000);
+            expect(date.getMonth()).toBe(0);
+            expect(date.getDate()).toBe(1);
+            expect(date.getHours()).toBe(1);
+            expect(date.getMinutes()).toBe(0);
+            expect(date.getSeconds()).toBe(0);
+            expect(date.getMilliseconds()).toBe(0);
+
+            date = YJS.Date.add(new Date(2000, 0, 1), YJS.Date.MINUTES, 61);
+            expect(date.getFullYear()).toBe(2000);
+            expect(date.getMonth()).toBe(0);
+            expect(date.getDate()).toBe(1);
+            expect(date.getHours()).toBe(1);
+            expect(date.getMinutes()).toBe(1);
+            expect(date.getSeconds()).toBe(0);
+            expect(date.getMilliseconds()).toBe(0);
+
+            date = YJS.Date.add(new Date(2000, 0, 1), YJS.Date.MINUTES, -59);
+            expect(date.getFullYear()).toBe(1999);
+            expect(date.getMonth()).toBe(11);
+            expect(date.getDate()).toBe(31);
+            expect(date.getHours()).toBe(23);
+            expect(date.getMinutes()).toBe(1);
+            expect(date.getSeconds()).toBe(0);
+            expect(date.getMilliseconds()).toBe(0);
+
+            date = YJS.Date.add(new Date(2000, 0, 1), YJS.Date.MINUTES, -60);
+            expect(date.getFullYear()).toBe(1999);
+            expect(date.getMonth()).toBe(11);
+            expect(date.getDate()).toBe(31);
+            expect(date.getHours()).toBe(23);
+            expect(date.getMinutes()).toBe(0);
+            expect(date.getSeconds()).toBe(0);
+            expect(date.getMilliseconds()).toBe(0);
+
+            date = YJS.Date.add(new Date(2000, 0, 1), YJS.Date.MINUTES, -61);
+            expect(date.getFullYear()).toBe(1999);
+            expect(date.getMonth()).toBe(11);
+            expect(date.getDate()).toBe(31);
+            expect(date.getHours()).toBe(22);
+            expect(date.getMinutes()).toBe(59);
+            expect(date.getSeconds()).toBe(0);
+            expect(date.getMilliseconds()).toBe(0);
+        });
+
+        it("should add/subtract seconds", function () {
+            var date;
+
+            date = YJS.Date.add(new Date(2000, 0, 1), YJS.Date.SECONDS, 0);
+            expect(date.getFullYear()).toBe(2000);
+            expect(date.getMonth()).toBe(0);
+            expect(date.getDate()).toBe(1);
+            expect(date.getHours()).toBe(0);
+            expect(date.getMinutes()).toBe(0);
+            expect(date.getSeconds()).toBe(0);
+            expect(date.getMilliseconds()).toBe(0);
+
+            date = YJS.Date.add(new Date(2000, 0, 1), YJS.Date.SECONDS, 59);
+            expect(date.getFullYear()).toBe(2000);
+            expect(date.getMonth()).toBe(0);
+            expect(date.getDate()).toBe(1);
+            expect(date.getHours()).toBe(0);
+            expect(date.getMinutes()).toBe(0);
+            expect(date.getSeconds()).toBe(59);
+            expect(date.getMilliseconds()).toBe(0);
+
+            date = YJS.Date.add(new Date(2000, 0, 1), YJS.Date.SECONDS, 60);
+            expect(date.getFullYear()).toBe(2000);
+            expect(date.getMonth()).toBe(0);
+            expect(date.getDate()).toBe(1);
+            expect(date.getHours()).toBe(0);
+            expect(date.getMinutes()).toBe(1);
+            expect(date.getSeconds()).toBe(0);
+            expect(date.getMilliseconds()).toBe(0);
+
+            date = YJS.Date.add(new Date(2000, 0, 1), YJS.Date.SECONDS, 61);
+            expect(date.getFullYear()).toBe(2000);
+            expect(date.getMonth()).toBe(0);
+            expect(date.getDate()).toBe(1);
+            expect(date.getHours()).toBe(0);
+            expect(date.getMinutes()).toBe(1);
+            expect(date.getSeconds()).toBe(1);
+            expect(date.getMilliseconds()).toBe(0);
+
+            date = YJS.Date.add(new Date(2000, 0, 1), YJS.Date.SECONDS, -59);
+            expect(date.getFullYear()).toBe(1999);
+            expect(date.getMonth()).toBe(11);
+            expect(date.getDate()).toBe(31);
+            expect(date.getHours()).toBe(23);
+            expect(date.getMinutes()).toBe(59);
+            expect(date.getSeconds()).toBe(1);
+            expect(date.getMilliseconds()).toBe(0);
+
+            date = YJS.Date.add(new Date(2000, 0, 1), YJS.Date.SECONDS, -60);
+            expect(date.getFullYear()).toBe(1999);
+            expect(date.getMonth()).toBe(11);
+            expect(date.getDate()).toBe(31);
+            expect(date.getHours()).toBe(23);
+            expect(date.getMinutes()).toBe(59);
+            expect(date.getSeconds()).toBe(0);
+            expect(date.getMilliseconds()).toBe(0);
+
+            date = YJS.Date.add(new Date(2000, 0, 1), YJS.Date.SECONDS, -61);
+            expect(date.getFullYear()).toBe(1999);
+            expect(date.getMonth()).toBe(11);
+            expect(date.getDate()).toBe(31);
+            expect(date.getHours()).toBe(23);
+            expect(date.getMinutes()).toBe(58);
+            expect(date.getSeconds()).toBe(59);
+            expect(date.getMilliseconds()).toBe(0);
+        });
+
+        it("should add/subtract milliseconds", function () {
+            var date;
+
+            date = YJS.Date.add(new Date(2000, 0, 1), YJS.Date.MILLISECONDS, 0);
+            expect(date.getFullYear()).toBe(2000);
+            expect(date.getMonth()).toBe(0);
+            expect(date.getDate()).toBe(1);
+            expect(date.getHours()).toBe(0);
+            expect(date.getMinutes()).toBe(0);
+            expect(date.getSeconds()).toBe(0);
+            expect(date.getMilliseconds()).toBe(0);
+
+            date = YJS.Date.add(new Date(2000, 0, 1), YJS.Date.MILLISECONDS, 100);
+            expect(date.getFullYear()).toBe(2000);
+            expect(date.getMonth()).toBe(0);
+            expect(date.getDate()).toBe(1);
+            expect(date.getHours()).toBe(0);
+            expect(date.getMinutes()).toBe(0);
+            expect(date.getSeconds()).toBe(0);
+            expect(date.getMilliseconds()).toBe(100);
+
+            date = YJS.Date.add(new Date(2000, 0, 1), YJS.Date.MILLISECONDS, 1000);
+            expect(date.getFullYear()).toBe(2000);
+            expect(date.getMonth()).toBe(0);
+            expect(date.getDate()).toBe(1);
+            expect(date.getHours()).toBe(0);
+            expect(date.getMinutes()).toBe(0);
+            expect(date.getSeconds()).toBe(1);
+            expect(date.getMilliseconds()).toBe(0);
+
+            date = YJS.Date.add(new Date(2000, 0, 1), YJS.Date.MILLISECONDS, 1100);
+            expect(date.getFullYear()).toBe(2000);
+            expect(date.getMonth()).toBe(0);
+            expect(date.getDate()).toBe(1);
+            expect(date.getHours()).toBe(0);
+            expect(date.getMinutes()).toBe(0);
+            expect(date.getSeconds()).toBe(1);
+            expect(date.getMilliseconds()).toBe(100);
+
+            date = YJS.Date.add(new Date(2000, 0, 1), YJS.Date.MILLISECONDS, -100);
+            expect(date.getFullYear()).toBe(1999);
+            expect(date.getMonth()).toBe(11);
+            expect(date.getDate()).toBe(31);
+            expect(date.getHours()).toBe(23);
+            expect(date.getMinutes()).toBe(59);
+            expect(date.getSeconds()).toBe(59);
+            expect(date.getMilliseconds()).toBe(900);
+
+            date = YJS.Date.add(new Date(2000, 0, 1), YJS.Date.MILLISECONDS, -1000);
+            expect(date.getFullYear()).toBe(1999);
+            expect(date.getMonth()).toBe(11);
+            expect(date.getDate()).toBe(31);
+            expect(date.getHours()).toBe(23);
+            expect(date.getMinutes()).toBe(59);
+            expect(date.getSeconds()).toBe(59);
+            expect(date.getMilliseconds()).toBe(0);
+
+            date = YJS.Date.add(new Date(2000, 0, 1), YJS.Date.MILLISECONDS, -1100);
+            expect(date.getFullYear()).toBe(1999);
+            expect(date.getMonth()).toBe(11);
+            expect(date.getDate()).toBe(31);
+            expect(date.getHours()).toBe(23);
+            expect(date.getMinutes()).toBe(59);
+            expect(date.getSeconds()).toBe(58);
+            expect(date.getMilliseconds()).toBe(900);
+        });
+
+        it("should handle crossing day light savings correctly", function () {
+            var ONE_HR_MS = 60 * 60 * 1000,
+                HALF_HR_MS = 30 * 60 * 1000,
+                TWO_HR_MS = 2 * 60 * 60 * 1000,
+                dst, std, tzCode;
+
+            std = new Date(2015, 2, 8, 1, 30, 0);
+            tzCode = guessTimezoneCode(std);
+            if (tzCode == 'MST') {
+                // "Native addition"
+                dst = new Date(std.getTime() + ONE_HR_MS);
+
+                expect(dst.getFullYear()).toBe(2015);
+                expect(dst.getMonth()).toBe(2);
+                expect(dst.getDate()).toBe(8);
+                expect(dst.getHours()).toBe(3);
+                expect(dst.getMinutes()).toBe(30);
+                expect(dst.getSeconds()).toBe(0);
+                expect(dst.getMilliseconds()).toBe(0);
+
+                // Should give same result as "native addition".
+                dst = YJS.Date.add(std, YJS.Date.MILLISECONDS, ONE_HR_MS);
+
+                expect(dst.getFullYear()).toBe(2015);
+                expect(dst.getMonth()).toBe(2);
+                expect(dst.getDate()).toBe(8);
+                expect(dst.getHours()).toBe(3);
+                expect(dst.getMinutes()).toBe(30);
+                expect(dst.getSeconds()).toBe(0);
+                expect(dst.getMilliseconds()).toBe(0);
+            }
+
+            dst = new Date(2015, 10, 1, 1, 30, 0);
+            tzCode = guessTimezoneCode(dst);
+            if (tzCode == 'MDT') {
+                // "Native addition"
+                std = new Date(dst.getTime() + ONE_HR_MS);
+
+                expect(std.getFullYear()).toBe(2015);
+                expect(std.getMonth()).toBe(10);
+                expect(std.getDate()).toBe(1);
+                expect(std.getHours()).toBe(1);
+                expect(std.getMinutes()).toBe(30);
+                expect(std.getSeconds()).toBe(0);
+                expect(std.getMilliseconds()).toBe(0);
+
+                // Should give same result as "native addition".
+                std = YJS.Date.add(dst, YJS.Date.MILLISECONDS, ONE_HR_MS);
+
+                expect(std.getFullYear()).toBe(2015);
+                expect(std.getMonth()).toBe(10);
+                expect(std.getDate()).toBe(1);
+                expect(std.getHours()).toBe(1);
+                expect(std.getMinutes()).toBe(30);
+                expect(std.getSeconds()).toBe(0);
+                expect(std.getMilliseconds()).toBe(0);
+            }
+
+            dst = new Date(2015, 10, 1, 1, 30, 0);
+            tzCode = guessTimezoneCode(dst);
+            if (tzCode == 'MDT') {
+                // "Native addition"
+                std = new Date(dst.getTime() + HALF_HR_MS);
+
+                expect(std.getFullYear()).toBe(2015);
+                expect(std.getMonth()).toBe(10);
+                expect(std.getDate()).toBe(1);
+                expect(std.getHours()).toBe(1);
+                expect(std.getMinutes()).toBe(0);
+                expect(std.getSeconds()).toBe(0);
+                expect(std.getMilliseconds()).toBe(0);
+
+                std = new Date(dst.getTime() + HALF_HR_MS + 1);
+
+                expect(std.getFullYear()).toBe(2015);
+                expect(std.getMonth()).toBe(10);
+                expect(std.getDate()).toBe(1);
+                expect(std.getHours()).toBe(1);
+                expect(std.getMinutes()).toBe(0);
+                expect(std.getSeconds()).toBe(0);
+                expect(std.getMilliseconds()).toBe(1);
+
+                // Should give same result as "native addition".
+                std = YJS.Date.add(dst, YJS.Date.MILLISECONDS, HALF_HR_MS);
+
+                expect(std.getFullYear()).toBe(2015);
+                expect(std.getMonth()).toBe(10);
+                expect(std.getDate()).toBe(1);
+                expect(std.getHours()).toBe(1);
+                expect(std.getMinutes()).toBe(0);
+                expect(std.getSeconds()).toBe(0);
+                expect(std.getMilliseconds()).toBe(0);
+            }
+            
+        });
+
     });
 
     describe(".clearTime", function () {

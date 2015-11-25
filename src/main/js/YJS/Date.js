@@ -23,6 +23,124 @@ NS.Date = YJS_Date = {
 
 // ==========================================================================
 /**
+ * The milliseconds unit constant used by the #add method.
+ * 
+ * @type string
+ */
+YJS_Date.MILLISECONDS = "ms";
+
+/**
+ * The seconds unit constant used by the #add method.
+ * 
+ * @type string
+ */
+YJS_Date.SECONDS = "s";
+
+/**
+ * The minutes unit constant used by the #add method.
+ * 
+ * @type string
+ */
+YJS_Date.MINUTES = "i";
+
+/**
+ * The hours unit constant used by the #add method.
+ * 
+ * @type string
+ */
+YJS_Date.HOURS = "h";
+
+/**
+ * The day unit constant used by the #add method.
+ * 
+ * @type string
+ */
+YJS_Date.DAY = "d";
+
+/**
+ * The month unit constant used by the #add method.
+ * 
+ * @type string
+ */
+YJS_Date.MONTH = "m";
+
+/**
+ * The year unit constant used by the #add method.
+ * 
+ * @type string
+ */
+YJS_Date.YEAR = "y";
+
+// ==========================================================================
+/**
+ * Adds/subtracts an interval from specified date. The specified date is not modified. A new date is created with the
+ * results of the calculation.
+ * 
+ * NOTE: Non-date input just falls through. It is not converted to a date before adding.
+ * 
+ *     // Basic usage:
+ *     var stPattysDay = YJS.Date.add(new Date(1976, 2, 12), YJS.Date.DAY, 5);
+ *     var feb29th = YJS.Date.add(new Date(2000, 0, 31), YJS.Date.MONTH, 1);
+ * 
+ *     // Negative increment will be subtracted:
+ *     var christmas = YJS.Date.add(new Date(2000, 11, 30), YJS.Date.DAY, -5);
+ * 
+ * NOTE: This function currently does not handle decimal increments.
+ * 
+ * @param {?Date} date The date to add the increment to.
+ * @param {string} unit A valid date unit enum value. Must be one of #YEAR, #MONTH, #DAY, #HOURS, #MINUTES,
+ *   #SECONDS, or #MILLISECONDS.
+ * @param {number} increment The amount to add to the specified date. Negative values will substract from the date.
+ *   Must be an integral number.
+ * 
+ * @return {Date} A new Date instance with the interval added/subtracted.
+ */
+YJS_Date.add = function (date, unit, increment) {
+    var YJS_Date = YJS.Date,
+        YJS_Utils = YJS.Utils,
+        dt = YJS_Date.clone(date),
+        day, firstDateOfMonth, firstDateOfNewMonth, lastDateOfNewMonth, month;
+
+    if (YJS_Utils.typeOf(dt) === 'date' && YJS_Utils.typeOf(unit) === 'string' && increment !== 0) {
+        switch (unit.toLowerCase()) {
+        case YJS_Date.MILLISECONDS:
+            dt = new Date(dt.getTime() + increment);
+            break;
+        case YJS_Date.SECONDS:
+            dt.setSeconds(dt.getSeconds() + increment);
+            break;
+        case YJS_Date.MINUTES:
+            dt.setMinutes(dt.getMinutes() + increment);
+            break;
+        case YJS_Date.HOURS:
+            dt.setHours(dt.getHours() + increment);
+            break;
+        case YJS_Date.DAY:
+            dt.setDate(dt.getDate() + increment);
+            break;
+        case YJS_Date.MONTH:
+            day = dt.getDate();
+            month = dt.getMonth();
+            if (day > 28) {
+                firstDateOfMonth = YJS_Date.getFirstDateOfMonth(dt);
+                firstDateOfNewMonth = YJS_Date.add(firstDateOfMonth, YJS_Date.MONTH, increment);
+                lastDateOfNewMonth = YJS_Date.getLastDateOfMonth(firstDateOfNewMonth);
+                day = Math.min(day, lastDateOfNewMonth.getDate());
+            }
+            dt.setDate(day);
+            dt.setMonth(month + increment);
+            break;
+        case YJS_Date.YEAR:
+            dt.setFullYear(dt.getFullYear() + increment);
+            break;
+        }
+    }
+
+    return dt;
+};
+
+// ==========================================================================
+/**
  * Clears all time information from the specified date. That is, the passed date is mutated. A clone is not first
  * created.
  * 
