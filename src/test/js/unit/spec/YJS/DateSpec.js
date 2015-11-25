@@ -222,7 +222,7 @@ Invariants:
 
 */
 
-var extractTimezone, guessTimezoneCode,
+var adjustsForDstInYear, extractTimezone, guessTimezoneCode,
     TIMEZONE_TO_TIMEZONE_CODE_LUT,
     TIMEZONE_CODE_TO_TIMEZONE_LUT;
 
@@ -270,6 +270,29 @@ guessTimezoneCode = function (date) {
     }
     tzCode = TIMEZONE_TO_TIMEZONE_CODE_LUT[timezone] || null;
     return tzCode;
+};
+
+adjustsForDstInYear = function(year) {
+    var ONE_HR_MS = 60 * 60 * 1000,
+        ONE_DAY_MS = 24 * ONE_HR_MS,
+        hour = 8,
+        prevDt = new Date(year, 0, 1, hour, 0, 1),
+        hr, i, nextDt, yr;
+
+    i = 1;
+    nextDt = new Date(prevDt.getTime() + ONE_DAY_MS * i);
+    yr = nextDt.getFullYear();
+    while (yr === year) {
+        hr = nextDt.getHours();
+        if (hr !== hour) {
+            return true;
+        }
+        i += 1;
+        nextDt = new Date(prevDt.getTime() + ONE_DAY_MS * i);
+        yr = nextDt.getFullYear();
+    }
+
+    return false;
 };
 
 /**
@@ -892,11 +915,12 @@ describe("YJS.Date", function () {
             var ONE_HR_MS = 60 * 60 * 1000,
                 HALF_HR_MS = 30 * 60 * 1000,
                 TWO_HR_MS = 2 * 60 * 60 * 1000,
-                dst, std, tzCode;
+                adjustsForDstIn2015, dst, std, tzCode;
 
+            adjustsForDstIn2015 = adjustsForDstInYear(2015);
             std = new Date(2015, 2, 8, 1, 30, 0);
             tzCode = guessTimezoneCode(std);
-            if (tzCode == 'MST') {
+            if (tzCode == 'MST' && adjustsForDstIn2015) {
                 // "Native addition"
                 dst = new Date(std.getTime() + ONE_HR_MS);
 
