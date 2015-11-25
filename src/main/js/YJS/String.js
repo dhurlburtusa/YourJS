@@ -44,13 +44,18 @@ NS.String = YJS_String = {
  * 
  * See the Jasmine Specs for example uses.
  * 
+ * NOTE: This function is `this`less which means it doesn't matter what object it is bound to when called.
+ * This allows it to be assigned to a local variable and then later called using just the local variable like so.
+ * 
+ *     var convert = YJS.String.convert;
+ *     convert(true); // "true"
+ * 
  * @param {?Mixed} input The value to convert to a string.
  * @param {Object} [options] The options to use when doing the conversion.
  * @param {boolean} [options.trim=true] `true` to trim the string after conversion.
  * 
  * @return {String|null|undefined} The input converted to a string.
  */
-// @scopeless
 YJS_String.convert = function (input, options) {
     var output, trim;
 
@@ -242,11 +247,16 @@ YJS_String.printf = function (pattern, varargs) {
  * 
  * NOTE: This function behaves like `Ext.String.trim` but does not barf if `input` is not a string.
  * 
+ * NOTE: This function is `this`less which means it doesn't matter what object it is bound to when called.
+ * This allows it to be assigned to a local variable and then later called using just the local variable like so.
+ * 
+ *     var trim = YJS.String.trim;
+ *     trim(" Some string. "); // "Some string."
+ * 
  * @param {?String} input The string to trim.
  * 
  * @return {String|Mixed} The trimmed string or the non-string input.
  */
-// @scopeless
 YJS_String.trim = function (input) {
     if (YJS.Utils.typeOf(input) == 'string') {
         input = input.replace(/(^\s*)|(\s*$)/g, "");
