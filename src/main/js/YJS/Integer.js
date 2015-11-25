@@ -54,9 +54,7 @@ YJS_Integer.convert = function (input, options) {
     output = defValue;
     if (input) {
         if (typeof input === 'number') {
-            if (input === GBL.Number.NEGATIVE_INFINITY || input === GBL.Number.POSITIVE_INFINITY) {
-                // Keep output set to default value.
-            } else {
+            if (!(input === GBL.Number.NEGATIVE_INFINITY || input === GBL.Number.POSITIVE_INFINITY)) {
                 output = YJS.Math.round(input);
             }
         } else {

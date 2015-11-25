@@ -15,11 +15,13 @@
 // @endif
 
 var NS = YJS.ns(nsPath),
-    YJS_Date;
+    DAYS_IN_MONTH, YJS_Date;
 
 NS.Date = YJS_Date = {
     $LOG: YJS.__.tmp.LOG
 };
+
+DAYS_IN_MONTH = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
 
 // ==========================================================================
 /**
@@ -191,21 +193,16 @@ YJS_Date.clone = function (date) {
  * 
  * @return {number|undefined} The number of days in the month.
  */
-YJS_Date.getDaysInMonth = (function () {
-    // Make a closure for efficiency. That is, don't redefine following array each time function is called.
-    var daysInMonth = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+YJS_Date.getDaysInMonth = function (date) {
+    var days, month;
 
-    return function (date) {
-        var days, month;
+    if (date instanceof Date) {
+        month = date.getMonth();
 
-        if (date instanceof Date) {
-            month = date.getMonth();
-
-            days = (month === 1 && YJS.Date.isLeapYear(date) ? 29 : daysInMonth[month]);
-        }
-        return days;
-    };
-})();
+        days = month === 1 && YJS.Date.isLeapYear(date) ? 29 : DAYS_IN_MONTH[month];
+    }
+    return days;
+};
 
 // ==========================================================================
 /**
@@ -264,7 +261,7 @@ YJS_Date.isLeapYear = function (date) {
 
     if (date instanceof Date) {
         year = date.getFullYear();
-        answer = !!((year & 3) === 0 && (year % 100 || (year % 400 === 0 && year)));
+        answer = !!((year & 3) === 0 && (year % 100 || year % 400 === 0 && year));
     }
 
     return answer;
