@@ -215,6 +215,11 @@ DST Ends:
 2016-11-06T02:00:00 for (UTC-04:00) Atlantic Time (Canada)
 2016-11-06T02:00:00 for (UTC-03:30) Newfoundland
 
+Invariants:
+
+- When DST begins, the clock is ALWAYS adjusted by one full hour ahead.
+- When DST ends, the clock is ALWAYS adjusted by one full hour back.
+
 */
 
 var extractTimezone, guessTimezoneCode,
