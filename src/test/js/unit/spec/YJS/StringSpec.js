@@ -98,6 +98,11 @@ describe("YJS.String", function () {
             expect(value).toBe('undefined');
         });
 
+        it("is `this`less", function () {
+            var convert = YJS.String.convert;
+            expect(convert(true)).toBe('true');
+        });
+
     });
 
     describe(".escape", function () {
@@ -432,6 +437,11 @@ describe("YJS.String", function () {
 
             value = YJS.String.trim('\tfoo bar\n');
             expect(value).toEqual('foo bar');
+        });
+
+        it("is `this`less", function () {
+            var trim = YJS.String.trim;
+            expect(trim(' foo ')).toBe('foo');
         });
 
     });
