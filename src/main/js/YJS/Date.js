@@ -185,6 +185,77 @@ YJS_Date.clone = function (date) {
     return date;
 };
 
+// ==========================================================================    
+/**
+ * Determines the difference between two dates.
+ * 
+ * Example Usage:
+ * 
+ *     var date1 = new Date(2010, 6, 4, 12, 0, 0);
+ *     var date2 = new Date(2010, 6, 4, 12, 31, 59);
+ *     YJS.Date.diff(date1, date1, YJS.Date.MINUTES); // 31 full minutes
+ * 
+ * See the Jasmine Specs for more example uses.
+ * 
+ * @param {Date} date1
+ * @param {Date} date2
+ * @param {String} unit A valid date unit enum value. Must be one of #YEAR, #MONTH, #DAY, #HOURS, #MINUTES,
+ *   #SECONDS, or #MILLISECONDS.
+ * 
+ * @return {number} The difference between the two dates as an integer. This value is not rounded.
+ */
+YJS_Date.diff = function (date1, date2, unit) {
+    var YJS_Date = YJS.Date,
+        YJS_Utils = YJS.Utils,
+        difference, msec1, msec2;
+
+    msec1 = date1.getTime();
+    msec2 = date2.getTime();
+
+    if (YJS_Utils.typeOf(date1) === 'date' && YJS_Utils.typeOf(date2) === 'date' && YJS_Utils.typeOf(unit) === 'string') {
+        switch (unit.toLowerCase()) {
+        case YJS_Date.MILLISECONDS:
+            difference = msec2 - msec1;
+            break;
+        case YJS_Date.SECONDS:
+            difference = (msec2 - msec1) / 1000;
+            break;
+        case YJS_Date.MINUTES:
+            difference = (msec2 - msec1) / 60000;
+            break;
+        case YJS_Date.HOURS:
+            difference = (msec2 - msec1) / 3600000;
+            break;
+        case YJS_Date.DAY:
+            difference = (msec2 - msec1) / 86400000;
+            break;
+        case YJS_Date.MONTH:
+            difference = (date2.getFullYear() * 12 + date2.getMonth()) - (date1.getFullYear() * 12 + date1.getMonth());
+            if (YJS_Date.add(date1, unit, difference) > date2) {
+                difference -= 1;
+            }
+            break;
+        case YJS_Date.YEAR:
+            difference = date2.getFullYear() - date1.getFullYear();
+            if (YJS_Date.add(date1, unit, difference) > date2) {
+                difference -= 1;
+            }
+            break;
+        default:
+            throw new TypeError("`unit` must be a valid date/time unit.");
+        }
+    } else {
+        throw new TypeError("`date1` and `date2` must be Date instances and `unit` must be a string of a valid date/time unit.");
+    }
+
+    if (difference < 0) {
+        difference = Math.ceil(difference);
+    } else if (difference > 0) {
+        difference = Math.floor(difference);
+    }
+    return difference;
+};
+
 // ==========================================================================
 /**
  * Get the number of days in the specified month, adjusted for leap year.

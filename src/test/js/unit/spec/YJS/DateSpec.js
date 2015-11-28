@@ -1109,6 +1109,168 @@ describe("YJS.Date", function () {
 
     });
 
+    describe(".diff", function () {
+
+        it("should calculate the difference of minutes between 2 dates", function () {
+            // NOTE: The following comments in this function assume a timezone where DST begins near the beginning of the year and
+            // ends near the end of the year.
+            var adjustsForDstIn2000, date1, date2, offset;
+            
+            adjustsForDstIn2000 = adjustsForDstInYear(2000);
+
+            offset = 0;
+            if (adjustsForDstIn2000) {
+                offset = 60;
+            }
+
+            date1 = new Date(2000, 0, 1, 12, 0, 1);
+            date2 = new Date(2001, 0, 1, 12, 0, 1);
+            expect(YJS.Date.diff(date1, date1, YJS.Date.MINUTES)).toBe(0);
+            expect(YJS.Date.diff(date2, date2, YJS.Date.MINUTES)).toBe(0);
+            expect(YJS.Date.diff(date1, date2, YJS.Date.MINUTES)).toBe(60 * 24 * 366);
+            expect(YJS.Date.diff(date2, date1, YJS.Date.MINUTES)).toBe(-(60 * 24 * 366));
+
+            date1 = new Date(2000, 5, 1, 12, 0, 1); // During daylight savings.
+            date2 = new Date(2000, 12, 1, 12, 0, 1); // After daylight savings.
+            expect(YJS.Date.diff(date1, date1, YJS.Date.MINUTES)).toBe(0);
+            expect(YJS.Date.diff(date2, date2, YJS.Date.MINUTES)).toBe(0);
+            expect(YJS.Date.diff(date1, date2, YJS.Date.MINUTES)).toBe((60 * 24 * 214) + offset);
+            expect(YJS.Date.diff(date2, date1, YJS.Date.MINUTES)).toBe(-((60 * 24 * 214) + offset));
+
+            date1 = new Date(2000, 5, 1, 12, 0, 1); // During daylight savings.
+            date2 = new Date(2000, 6, 1, 12, 0, 1); // During daylight savings.
+            expect(YJS.Date.diff(date1, date1, YJS.Date.MINUTES)).toBe(0);
+            expect(YJS.Date.diff(date2, date2, YJS.Date.MINUTES)).toBe(0);
+            expect(YJS.Date.diff(date1, date2, YJS.Date.MINUTES)).toBe(60 * 24 * 30);
+            expect(YJS.Date.diff(date2, date1, YJS.Date.MINUTES)).toBe(-(60 * 24 * 30));
+
+            date1 = new Date(2000, 1, 1, 12, 0, 1); // Before daylight savings.
+            date2 = new Date(2000, 6, 1, 12, 0, 1); // During daylight savings.
+            expect(YJS.Date.diff(date1, date1, YJS.Date.MINUTES)).toBe(0);
+            expect(YJS.Date.diff(date2, date2, YJS.Date.MINUTES)).toBe(0);
+            expect(YJS.Date.diff(date1, date2, YJS.Date.MINUTES)).toBe((60 * 24 * 151) - offset);
+            expect(YJS.Date.diff(date2, date1, YJS.Date.MINUTES)).toBe(-((60 * 24 * 151) - offset));
+
+            // Due to daylight savings, one hour should be missing.
+            // Daylight savings starts on March 14th, 2010.
+            date1 = new Date(2010, 2, 14, 0, 0, 0);
+            date2 = new Date(2010, 2, 14, 3, 0, 0);
+            expect(YJS.Date.diff(date1, date1, YJS.Date.MINUTES)).toBe(0);
+            expect(YJS.Date.diff(date2, date2, YJS.Date.MINUTES)).toBe(0);
+            expect(YJS.Date.diff(date1, date2, YJS.Date.MINUTES)).toBe(180 - offset);
+            expect(YJS.Date.diff(date2, date1, YJS.Date.MINUTES)).toBe(-180 + offset);
+
+            // Due to daylight savings, one more hour should have transpired.
+            // Daylight savings ends on Nov 7th, 2010.
+            date1 = new Date(2010, 10, 7, 0, 0, 0);
+            date2 = new Date(2010, 10, 7, 3, 0, 0);
+            expect(YJS.Date.diff(date1, date1, YJS.Date.MINUTES)).toBe(0);
+            expect(YJS.Date.diff(date2, date2, YJS.Date.MINUTES)).toBe(0);
+            expect(YJS.Date.diff(date1, date2, YJS.Date.MINUTES)).toBe(180 + offset);
+            expect(YJS.Date.diff(date2, date1, YJS.Date.MINUTES)).toBe(-180 - offset);
+
+            date1 = new Date(2000, 0, 1, 12, 0, 0);
+            date2 = new Date(2000, 0, 1, 12, 1, 59);
+            expect(YJS.Date.diff(date1, date1, YJS.Date.MINUTES)).toBe(0);
+            expect(YJS.Date.diff(date2, date2, YJS.Date.MINUTES)).toBe(0);
+            expect(YJS.Date.diff(date1, date2, YJS.Date.MINUTES)).toBe(1);
+            expect(YJS.Date.diff(date2, date1, YJS.Date.MINUTES)).toBe(-1);
+        });
+
+        it("should calculate the difference of hours between 2 dates", function () {
+            // NOTE: The following comments in this function assume a timezone where DST begins near the beginning of the year and
+            // ends near the end of the year.
+            var adjustsForDstIn2000, date1, date2, offset;
+            
+            adjustsForDstIn2000 = adjustsForDstInYear(2000);
+
+            offset = 0;
+            if (adjustsForDstIn2000) {
+                offset = 1;
+            }
+
+            date1 = new Date(2000, 0, 1, 12, 0, 1);
+            date2 = new Date(2001, 0, 1, 12, 0, 1);
+            expect(YJS.Date.diff(date1, date1, YJS.Date.HOURS)).toBe(0);
+            expect(YJS.Date.diff(date2, date2, YJS.Date.HOURS)).toBe(0);
+            expect(YJS.Date.diff(date1, date2, YJS.Date.HOURS)).toBe(24 * 366);
+            expect(YJS.Date.diff(date2, date1, YJS.Date.HOURS)).toBe(-24 * 366);
+
+            date1 = new Date(2000, 5, 1, 12, 0, 1); // During daylight savings.
+            date2 = new Date(2000, 12, 1, 12, 0, 1); // After daylight savings.
+            expect(YJS.Date.diff(date1, date1, YJS.Date.HOURS)).toBe(0);
+            expect(YJS.Date.diff(date2, date2, YJS.Date.HOURS)).toBe(0);
+            expect(YJS.Date.diff(date1, date2, YJS.Date.HOURS)).toBe((24 * 214) + offset);
+            expect(YJS.Date.diff(date2, date1, YJS.Date.HOURS)).toBe(-((24 * 214) + offset));
+
+            date1 = new Date(2000, 5, 1, 12, 0, 1); // During daylight savings.
+            date2 = new Date(2000, 6, 1, 12, 0, 1); // During daylight savings.
+            expect(YJS.Date.diff(date1, date1, YJS.Date.HOURS)).toBe(0);
+            expect(YJS.Date.diff(date2, date2, YJS.Date.HOURS)).toBe(0);
+            expect(YJS.Date.diff(date1, date2, YJS.Date.HOURS)).toBe(24 * 30);
+            expect(YJS.Date.diff(date2, date1, YJS.Date.HOURS)).toBe(-24 * 30);
+
+            date1 = new Date(2000, 1, 1, 12, 0, 1); // Before daylight savings.
+            date2 = new Date(2000, 6, 1, 12, 0, 1); // During daylight savings.
+            expect(YJS.Date.diff(date1, date1, YJS.Date.HOURS)).toBe(0);
+            expect(YJS.Date.diff(date2, date2, YJS.Date.HOURS)).toBe(0);
+            expect(YJS.Date.diff(date1, date2, YJS.Date.HOURS)).toBe((24 * 151) - offset);
+            expect(YJS.Date.diff(date2, date1, YJS.Date.HOURS)).toBe(-((24 * 151) - offset));
+
+            // Due to daylight savings, one hour should be missing.
+            // Daylight savings starts on March 14th, 2010.
+            date1 = new Date(2010, 2, 14, 0, 0, 0);
+            date2 = new Date(2010, 2, 14, 3, 0, 0);
+            expect(YJS.Date.diff(date1, date1, YJS.Date.HOURS)).toBe(0);
+            expect(YJS.Date.diff(date2, date2, YJS.Date.HOURS)).toBe(0);
+            expect(YJS.Date.diff(date1, date2, YJS.Date.HOURS)).toBe(3 - offset);
+            expect(YJS.Date.diff(date2, date1, YJS.Date.HOURS)).toBe(-3 + offset);
+
+            // Due to daylight savings, one more hour should have transpired.
+            // Daylight savings ends on Nov 7th, 2010.
+            date1 = new Date(2010, 10, 7, 0, 0, 0);
+            date2 = new Date(2010, 10, 7, 3, 0, 0);
+            expect(YJS.Date.diff(date1, date1, YJS.Date.HOURS)).toBe(0);
+            expect(YJS.Date.diff(date2, date2, YJS.Date.HOURS)).toBe(0);
+            expect(YJS.Date.diff(date1, date2, YJS.Date.HOURS)).toBe(3 + offset);
+            expect(YJS.Date.diff(date2, date1, YJS.Date.HOURS)).toBe(-3 - offset);
+        });
+
+        it("should calculate the difference of days between 2 dates", function () {
+            var date1, date2;
+
+            date1 = new Date(2000, 0, 1, 12, 0, 1);
+            date2 = new Date(2001, 0, 1, 12, 0, 1);
+            expect(YJS.Date.diff(date1, date1, YJS.Date.DAY)).toBe(0);
+            expect(YJS.Date.diff(date2, date2, YJS.Date.DAY)).toBe(0);
+            expect(YJS.Date.diff(date1, date2, YJS.Date.DAY)).toBe(366);
+            expect(YJS.Date.diff(date2, date1, YJS.Date.DAY)).toBe(-366);
+        });
+
+        it("should calculate the difference of months between 2 dates", function () {
+            var date1, date2;
+
+            date1 = new Date(2000, 0, 1, 12, 0, 1);
+            date2 = new Date(2001, 0, 1, 12, 0, 1);
+            expect(YJS.Date.diff(date1, date1, YJS.Date.MONTH)).toBe(0);
+            expect(YJS.Date.diff(date2, date2, YJS.Date.MONTH)).toBe(0);
+            expect(YJS.Date.diff(date1, date2, YJS.Date.MONTH)).toBe(12);
+            expect(YJS.Date.diff(date2, date1, YJS.Date.MONTH)).toBe(-12);
+        });
+
+        it("should calculate the difference of years between 2 dates", function () {
+            var date1, date2;
+
+            date1 = new Date(2000, 0, 1, 12, 0, 1);
+            date2 = new Date(2020, 0, 1, 12, 0, 1);
+            expect(YJS.Date.diff(date1, date1, YJS.Date.YEAR)).toBe(0);
+            expect(YJS.Date.diff(date2, date2, YJS.Date.YEAR)).toBe(0);
+            expect(YJS.Date.diff(date1, date2, YJS.Date.YEAR)).toBe(20);
+            expect(YJS.Date.diff(date2, date1, YJS.Date.YEAR)).toBe(-20);
+        });
+
+    });
+
     describe(".getDaysInMonth", function () {
 
         it("called with anything but a Date instance should return undefined", function () {
