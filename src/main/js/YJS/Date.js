@@ -340,6 +340,46 @@ YJS_Date.isLeapYear = function (date) {
 
 // ==========================================================================
 /**
+ * Determines if the specified date information will cause a JavaScript Date "rollover". The date information is
+ * invalid if a Date "rollover" occurs.
+ * 
+ * @param {Number} year 4-digit year.
+ * @param {Number} month 0-based month.
+ * @param {Number} [day=1] Day of month.
+ * @param {Number} [hours=0] Hours.
+ * @param {Number} [minutes=0] Minutes.
+ * @param {Number} [seconds=0] Seconds.
+ * @param {Number} [milliseconds=0] Milliseconds.
+ * 
+ * @return {Boolean} `true` if the specified date information does not cause a Date "rollover", `false` otherwise.
+ */
+YJS_Date.isValid = function (y, m, d, h, i, s, ms) {
+    var dt, isValid;
+
+    d = d || 1;
+    h = h || 0;
+    i = i || 0;
+    s = s || 0;
+    ms = ms || 0;
+
+    // Special handling for year < 100
+    dt = YJS.Date.add(new Date(y < 100 ? 100 : y, m, d, h, i, s, ms), YJS.Date.YEAR, y < 100 ? y - 100 : 0);
+
+    isValid = (
+         y == dt.getFullYear() &&
+         m == dt.getMonth() &&
+         d == dt.getDate() &&
+         h == dt.getHours() &&
+         i == dt.getMinutes() &&
+         s == dt.getSeconds() &&
+        ms == dt.getMilliseconds()
+    );
+
+    return isValid;
+};
+
+// ==========================================================================
+/**
  * Returns a date representing the current date and time at the time of the method call.
  * 
  *     YJS.Date.now(); // e.g., 2010-09-08 07:06:54

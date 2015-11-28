@@ -1579,6 +1579,57 @@ describe("YJS.Date", function () {
 
     });
 
+    describe(".isValid", function () {
+
+        it("called with valid date info should return true", function () {
+            var isValid;
+
+            isValid = YJS.Date.isValid(2000, 0);
+            expect(isValid).toBe(true);
+
+            isValid = YJS.Date.isValid(2000, 1, 29);
+            expect(isValid).toBe(true);
+
+            isValid = YJS.Date.isValid(2001, 1, 28);
+            expect(isValid).toBe(true);
+        });
+
+        it("called with invalid date info should return false", function () {
+            var isValid;
+
+            isValid = YJS.Date.isValid(undefined);
+            expect(isValid).toBe(false);
+
+            isValid = YJS.Date.isValid(undefined, undefined);
+            expect(isValid).toBe(false);
+
+            isValid = YJS.Date.isValid(undefined, undefined, undefined);
+            expect(isValid).toBe(false);
+
+            isValid = YJS.Date.isValid(2000, 1, 30);
+            expect(isValid).toBe(false);
+
+            isValid = YJS.Date.isValid(2001, 1, 29);
+            expect(isValid).toBe(false);
+
+            isValid = YJS.Date.isValid(2001, 3, 31);
+            expect(isValid).toBe(false);
+
+            isValid = YJS.Date.isValid(2001, 5, 31);
+            expect(isValid).toBe(false);
+
+            isValid = YJS.Date.isValid(2001, 8, 31);
+            expect(isValid).toBe(false);
+
+            isValid = YJS.Date.isValid(2001, 10, 31);
+            expect(isValid).toBe(false);
+
+            isValid = YJS.Date.isValid(2000, 2, 12, 2, 75, 0);
+            expect(isValid).toBe(false);
+        });
+
+    });
+
     describe(".now", function () {
 
         it("should return a number representing the current time", function () {
