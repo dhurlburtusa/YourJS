@@ -154,9 +154,8 @@ YJS_Array.unique = function (array, options) {
  * 
  * See the Jasmine Specs for more example uses.
  * 
- * NOTE: This function behaves like `Ext.Array.from` but does not return an empty array when `null` is passed in. In
- * that case, an array with `null` as the single item is returned. It also doesn't handle some "iterables" like
- * NodeList that `Ext.Array.from` does.
+ * NOTE: This function does not return an empty array when `null` is passed in.  In that case, an array with `null` as
+ * the single item is returned. It also doesn't handle some "iterables" like NodeList.
  * 
  * TODO: Handle various array-like objects. 
  * 

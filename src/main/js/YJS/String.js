@@ -245,8 +245,6 @@ YJS_String.printf = function (pattern, varargs) {
  * 
  * See the Jasmine Specs for more example uses.
  * 
- * NOTE: This function behaves like `Ext.String.trim` but does not barf if `input` is not a string.
- * 
  * NOTE: This function is `this`less which means it doesn't matter what object it is bound to when called.
  * This allows it to be assigned to a local variable and then later called using just the local variable like so.
  * 
